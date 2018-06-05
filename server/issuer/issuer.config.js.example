@@ -1,0 +1,12 @@
+'use strict';
+
+module.exports = {
+  name: 'Example Issuer',
+  url: 'https://example.org',
+  email: 'issuer@example.org',
+  description: 'Example Issuer Description',
+  telephone: '',
+  imagePath: '',
+  publicKey: '',
+  privateKey: ''
+};
