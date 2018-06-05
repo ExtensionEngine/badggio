@@ -2,7 +2,7 @@
 
 const { Model } = require('sequelize');
 
-class BadgeClass extends Model {
+class Badge extends Model {
   static fields(DataTypes) {
     const { ARRAY, STRING, TEXT } = DataTypes;
     return {
@@ -14,31 +14,43 @@ class BadgeClass extends Model {
         type: TEXT,
         allowNull: false
       },
-      criteria_url: {
+      criteriaUrl: {
         type: STRING
       },
-      criteria_narrative: {
+      criteriaNarrative: {
         type: TEXT
       },
-      image_caption: {
+      imageCaption: {
         type: STRING
       },
-      image_author_iri: {
+      imageAuthorIri: {
         type: TEXT
       },
-      image_hash: {
+      imageHash: {
         type: STRING,
         allowNull: false
       },
       tags: {
         type: ARRAY(STRING)
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        field: 'created_at'
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        field: 'updated_at'
+      },
+      deletedAt: {
+        type: DataTypes.DATE,
+        field: 'deleted_at'
       }
     };
   }
 
   static options() {
     return {
-      modelName: 'BadgeClass',
+      modelName: 'badge',
       underscored: true,
       timestamps: true,
       paranoid: true,
@@ -47,4 +59,4 @@ class BadgeClass extends Model {
   }
 }
 
-module.exports = BadgeClass;
+module.exports = Badge;
