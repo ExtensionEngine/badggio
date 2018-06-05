@@ -18,7 +18,7 @@ module.exports = {
     },
     criteriaUrl: {
       type: Sequelize.STRING,
-      field: 'criteria_url',
+      field: 'criteria_url'
     },
     criteriaNarrative: {
       type: Sequelize.TEXT,
