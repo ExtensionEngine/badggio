@@ -4,9 +4,10 @@ const auth = require('./common/auth').authenticate('jwt');
 const express = require('express');
 const user = require('./user');
 
-const router = express.Router();
+const api = express.Router();
+const root = express.Router();
 // TODO: Remove this demo route!
-router.use('/ping', (_, res) => res.jsend.success(null));
-router.use(user.path, user.router);
+api.use('/ping', (_, res) => res.jsend.success(null));
+api.use(user.path, user.router);
 
-module.exports = router;
+module.exports = { api, root };

@@ -39,7 +39,8 @@ app.use(morgan(format, {
 }));
 
 // Mount main router
-app.use('/api/v1', nocache(), router);
+app.use('/', nocache(), router.root);
+app.use('/api/v1', nocache(), router.api);
 
 // Global error handler.
 app.use((err, req, res, next) => {
