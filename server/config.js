@@ -1,6 +1,7 @@
 'use strict';
 
 const path = require('path');
+const issuer = require('../.issuer-rc.json');
 
 module.exports = {
   hostname: process.env.HOSTNAME,
@@ -39,5 +40,6 @@ module.exports = {
       path: process.env.STORAGE_PATH
     },
     provider: process.env.STORAGE_PROVIDER
-  }
+  },
+  issuer
 };
