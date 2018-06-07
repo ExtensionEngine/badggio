@@ -16,43 +16,41 @@ module.exports = {
       type: Sequelize.TEXT,
       allowNull: false
     },
-    criteriaUrl: {
+    imageHash: {
       type: Sequelize.STRING,
-      field: 'criteria_url'
+      field: 'image_hash',
+      allowNull: false
     },
     criteriaNarrative: {
       type: Sequelize.TEXT,
-      field: 'criteria_narrative'
+      field: 'criteria_narrative',
+      allowNull: false
     },
     imageCaption: {
       type: Sequelize.STRING,
       field: 'image_caption'
     },
     imageAuthorIri: {
-      type: Sequelize.TEXT,
+      type: Sequelize.STRING,
       field: 'image_author_iri'
     },
-    imageHash: {
-      type: Sequelize.STRING,
-      field: 'image_hash',
-      allowNull: false
-    },
     tags: {
-      type: Sequelize.ARRAY(Sequelize.STRING)
+      type: Sequelize.ARRAY(Sequelize.STRING),
+      defaultValue: []
     },
     createdAt: {
       type: Sequelize.DATE,
       field: 'created_at',
       allowNull: false
     },
+    deletedAt: {
+      type: Sequelize.DATE,
+      field: 'deleted_at'
+    },
     updatedAt: {
       type: Sequelize.DATE,
       field: 'updated_at',
       allowNull: false
-    },
-    deletedAt: {
-      type: Sequelize.DATE,
-      field: 'deleted_at'
     }
   }),
   down: (queryInterface, Sequelize) => queryInterface.dropTable('badge')
