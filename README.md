@@ -1,7 +1,6 @@
 ### Setup
 - #### Issuer configuration
-  Issuer is configured in a `.issuer-rc.json` file. Use the `.issuer-rc.json.example` file as a template:
-  `cp .issuer-rc.json.example .issuer-rc.json` and enter configuration details.
+  Issuer is configured in a `.issuer-rc.json` file. Use the `.issuer-rc.json.example` file as a template.
   List of properties:<br>
   | Name        | Required | Description |
   | :---------- | :------: | :---------- |
