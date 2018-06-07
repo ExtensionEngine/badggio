@@ -9,7 +9,7 @@ const Sequelize = require('sequelize');
 const Umzug = require('umzug');
 
 // Require models.
-const Badge = require('../../badge/badge.model');
+const BadgeClass = require('../../badge/badge.model');
 const User = require('../../user/user.model');
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -48,7 +48,7 @@ function initialize() {
 }
 
 const models = {
-  Badge: defineModel(Badge),
+  BadgeClass: defineModel(BadgeClass),
   User: defineModel(User)
 };
 

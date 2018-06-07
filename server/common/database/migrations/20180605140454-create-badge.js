@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('badge', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('badge_class', {
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
@@ -53,5 +53,5 @@ module.exports = {
       allowNull: false
     }
   }),
-  down: (queryInterface, Sequelize) => queryInterface.dropTable('badge')
+  down: (queryInterface, Sequelize) => queryInterface.dropTable('badge_class')
 };

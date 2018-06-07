@@ -2,7 +2,7 @@
 
 const { Model } = require('sequelize');
 
-class Badge extends Model {
+class BadgeClass extends Model {
   static fields(DataTypes) {
     const { ARRAY, STRING, TEXT } = DataTypes;
     return {
@@ -16,14 +16,14 @@ class Badge extends Model {
         allowNull: false,
         validate: { notEmpty: true, len: [2, 2000] }
       },
-      imageHash: {
-        type: STRING,
-        allowNull: false
-      },
       criteriaNarrative: {
         type: TEXT,
         allowNull: false,
         validate: { notEmpty: true, len: [2, 2000] }
+      },
+      imageHash: {
+        type: STRING,
+        allowNull: false
       },
       imageCaption: {
         type: STRING,
@@ -54,7 +54,7 @@ class Badge extends Model {
 
   static options() {
     return {
-      modelName: 'badge',
+      modelName: 'badge_class',
       underscored: true,
       timestamps: true,
       paranoid: true,
@@ -63,4 +63,4 @@ class Badge extends Model {
   }
 }
 
-module.exports = Badge;
+module.exports = BadgeClass;
