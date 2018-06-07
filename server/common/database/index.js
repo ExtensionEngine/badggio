@@ -9,7 +9,7 @@ const Sequelize = require('sequelize');
 const Umzug = require('umzug');
 
 // Require models.
-const BadgeClass = require('../../badge/badge.model');
+const BadgeClass = require('../../badge-class/badge-class.model');
 const User = require('../../user/user.model');
 
 const isProduction = process.env.NODE_ENV === 'production';
