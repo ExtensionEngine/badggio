@@ -1,7 +1,7 @@
 'use strict';
 
 const path = require('path');
-const issuer = require('./issuer/issuer.constance');
+const issuer = require('./issuer/issuer.constants');
 
 module.exports = {
   hostname: process.env.HOSTNAME,
