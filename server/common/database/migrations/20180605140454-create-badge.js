@@ -16,14 +16,14 @@ module.exports = {
       type: Sequelize.TEXT,
       allowNull: false
     },
-    imageHash: {
-      type: Sequelize.STRING,
-      field: 'image_hash',
-      allowNull: false
-    },
     criteriaNarrative: {
       type: Sequelize.TEXT,
       field: 'criteria_narrative',
+      allowNull: false
+    },
+    imageHash: {
+      type: Sequelize.STRING,
+      field: 'image_hash',
       allowNull: false
     },
     imageCaption: {
