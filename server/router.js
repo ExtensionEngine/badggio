@@ -1,13 +1,15 @@
 'use strict';
 
-const auth = require('./common/auth').authenticate('jwt');
 const express = require('express');
 const user = require('./user');
 
 const api = express.Router();
 const root = express.Router();
-// TODO: Remove this demo route!
-api.use('/ping', (_, res) => res.jsend.success(null));
+const router = express.Router();
+
 api.use(user.path, user.router);
 
-module.exports = { api, root };
+router.use(root);
+router.use('/api/v1', api);
+
+module.exports = router;
