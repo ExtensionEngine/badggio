@@ -14,7 +14,6 @@ npm-debug.log*
 # Configuration
 .env
 .issuer-rc.json
-server/assets/issuer-image.*
 
 # Tailor dump storage
 data/*
