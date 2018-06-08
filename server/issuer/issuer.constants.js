@@ -1,25 +1,15 @@
 'use strict';
 
-const glob = require('glob');
-const issuer = require('../../.issuer-rc.json');
-const path = require('path');
+const issuer = require('./issuer.validator');
+const normalizeUrl = require('normalize-url');
+const { HOSTNAME, NODE_ENV, PORT } = process.env;
 
-function findImage(imagePath) {
-  let pattern;
-  if (imagePath) {
-    pattern = path.resolve(__dirname, '../../', imagePath);
-  } else {
-    pattern = path.resolve(__dirname,
-      '../assets/issuer-image.@(svg|jpg|jpeg|png)');
-  }
+const protocol = NODE_ENV === 'production' ? 'https' : 'http';
+const fullUrl = `${protocol}://${HOSTNAME}:${PORT}`;
+const url = normalizeUrl(fullUrl);
 
-  const files = glob.sync(pattern);
-  if (files.length > 1) {
-    throw Error(`Found more than one image matching '${pattern}' pattern!`);
-  }
-  return (files.length === 1) ? files[0] : '';
-}
-
-issuer.imagePath = findImage(issuer.imagePath);
+issuer.issuerUrl = `${url}/issuer/issuer.json`;
+issuer.imageUrl = `${url}/issuer/image`;
+issuer.publicKeyUrl = `${url}/issuer/publicKey.json`;
 
 module.exports = issuer;
