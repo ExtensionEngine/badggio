@@ -13,7 +13,7 @@ npm-debug.log*
 
 # Configuration
 .env
-.issuer-rc.json
+.issuerrc.json
 
 # Tailor dump storage
 data/*

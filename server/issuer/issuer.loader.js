@@ -1,10 +1,12 @@
 'use strict';
 
 const ajv = require('../common/ajv');
-const issuer = require('../../.issuer-rc.json');
+const explorer = require('cosmiconfig')('issuer');
 const paths = require('./issuer.paths');
 const schema = require('./issuer.schema.json');
 const { SERVER_URL } = process.env;
+
+const issuer = explorer.searchSync().config;
 
 function load() {
   const valid = ajv.validate(schema, issuer);
