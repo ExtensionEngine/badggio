@@ -51,6 +51,7 @@ module.exports = {
 };
 
 function storeImageTo(storage, { id }, { imageType, image }) {
+  // figure out how to get image type from image to drop function argument
   return storage.setItem({ key: composeKey(id, imageType), image });
 }
 
