@@ -51,6 +51,7 @@
     "vue-template-compiler": "^2.5.16"
   },
   "dependencies": {
+    "ajv": "^6.5.0",
     "aws-sdk": "^2.226.1",
     "axios": "^0.18.0",
     "bcrypt": "^2.0.1",
@@ -79,7 +80,6 @@
     "mdi": "^2.2.43",
     "morgan": "^1.9.0",
     "nocache": "^2.0.0",
-    "normalize-url": "^3.0.1",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
     "pg": "^7.4.1",
@@ -90,7 +90,6 @@
     "umzug": "^2.1.0",
     "url-join": "^4.0.0",
     "v-hotkey": "^0.2.0",
-    "validator": "^10.3.0",
     "vee-validate": "^2.0.6",
     "vue": "^2.5.16",
     "vue-multiselect": "^2.1.0",
