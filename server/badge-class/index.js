@@ -1,7 +1,7 @@
 'use strict';
 
 const auth = require('../common/auth').authenticate('jwt');
-const ctrl = require('./badge.controller');
+const ctrl = require('./badge-class.controller');
 const router = require('express').Router();
 
 router
