@@ -22,7 +22,8 @@
     },
     "imagePath": {
       "type": "string",
-      "path": null
+      "if": { "minLength": 1 },
+      "then": { "path": null }
     },
     "publicKey": {
       "type": "string"
