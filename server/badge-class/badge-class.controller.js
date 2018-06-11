@@ -2,6 +2,9 @@
 
 const { createError } = require('../common/errors');
 const { BadgeClass } = require('../common/database');
+const createStorage = require('../common/storage');
+const config = require('../config');
+const hasha = require('hasha');
 const HttpStatus = require('http-status');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
@@ -9,22 +12,22 @@ const pick = require('lodash/pick');
 const { NOT_FOUND } = HttpStatus;
 const inputAttrs = ['name', 'description', 'criteriaNarrative', 'imageCaption',
   'imageAuthorId', 'tags'];
+const storage = createStorage(config.storage);
 
 function create({ body }, res) {
   return BadgeClass.findOne({ where: { name: body.name } })
     .then(badge => !badge || createError(NOT_FOUND, 'Badge already exists!'))
     .then(() => {
-      // TODO: hash image and save hash with associated badge
-      return BadgeClass.create({ ...pick(body, inputAttrs), imageHash });
+      const hash = hashImage(body);
+      return BadgeClass.create({ ...pick(body, inputAttrs), imageHash: hash });
     }).then(badge => {
-      // TODO: store image to storage as { key: badge.id, image: body.image}
-      // TODO: add profile getter to badge model
-      return respond(res, badge.profile);
-    });
+      return storeImageTo(storage, badge, body).then(() => badge);
+    }).then(badge => res.jsend.success(badge.profile));
 }
 
 function list({ query: { email, emailLike, role } }, res) {
-  return BadgeClass.findAll().then(badges => respond(res, map(badges, 'profile')));
+  return BadgeClass.findAll()
+    .then(badges => res.jsend.success(map(badges, 'profile')));
 }
 
 function patch({ params, body }, res) {
@@ -32,9 +35,13 @@ function patch({ params, body }, res) {
     .then(badge => badge || createError(NOT_FOUND, 'Badge does not exist!'))
     .then(badge => {
       const newValues = { ...pick(body, inputAttrs) };
-      // TODO: if (body.image) hash image and add to newValues, update storage
-      return badge.update(newValues);
-    }).then(badge => respond(res, badge.profile));
+      const hash = hashImage(body);
+      if (hash === badge.imageHash) return { badge, newValues };
+      newValues.imageHash = hash;
+      return storeImageTo(storage, badge, body).then(() => ({ badge, newValues }));
+    })
+    .then(({ badge, newValues }) => badge.update(newValues))
+    .then(badge => res.jsend.success(badge.profile));
 }
 
 module.exports = {
@@ -43,8 +50,10 @@ module.exports = {
   patch
 };
 
-function respond(res, data = {}) { return res.jsend.success(data); }
+function storeImageTo(storage, { id }, { imageType, image }) {
+  return storage.setItem({ key: composeKey(id, imageType), image });
+}
 
-function hash(data) { return };
+function composeKey(id, imageType) { return `${id}.${imageType}`; }
 
-function store(data) { return };
+function hashImage({ image }) { return hasha(image); }
