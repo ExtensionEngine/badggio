@@ -49,6 +49,7 @@ class BadgeClass extends Model {
         type: DataTypes.DATE,
         field: 'updated_at'
       }
+      // TODO: ADD profile getter
     };
   }
 
