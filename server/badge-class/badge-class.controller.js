@@ -18,10 +18,11 @@ function create({ body }, res) {
   return BadgeClass.findOne({ where: { name: body.name } })
     .then(badge => !badge || createError(NOT_FOUND, 'Badge already exists!'))
     .then(() => {
-      const hash = hashImage(body);
-      return BadgeClass.create({ ...pick(body, inputAttrs), imageHash: hash });
+      const imageHash = hasha(body);
+      return BadgeClass.create({ ...pick(body, inputAttrs), imageHash });
     }).then(badge => {
-      return storeImageTo(storage, badge, body).then(() => badge);
+      return storage.setItem({ key: `${badge.id}.${body.imageType}` })
+        .then(() => badge);
     }).then(badge => res.jsend.success(badge.profile));
 }
 
@@ -35,10 +36,11 @@ function patch({ params, body }, res) {
     .then(badge => badge || createError(NOT_FOUND, 'Badge does not exist!'))
     .then(badge => {
       const newValues = { ...pick(body, inputAttrs) };
-      const hash = hashImage(body);
-      if (hash === badge.imageHash) return { badge, newValues };
-      newValues.imageHash = hash;
-      return storeImageTo(storage, badge, body).then(() => ({ badge, newValues }));
+      const imageHash = hasha(body);
+      if (imageHash === badge.imageHash) return { badge, newValues };
+      newValues.imageHash = imageHash;
+      return storage.setItem({ key: `${badge.id}.${body.imageType}` })
+        .then(() => ({ badge, newValues }));
     })
     .then(({ badge, newValues }) => badge.update(newValues))
     .then(badge => res.jsend.success(badge.profile));
@@ -49,12 +51,3 @@ module.exports = {
   list,
   patch
 };
-
-function storeImageTo(storage, { id }, { imageType, image }) {
-  // figure out how to get image type from image to drop function argument
-  return storage.setItem({ key: composeKey(id, imageType), image });
-}
-
-function composeKey(id, imageType) { return `${id}.${imageType}`; }
-
-function hashImage({ image }) { return hasha(image); }
