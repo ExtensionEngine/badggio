@@ -23,7 +23,7 @@
     "imagePath": {
       "type": "string",
       "if": { "minLength": 1 },
-      "then": { "path": null }
+      "then": { "fileExists": null }
     },
     "publicKey": {
       "type": "string"
@@ -46,10 +46,10 @@
   "then": {
     "allOf": [
       { "properties":
-        { "publicKey": { "minLength": 1, "path": null } }
+        { "publicKey": { "minLength": 1, "fileExists": null } }
       },
       { "properties":
-        { "privateKey": { "minLength": 1, "path": null } }
+        { "privateKey": { "minLength": 1, "fileExists": null } }
       }
     ]
   }
