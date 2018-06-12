@@ -51,6 +51,7 @@
     "vue-template-compiler": "^2.5.16"
   },
   "dependencies": {
+    "ajv": "^6.5.0",
     "aws-sdk": "^2.226.1",
     "axios": "^0.18.0",
     "bcrypt": "^2.0.1",
@@ -59,6 +60,7 @@
     "bulma": "^0.6.2",
     "bunyan": "^1.8.12",
     "cors": "^2.8.4",
+    "cosmiconfig": "^5.0.5",
     "cuid": "^2.1.1",
     "dotenv": "^5.0.1",
     "emailjs": "^2.0.0",

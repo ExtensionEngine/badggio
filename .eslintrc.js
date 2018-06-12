@@ -20,6 +20,7 @@ module.exports = {
     }],
     'arrow-parens': 'off',
     'no-debugger': isDev ? 'warn' : 'error',
+    'object-shorthand': ['error', 'always'],
     'space-before-function-paren': ['error', {
       anonymous: 'always',
       named: 'never'

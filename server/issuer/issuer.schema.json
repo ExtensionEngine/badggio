@@ -1,0 +1,56 @@
+{
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "url": {
+      "type": "string",
+      "format": "url"
+    },
+    "email": {
+      "type": "string",
+      "format": "email"
+    },
+    "description": {
+      "type": "string"
+    },
+    "telephone": {
+      "type": "string",
+      "pattern": "^\\+?[0-9()\\-\\.\\s]*$"
+    },
+    "imagePath": {
+      "type": "string",
+      "if": { "minLength": 1 },
+      "then": { "fileExists": null }
+    },
+    "publicKey": {
+      "type": "string"
+    },
+    "privateKey": {
+      "type": "string"
+    }
+  },
+  "required": ["name", "url", "email"],
+  "if": {
+    "anyOf": [
+      { "properties":
+        { "publicKey": { "minLength": 1 } }
+      },
+      { "properties":
+        { "privateKey": { "minLength": 1 } }
+      }
+    ]
+  },
+  "then": {
+    "allOf": [
+      { "properties":
+        { "publicKey": { "minLength": 1, "fileExists": null } }
+      },
+      { "properties":
+        { "privateKey": { "minLength": 1, "fileExists": null } }
+      }
+    ]
+  }
+}

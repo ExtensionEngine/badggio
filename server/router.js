@@ -9,7 +9,7 @@ const router = express.Router();
 
 api.use(user.path, user.router);
 
-router.use(badging);
+router.use('/', badging);
 router.use('/api/v1', api);
 
 module.exports = router;
