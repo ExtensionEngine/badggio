@@ -34,8 +34,11 @@ class Storage {
   }
 
   setItem({ key, image }) {
-    return new Promise(resolve => {
-      const stream = this.store.createWriteStream({ key }, resolve({ key, image }));
+    return new Promise((resolve, reject) => {
+      const stream = this.store.createWriteStream({ key }, (err, result) => {
+        if (err) return reject(err);
+        return resolve({ key, image });
+      });
       stream.end(image);
     });
   }
