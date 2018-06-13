@@ -13,7 +13,7 @@ function profile() {
     image: issuer.imageUrl,
     email: issuer.email,
     publicKey: publicKey(),
-    verificationObject: verificationObject(),
+    verification: verificationObject(),
     revocationList: revocationList()
   };
 }
