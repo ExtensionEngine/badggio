@@ -1,6 +1,9 @@
 'use strict';
 
 const { Model } = require('sequelize');
+const config = require('../config');
+const createStorage = require('../common/storage');
+const store = createStorage(config.storage);
 
 class BadgeClass extends Model {
   static fields(DataTypes) {
@@ -61,6 +64,18 @@ class BadgeClass extends Model {
       paranoid: true,
       freezeTableName: true
     };
+  }
+
+  storeImage({ image, imageType }) {
+    //  TODO: check image type
+    const key = `${this.id}.${imageType}`;
+    const isImageNew = !store.fileExists(key);
+
+    if (isImageNew) return store.setItem({ key, image }).then(() => this);
+    return store.getItem(key)
+      .then(oldImage => oldImage !== image)
+      .then(changed => changed && store.setItem({ key, image }))
+      .then(() => this);
   }
 }
 
