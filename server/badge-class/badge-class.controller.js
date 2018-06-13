@@ -15,13 +15,13 @@ function create({ body }, res) {
   return sequelize.transaction(transaction => {
     return BadgeClass.create({ ...pick(body, inputAttrs) }, transaction)
       .then(badge => badge.storeImage(body));
-  }).then(badge => res.jsend.success(badge.profile));
+  }).then(badge => res.jsend.success(badge));
 }
 
 // TODO: finish this when we have created some badges
 function list({ query: { email, emailLike, role } }, res) {
   return BadgeClass.findAll()
-    .then(badges => res.jsend.success(map(badges, 'profile')));
+    .then(badges => res.jsend.success(badges));
 }
 
 function patch({ params, body }, res) {
@@ -30,7 +30,7 @@ function patch({ params, body }, res) {
       .then(badge => badge || createError(NOT_FOUND, 'Badge does not exist!'))
       .then(badge => badge.update({ ...pick(body, inputAttrs) }, transaction))
       .then(badge => badge.storeImage(body));
-  }).then(badge => res.jsend.success(badge.profile));
+  }).then(badge => res.jsend.success(badge));
 }
 
 function addImageHash({ body }, res, next) {
