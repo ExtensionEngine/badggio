@@ -7,6 +7,7 @@ function profile() {
     id: issuer.issuerUrl,
     type: 'Issuer',
     name: issuer.name,
+    url: issuer.url,
     telephone: issuer.telephone,
     description: issuer.description,
     image: issuer.imageUrl,
