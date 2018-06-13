@@ -6,7 +6,6 @@ const hasha = require('hasha');
 const HttpStatus = require('http-status');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
-const set = require('lodash/set');
 
 const { NOT_FOUND } = HttpStatus;
 const inputAttrs = ['name', 'description', 'criteriaNarrative', 'imageCaption',
