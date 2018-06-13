@@ -37,6 +37,7 @@ function revocationList() {
 }
 
 function verificationObject() {
+  // TODO: add verificationProperty, startsWith and allowedOrigins properties
   if (!issuer.publicKey) {
     return { type: 'HostedBadge' };
   }
