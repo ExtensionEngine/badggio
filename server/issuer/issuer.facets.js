@@ -19,7 +19,7 @@ function profile() {
 }
 
 function publicKey() {
-  if (!issuer.publicKey || !issuer.privateKey) return null;
+  if (!issuer.publicKey) return null;
   return {
     id: issuer.publicKeyUrl,
     type: 'CryptographicKey',
@@ -37,7 +37,7 @@ function revocationList() {
 }
 
 function verificationObject() {
-  if (!issuer.publicKey || !issuer.privateKey) {
+  if (!issuer.publicKey) {
     return { type: 'HostedBadge' };
   }
   return {
