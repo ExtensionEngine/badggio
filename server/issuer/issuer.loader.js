@@ -19,7 +19,8 @@ function load() {
   const load = {
     imageUrl: SERVER_URL + paths.root + paths.image,
     issuerUrl: SERVER_URL + paths.root + paths.issuer,
-    publicKeyUrl: SERVER_URL + paths.root + paths.publicKey
+    publicKeyUrl: SERVER_URL + paths.root + paths.publicKey,
+    revocationListUrl: SERVER_URL + paths.root + paths.revocationList
   };
 
   if (issuer.publicKeyPath) {

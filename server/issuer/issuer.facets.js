@@ -13,7 +13,7 @@ function profile() {
     email: issuer.email,
     publicKey: (issuer.publicKey) ? publicKey() : undefined,
     verification: verificationObject(),
-    revocationList: revocationList()
+    revocationList: issuer.revocationListUrl
   };
 }
 
