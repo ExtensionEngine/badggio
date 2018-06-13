@@ -2,6 +2,7 @@
 
 const ajv = require('../common/ajv');
 const explorer = require('cosmiconfig')('issuer');
+const fs = require('fs');
 const paths = require('./issuer.paths');
 const schema = require('./issuer.schema.json');
 const { SERVER_URL } = process.env;
@@ -15,10 +16,18 @@ function load() {
       `Issuer${error.dataPath}: ${error.message}`).join(', '));
   }
 
-  const issuerUrl = SERVER_URL + paths.root + paths.issuer;
-  const imageUrl = SERVER_URL + paths.root + paths.image;
-  const publicKeyUrl = SERVER_URL + paths.root + paths.publicKey;
-  return Object.assign({}, issuer, { issuerUrl, imageUrl, publicKeyUrl });
+  const load = {
+    imageUrl: SERVER_URL + paths.root + paths.image,
+    issuerUrl: SERVER_URL + paths.root + paths.issuer,
+    publicKeyUrl: SERVER_URL + paths.root + paths.publicKey
+  };
+
+  if (issuer.publicKeyPath) {
+    load.publicKey = fs.readFileSync(issuer.publicKeyPath, 'utf8');
+    load.privateKey = fs.readFileSync(issuer.privateKeyPath, 'utf8');
+  }
+
+  return Object.assign({}, issuer, load);
 }
 
 module.exports = { load };

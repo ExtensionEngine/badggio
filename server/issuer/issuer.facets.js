@@ -1,6 +1,5 @@
 'use strict';
 
-const fs = require('fs');
 const { issuer } = require('../config');
 
 function profile() {
@@ -24,7 +23,7 @@ function publicKey() {
     id: issuer.publicKeyUrl,
     type: 'CryptographicKey',
     owner: issuer.issuerUrl,
-    publicKeyPem: fs.readFileSync(issuer.publicKey, 'utf8')
+    publicKeyPem: issuer.publicKey
   };
 }
 
