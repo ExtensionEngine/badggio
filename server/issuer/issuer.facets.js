@@ -4,7 +4,7 @@ const fs = require('fs');
 const { issuer } = require('../config');
 
 function profile() {
-  const profile = {
+  return {
     id: issuer.issuerUrl,
     type: 'Issuer',
     name: issuer.name,
@@ -12,14 +12,10 @@ function profile() {
     description: issuer.description,
     image: issuer.imageUrl,
     email: issuer.email,
+    publicKey: (issuer.publicKey) ? publicKey() : undefined,
     verification: verificationObject(),
     revocationList: revocationList()
   };
-
-  const publicKey = publicKey();
-  if (publicKey) profile.publicKey = publicKey;
-
-  return profile;
 }
 
 function publicKey() {
