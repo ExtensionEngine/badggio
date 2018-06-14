@@ -15,7 +15,8 @@ function profile() {
     email: issuer.email,
     publicKey: issuer.publicKeyUrl,
     verification: verificationObject(),
-    revocationList: issuer.revocationListUrl
+    // TODO: load from assertion.paths.js once created
+    revocationList: 'http://example.org/assertions/revocationList.json'
   });
 }
 
@@ -26,14 +27,6 @@ function publicKey() {
     type: 'CryptographicKey',
     owner: issuer.issuerUrl,
     publicKeyPem: issuer.publicKey
-  };
-}
-
-function revocationList() {
-  // TODO: add revokedAssertions property
-  return {
-    type: 'RevocationList',
-    issuer: issuer.issuerUrl
   };
 }
 
@@ -51,6 +44,5 @@ function verificationObject() {
 module.exports = {
   profile,
   publicKey,
-  revocationList,
   verificationObject
 };
