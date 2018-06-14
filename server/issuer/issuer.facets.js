@@ -1,9 +1,10 @@
 'use strict';
 
+const pickBy = require('lodash/pickBy');
 const { issuer } = require('../config');
 
 function profile() {
-  return {
+  return pickBy({
     id: issuer.issuerUrl,
     type: 'Issuer',
     name: issuer.name,
@@ -15,7 +16,7 @@ function profile() {
     publicKey: issuer.publicKeyUrl,
     verification: verificationObject(),
     revocationList: issuer.revocationListUrl
-  };
+  });
 }
 
 function publicKey() {
