@@ -12,7 +12,7 @@ function profile() {
     description: issuer.description,
     image: issuer.imageUrl,
     email: issuer.email,
-    publicKey: (issuer.publicKey) ? publicKey() : undefined,
+    publicKey: issuer.publicKeyUrl,
     verification: verificationObject(),
     revocationList: issuer.revocationListUrl
   };
