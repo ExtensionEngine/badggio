@@ -23,6 +23,14 @@ function urls() {
   return urls;
 }
 
+/**
+ * Loads Issuer based on given configuration in `.issuerrc.json` file.
+ *
+ * Changes Issuer instance - removes falsy and adds
+ * additional (constant and calculated) properties.
+ * @throws {Error} Invalid configuration errors.
+ * @returns {object} Issuer.
+ */
 function load() {
   const valid = ajv.validate(schema, issuer);
   if (!valid) {
