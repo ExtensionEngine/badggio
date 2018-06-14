@@ -4,10 +4,24 @@ const ajv = require('../common/ajv');
 const explorer = require('cosmiconfig')('issuer');
 const fs = require('fs');
 const paths = require('./issuer.paths');
+const pickBy = require('lodash/pickBy');
 const schema = require('./issuer.schema.json');
 const { SERVER_URL } = process.env;
 
 const issuer = explorer.searchSync().config;
+
+function url(...paths) {
+  return [SERVER_URL, ...paths].join('');
+}
+
+function urls() {
+  const urls = {
+    issuerUrl: url(paths.root, paths.issuer)
+  };
+  if (issuer.imagePath) urls.imageUrl = url(paths.root, paths.image);
+  if (issuer.publicKeyPath) urls.publicKeyUrl = url(paths.root, paths.publicKey);
+  return urls;
+}
 
 function load() {
   const valid = ajv.validate(schema, issuer);
@@ -16,18 +30,13 @@ function load() {
       `Issuer${error.dataPath}: ${error.message}`).join(', '));
   }
 
-  const load = {
-    imageUrl: SERVER_URL + paths.root + paths.image,
-    issuerUrl: SERVER_URL + paths.root + paths.issuer,
-    publicKeyUrl: SERVER_URL + paths.root + paths.publicKey
-  };
-
   if (issuer.publicKeyPath) {
-    load.publicKey = fs.readFileSync(issuer.publicKeyPath, 'utf8');
-    load.privateKey = fs.readFileSync(issuer.privateKeyPath, 'utf8');
+    issuer.publicKey = fs.readFileSync(issuer.publicKeyPath, 'utf8');
+    issuer.privateKey = fs.readFileSync(issuer.privateKeyPath, 'utf8');
   }
 
-  return Object.assign({}, issuer, load);
+  Object.assign(issuer, urls());
+  return pickBy(issuer);
 }
 
 module.exports = { load };
