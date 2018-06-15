@@ -2,12 +2,42 @@
 
 const ajv = require('../common/ajv');
 const explorer = require('cosmiconfig')('issuer');
+const fs = require('fs');
 const paths = require('./issuer.paths');
+const pickBy = require('lodash/pickBy');
 const schema = require('./issuer.schema.json');
 const { SERVER_URL } = process.env;
 
 const issuer = explorer.searchSync().config;
 
+function loadKeyPairs() {
+  if (!issuer.publicKeyPath) return {};
+  return {
+    publicKey: fs.readFileSync(issuer.publicKeyPath, 'utf8'),
+    privateKey: fs.readFileSync(issuer.privateKeyPath, 'utf8')
+  };
+}
+
+function loadUrls() {
+  const rootUrl = SERVER_URL + paths.root;
+  const urls = {
+    issuerUrl: rootUrl + paths.issuer
+  };
+  if (issuer.imagePath) urls.imageUrl = rootUrl + paths.image;
+  if (issuer.publicKeyPath) urls.publicKeyUrl = rootUrl + paths.publicKey;
+  return urls;
+}
+
+/**
+ * Loads Issuer based on given configuration in `.issuerrc.json` file.
+ *
+ * Changes Issuer:
+ *  - loads Issuer urls
+ *  - loads Issuer keys (public and private)
+ *  - removes falsy properties
+ * @throws {Error} Invalid configuration errors.
+ * @returns {object} Issuer.
+ */
 function load() {
   const valid = ajv.validate(schema, issuer);
   if (!valid) {
@@ -15,10 +45,8 @@ function load() {
       `Issuer${error.dataPath}: ${error.message}`).join(', '));
   }
 
-  const issuerUrl = SERVER_URL + paths.root + paths.issuer;
-  const imageUrl = SERVER_URL + paths.root + paths.image;
-  const publicKeyUrl = SERVER_URL + paths.root + paths.publicKey;
-  return Object.assign({}, issuer, { issuerUrl, imageUrl, publicKeyUrl });
+  Object.assign(issuer, loadUrls(), loadKeyPairs());
+  return pickBy(issuer);
 }
 
 module.exports = { load };

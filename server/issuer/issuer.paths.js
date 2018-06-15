@@ -1,8 +1,8 @@
 'use strict';
 
 module.exports = {
-  root: '/issuer',
   image: '/image',
+  issuer: '/issuer.json',
   publicKey: '/publicKey.json',
-  issuer: '/issuer.json'
+  root: '/issuer'
 };
