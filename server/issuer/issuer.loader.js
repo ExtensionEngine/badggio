@@ -10,24 +10,31 @@ const { SERVER_URL } = process.env;
 
 const issuer = explorer.searchSync().config;
 
-function url(...paths) {
-  return [SERVER_URL, ...paths].join('');
+function loadKeyPairs() {
+  if (!issuer.publicKeyPath) return {};
+  return {
+    publicKey: fs.readFileSync(issuer.publicKeyPath, 'utf8'),
+    privateKey: fs.readFileSync(issuer.privateKeyPath, 'utf8')
+  };
 }
 
-function urls() {
+function loadUrls() {
+  const rootUrl = SERVER_URL + paths.root;
   const urls = {
-    issuerUrl: url(paths.root, paths.issuer)
+    issuerUrl: rootUrl + paths.issuer
   };
-  if (issuer.imagePath) urls.imageUrl = url(paths.root, paths.image);
-  if (issuer.publicKeyPath) urls.publicKeyUrl = url(paths.root, paths.publicKey);
+  if (issuer.imagePath) urls.imageUrl = rootUrl + paths.image;
+  if (issuer.publicKeyPath) urls.publicKeyUrl = rootUrl + paths.publicKey;
   return urls;
 }
 
 /**
  * Loads Issuer based on given configuration in `.issuerrc.json` file.
  *
- * Changes Issuer instance - removes falsy and adds
- * additional (constant and calculated) properties.
+ * Changes Issuer:
+ *  - loads Issuer urls
+ *  - loads Issuer keys (public and private)
+ *  - removes falsy properties
  * @throws {Error} Invalid configuration errors.
  * @returns {object} Issuer.
  */
@@ -38,12 +45,7 @@ function load() {
       `Issuer${error.dataPath}: ${error.message}`).join(', '));
   }
 
-  if (issuer.publicKeyPath) {
-    issuer.publicKey = fs.readFileSync(issuer.publicKeyPath, 'utf8');
-    issuer.privateKey = fs.readFileSync(issuer.privateKeyPath, 'utf8');
-  }
-
-  Object.assign(issuer, urls());
+  Object.assign(issuer, loadUrls(), loadKeyPairs());
   return pickBy(issuer);
 }
 
