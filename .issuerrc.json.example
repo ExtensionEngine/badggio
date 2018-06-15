@@ -5,6 +5,6 @@
   "description": "Example Issuer Description",
   "telephone": "",
   "imagePath": "",
-  "publicKey": "",
-  "privateKey": ""
+  "publicKeyPath": "",
+  "privateKeyPath": ""
 }

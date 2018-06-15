@@ -25,10 +25,10 @@
       "if": { "minLength": 1 },
       "then": { "fileExists": null }
     },
-    "publicKey": {
+    "publicKeyPath": {
       "type": "string"
     },
-    "privateKey": {
+    "privateKeyPath": {
       "type": "string"
     }
   },
@@ -36,20 +36,20 @@
   "if": {
     "anyOf": [
       { "properties":
-        { "publicKey": { "minLength": 1 } }
+        { "publicKeyPath": { "minLength": 1 } }
       },
       { "properties":
-        { "privateKey": { "minLength": 1 } }
+        { "privateKeyPath": { "minLength": 1 } }
       }
     ]
   },
   "then": {
     "allOf": [
       { "properties":
-        { "publicKey": { "minLength": 1, "fileExists": null } }
+        { "publicKeyPath": { "minLength": 1, "fileExists": null } }
       },
       { "properties":
-        { "privateKey": { "minLength": 1, "fileExists": null } }
+        { "privateKeyPath": { "minLength": 1, "fileExists": null } }
       }
     ]
   }
