@@ -1,9 +1,9 @@
 'use strict';
 
-const { createError } = require('../common/errors');
 const facets = require('./issuer.facets');
 const HttpStatus = require('http-status');
 const omit = require('lodash/omit');
+const { createError } = require('../common/errors');
 const { issuer } = require('../config');
 const { NOT_FOUND } = HttpStatus;
 
