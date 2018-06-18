@@ -20,14 +20,14 @@ function image(req, res) {
 }
 
 function profile(req, res) {
-  res.send(facets.profile());
+  res.json(facets.profile());
 }
 
 function publicKey(req, res) {
   if (!issuer.publicKeyPath) {
     return createError(NOT_FOUND, 'Public key does not exist!');
   }
-  res.send(facets.publicKey());
+  res.json(facets.publicKey());
 }
 
 module.exports = {
