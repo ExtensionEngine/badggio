@@ -8,7 +8,7 @@ const pickBy = require('lodash/pickBy');
 const schema = require('./issuer.schema.json');
 const { SERVER_URL } = process.env;
 
-const issuer = explorer.searchSync().config;
+const { config: issuer } = explorer.searchSync();
 
 function loadKeyPairs() {
   if (!issuer.publicKeyPath) return {};
