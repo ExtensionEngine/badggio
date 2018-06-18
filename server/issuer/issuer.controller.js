@@ -1,10 +1,11 @@
 'use strict';
 
+const { createError } = require('../common/errors');
 const facets = require('./issuer.facets');
 const HttpStatus = require('http-status');
 const omit = require('lodash/omit');
 const { issuer } = require('../config');
-const { NO_CONTENT } = HttpStatus;
+const { NOT_FOUND } = HttpStatus;
 
 function get(req, res) {
   const omitAttrs = ['imagePath', 'privateKey', 'privateKeyPath', 'publicKeyPath'];
@@ -12,8 +13,10 @@ function get(req, res) {
 }
 
 function image(req, res) {
-  if (issuer.imagePath) res.sendFile(issuer.imagePath);
-  else res.status(NO_CONTENT).send();
+  if (!issuer.imagePath) {
+    return createError(NOT_FOUND, 'Issuer image does not exist!');
+  }
+  res.sendFile(issuer.imagePath);
 }
 
 function profile(req, res) {
@@ -21,8 +24,10 @@ function profile(req, res) {
 }
 
 function publicKey(req, res) {
-  if (issuer.publicKeyPath) res.send(facets.publicKey());
-  else res.status(NO_CONTENT).send();
+  if (!issuer.publicKeyPath) {
+    return createError(NOT_FOUND, 'Public key does not exist!');
+  }
+  res.send(facets.publicKey());
 }
 
 module.exports = {
