@@ -3,6 +3,7 @@
 const { Model } = require('sequelize');
 const config = require('../config');
 const createStorage = require('../common/storage');
+const hasha = require('hasha');
 const store = createStorage(config.storage);
 
 class BadgeClass extends Model {
@@ -22,18 +23,22 @@ class BadgeClass extends Model {
       criteriaNarrative: {
         type: TEXT,
         allowNull: false,
+        field: 'criteria_narrative',
         validate: { notEmpty: true, len: [2, 2000] }
       },
       imageHash: {
         type: STRING,
+        field: 'image_hash',
         allowNull: false
       },
       imageCaption: {
         type: STRING,
+        field: 'image_caption',
         validate: { notEmpty: true, len: [2, 255] }
       },
       imageAuthorIri: {
         type: STRING,
+        field: 'image_author_iri',
         validate: { notEmpty: true, len: [2, 255] }
       },
       tags: {
@@ -52,13 +57,13 @@ class BadgeClass extends Model {
         type: DataTypes.DATE,
         field: 'updated_at'
       }
-      // TODO: ADD profile getter
     };
   }
 
   static options() {
     return {
-      modelName: 'badge_class',
+      modelName: 'BadgeClass',
+      tableName: 'badge_class',
       underscored: true,
       timestamps: true,
       paranoid: true,
@@ -66,16 +71,14 @@ class BadgeClass extends Model {
     };
   }
 
-  storeImage({ image, imageType }) {
-    //  TODO: check image type
+  storeImage(image, currentHash) {
+    const imageType = image.split(';')[0].split('/')[1];
     const key = `${this.id}.${imageType}`;
-    const isImageNew = !store.fileExists(key);
-
-    if (isImageNew) return store.setItem({ key, image }).then(() => this);
-    return store.getItem(key)
-      .then(oldImage => oldImage !== image)
-      .then(changed => changed && store.setItem({ key, image }))
-      .then(() => this);
+    const item = { key, image };
+    return store.fileExists(key).then(() => {
+      return store.getItem(key)
+        .then(oldImage => hasha(oldImage) !== currentHash && store.setItem(item));
+    }).catch(() => store.setItem(item)).then(() => this);
   }
 }
 
