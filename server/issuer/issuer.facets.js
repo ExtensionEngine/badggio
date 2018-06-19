@@ -1,6 +1,6 @@
 'use strict';
 
-const facetBase = require('../common/open-badges');
+const facetBase = require('../common/facets/base');
 const pickBy = require('lodash/pickBy');
 const { issuer } = require('../config');
 
