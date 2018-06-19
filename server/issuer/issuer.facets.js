@@ -5,7 +5,7 @@ const pickBy = require('lodash/pickBy');
 const { issuer } = require('../config');
 
 function profile() {
-  return pickBy(Object.assign({
+  return pickBy(Object.assign({}, facetBase, {
     id: issuer.issuerUrl,
     type: 'Issuer',
     name: issuer.name,
@@ -18,17 +18,17 @@ function profile() {
     verification: verificationObject(),
     // TODO: load from assertion.paths.js once created
     revocationList: 'http://example.org/assertions/revocationList.json'
-  }, facetBase));
+  }));
 }
 
 function publicKey() {
   if (!issuer.publicKey) return null;
-  return Object.assign({
+  return Object.assign({}, facetBase, {
     id: issuer.publicKeyUrl,
     type: 'CryptographicKey',
     owner: issuer.issuerUrl,
     publicKeyPem: issuer.publicKey
-  }, facetBase);
+  });
 }
 
 function verificationObject() {
