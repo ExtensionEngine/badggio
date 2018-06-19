@@ -1,14 +1,10 @@
 <template>
-  <v-tags-input
-    :value="data"
-    :validate="'required'"
-    @input="updateData"
-    name="tags" />
+  <v-tags-input :value="data" @input="updateData" name="tags" />
 </template>
 
 <script>
-import VTagsInput from '@/components/common/form/VTagsInput';
 import cloneDeep from 'lodash/cloneDeep';
+import VTagsInput from '@/components/common/form/VTagsInput';
 
 export default {
   name: 'tags',

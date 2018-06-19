@@ -1,14 +1,15 @@
 <template>
   <v-image-input
+    :validate="'required'"
+    :value="image"
     :width="300"
     :height="300"
-    :accept="'image/svg,image/png'"
-    :size="10"
+    :accept="'image/svg+xml,image/png'"
+    :size="0.256"
     :customStrings="{
-      upload: '<h1>Bummer!</h1>',
       drag: 'Drag an image or <br>click here to select a file'
     }"
-    :validate="'required'"
+    :hideChangeButton="true"
     @input="updateData"
     name="image" />
 </template>
@@ -20,11 +21,17 @@ export default {
   name: 'image-input',
   inheritAttrs: false,
   props: {
+    show: { type: Boolean, default: false },
     image: { type: String, default: '' }
   },
   methods: {
     updateData(image) {
       this.$emit('input', { image });
+    }
+  },
+  watch: {
+    show(val) {
+      if (val) window.dispatchEvent(new UIEvent('resize'));
     }
   },
   components: { VImageInput }

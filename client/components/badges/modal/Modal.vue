@@ -3,14 +3,18 @@
     <div class="badge-modal">
       <h2 class="title is-4">{{ badgeData ? 'Edit' : 'Create' }} Badge</h2>
       <form @submit.prevent="save">
-        <navigation :steps="steps" :active="active" @activate="activate" />
+        <navigation
+          :steps="steps"
+          :active="active"
+          @activate="activate" />
         <component
           v-for="(step, index) in steps"
           v-show="isActive(step)"
+          v-bind="badge"
+          :show="isActive(step)"
           :key="index"
           :is="step"
           :badgeData="badgeData"
-          v-bind="badge"
           @input="updateBadge" />
         <div class="controls field is-grouped is-grouped-right">
           <button @click="close" class="control button" type="button">Cancel</button>
@@ -26,15 +30,14 @@ import { mapActions } from 'vuex';
 import { withValidation } from '@/validation';
 import cloneDeep from 'lodash/cloneDeep';
 import head from 'lodash/head';
-import CriteriaNarrative from './steps/CriteriaNarrative';
-import Description from './steps/Description';
-import ImageSet from './steps/image/ImageSet';
+import CriteriaNarrative from './navigation/steps/CriteriaNarrative';
+import Description from './navigation/steps/Description';
+import ImageSet from './navigation/steps/image';
 import isEmpty from 'lodash/isEmpty';
 import Modal from '@/components/common/Modal';
-import Name from './steps/Name';
-import Navigation from './Navigation';
-import request from '@/api/request';
-import Tags from './steps/Tags';
+import Name from './navigation/steps/Name';
+import Navigation from './navigation/Navigation';
+import Tags from './navigation/steps/Tags';
 
 const resetBadge = () => {
   return {
@@ -44,10 +47,10 @@ const resetBadge = () => {
     criteriaNarrative: '',
     imageCaption: '',
     imageAuthorIri: '',
-    tags: ['']
+    tags: []
   };
 };
-const navSteps = ['Name', 'Description', 'ImageSet', 'CriteriaNarrative', 'Tags'];
+const navSteps = ['name', 'description', 'imageSet', 'criteriaNarrative', 'tags'];
 
 export default {
   name: 'badge-modal',
@@ -82,10 +85,15 @@ export default {
       this.badge = resetBadge();
       this.$emit('close');
     },
+    validate() {
+      return this.$validator.validateAll()
+        .then(() => this.$validator.validate('image', this.badge.image))
+        .then(() => isEmpty(this.vErrors.items));
+    },
     save() {
-      this.$validator.validateAll().then(isValid => {
+      this.validate().then(isValid => {
         if (!isValid) return;
-        // this.saveBadge(this.badge);
+        this.saveBadge(this.badge);
         this.close();
       });
     }
@@ -97,17 +105,6 @@ export default {
       if (!isEmpty(this.badgeData)) this.badge = cloneDeep(this.badgeData);
     }
   },
-  mounted() {
-    if (this.$validator.rules['unique-name']) return;
-    this.$validator.extend('unique-name', {
-      getMessage: field => `The ${field} is not unique.`,
-      validate: (name, [badgeData]) => {
-        if (badgeData && name === badgeData.name) return true;
-        return request.get('/badges', { params: { name } })
-          .then(res => ({ valid: isEmpty(res.data.data) }));
-      }
-    });
-  },
   components: {
     CriteriaNarrative,
     Description,
@@ -116,7 +113,6 @@ export default {
     Name,
     Navigation,
     Tags
-  },
-  inject: ['$validator']
+  }
 };
 </script>

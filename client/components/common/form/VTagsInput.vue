@@ -29,9 +29,9 @@
 </template>
 
 <script>
+import clone from 'lodash/clone';
 import humanize from 'humanize-string';
 import VInput from './VInput';
-import clone from 'lodash/clone';
 
 export default {
   name: 'v-tags-input',
@@ -39,7 +39,7 @@ export default {
   props: {
     type: { type: String, default: 'text' },
     name: { type: String, required: true },
-    value: { type: Array, default: () => [''] },
+    value: { type: Array, default: () => [] },
     validate: { type: [String, Object], default: null }
   },
   data() {
@@ -56,13 +56,18 @@ export default {
   methods: {
     input(value, index) {
       this.tags.splice(index, 1, value);
-      this.$emit('input', this.tags);
+      this.update();
     },
     addTag() {
       this.tags.push('');
+      this.update();
     },
     removeTag(index) {
       this.tags.splice(index, 1);
+      this.update();
+    },
+    update() {
+      this.$emit('input', this.tags);
     }
   },
   inject: ['$validator'],

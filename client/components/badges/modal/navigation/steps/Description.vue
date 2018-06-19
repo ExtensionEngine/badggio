@@ -1,10 +1,10 @@
 <template>
   <v-text-input
-    :value="description"
     :validate="{
       required: true,
       max: 2000,
     }"
+    :value="description"
     @input="updateData"
     name="description" />
 </template>

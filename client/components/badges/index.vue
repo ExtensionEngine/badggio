@@ -6,8 +6,6 @@
       class="btn-create button is-primary is-pulled-right">
       Create
     </button>
-    <table class="table is-fullwidth is-hoverable">
-    </table>
     <badge-modal
       :show="showModal"
       :badgeData="context"
@@ -18,7 +16,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
-import BadgeModal from './BadgeModal';
+import BadgeModal from './modal/Modal';
 
 export default {
   name: 'badge-list',

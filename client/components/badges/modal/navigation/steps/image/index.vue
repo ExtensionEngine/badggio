@@ -1,6 +1,6 @@
 <template>
   <div>
-    <image-input :image="image" @input="updateData" />
+    <image-input :show="show" :image="image" @input="updateData" />
     <caption-input :imageCaption="imageCaption" @input="updateData" />
     <author-iri-input :imageAuthorIri="imageAuthorIri" @input="updateData" />
   </div>
@@ -15,6 +15,7 @@ export default {
   name: 'image-set',
   inheritAttrs: false,
   props: {
+    show: { type: Boolean, default: false },
     image: { type: String, default: '' },
     imageCaption: { type: String, default: '' },
     imageAuthorIri: { type: String, default: '' }

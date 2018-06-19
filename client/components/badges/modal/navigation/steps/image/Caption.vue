@@ -1,12 +1,5 @@
 <template>
-  <v-input
-    :value="imageCaption"
-    :validate="{
-      max: 255,
-      required: true
-    }"
-    @input="updateData"
-    name="imageCaption" />
+  <v-input :value="imageCaption" @input="updateData" name="imageCaption" />
 </template>
 
 <script>

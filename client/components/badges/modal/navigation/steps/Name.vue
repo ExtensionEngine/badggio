@@ -1,18 +1,17 @@
 <template>
   <v-input
-    :value="name"
     :validate="{
       required: true,
-      max: 255,
-      'unique-name': data
+      max: 255
     }"
+    :value="name"
     @input="updateData"
     name="name" />
 </template>
 
 <script>
-import VInput from '@/components/common/form/VInput';
 import cloneDeep from 'lodash/cloneDeep';
+import VInput from '@/components/common/form/VInput';
 
 export default {
   name: 'name',

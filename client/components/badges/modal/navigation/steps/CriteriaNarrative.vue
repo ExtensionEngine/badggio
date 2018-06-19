@@ -1,10 +1,10 @@
 <template>
   <v-input
-    :value="criteriaNarrative"
     :validate="{
       max: 255,
       required: true
     }"
+    :value="criteriaNarrative"
     @input="updateData"
     name="criteriaNarrative" />
 </template>

@@ -5,7 +5,9 @@
         v-for="(step, index) in steps"
         :key="index"
         :class="{ 'active': isActive(step) }">
-        <a @click="activate(step)">{{ step | readable }}</a>
+        <a :class="{ 'error': hasError(step) }" @click="activate(step)">
+          {{ step | readable }}
+        </a>
       </li>
     </ul>
   </nav>
@@ -26,19 +28,30 @@ export default {
     },
     isActive(step) {
       return step === this.active;
+    },
+    hasError(step) {
+      const imageSteps = ['image', 'imageCaption', 'imageAuthorIri'];
+      return step === 'imageSet'
+        ? imageSteps.some(step => this.vErrors.has(step))
+        : this.vErrors.has(step);
     }
   },
   filters: {
     readable(value) {
       return humanize(value);
     }
-  }
+  },
+  inject: ['$validator']
 };
 </script>
 
 <style lang="scss" scoped>
 .breadcrumb {
   margin-bottom: 3.5rem;
+}
+
+.error {
+  color: #ff3860;
 }
 
 a {
