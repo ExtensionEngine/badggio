@@ -1,11 +1,11 @@
 'use strict';
 
-const facetBase = require('../common/facets/base');
 const pickBy = require('lodash/pickBy');
+const { base: facetBase } = require('../common/facets');
 const { issuer } = require('../config');
 
 function profile() {
-  return pickBy(Object.assign({}, facetBase, {
+  return pickBy(Object.assign(facetBase(), {
     id: issuer.issuerUrl,
     type: 'Issuer',
     name: issuer.name,
@@ -23,7 +23,7 @@ function profile() {
 
 function publicKey() {
   if (!issuer.publicKey) return null;
-  return Object.assign({}, facetBase, {
+  return Object.assign(facetBase(), {
     id: issuer.publicKeyUrl,
     type: 'CryptographicKey',
     owner: issuer.issuerUrl,
