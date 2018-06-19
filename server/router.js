@@ -10,10 +10,10 @@ const router = express.Router();
 
 api
   .use(user.path, user.router)
-  .use(issuer.path, issuer.api);
+  .use(issuer.path, issuer.apiRouter);
 
 badging
-  .use(issuer.path, issuer.badging);
+  .use(issuer.path, issuer.badgingRouter);
 
 router.use('/', badging);
 router.use('/api/v1', api);

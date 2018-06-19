@@ -4,20 +4,20 @@ const auth = require('../common/auth').authenticate('jwt');
 const ctrl = require('./issuer.controller');
 const paths = require('./issuer.paths');
 
-const api = require('express').Router();
-const badging = require('express').Router();
+const apiRouter = require('express').Router();
+const badgingRouter = require('express').Router();
 
-api
+apiRouter
   .use(auth)
   .get('/', ctrl.get);
 
-badging
+badgingRouter
   .get(paths.image, ctrl.image)
   .get(paths.issuer, ctrl.profile)
   .get(paths.publicKey, ctrl.publicKey);
 
 module.exports = {
-  api,
-  badging,
+  apiRouter,
+  badgingRouter,
   path: paths.root
 };
