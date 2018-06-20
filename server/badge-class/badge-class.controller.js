@@ -4,7 +4,6 @@ const { createError } = require('../common/errors');
 const { BadgeClass, sequelize } = require('../common/database');
 const hasha = require('hasha');
 const HttpStatus = require('http-status');
-const map = require('lodash/map');
 const pick = require('lodash/pick');
 
 const { NOT_FOUND } = HttpStatus;
@@ -14,7 +13,7 @@ const inputAttrs = ['name', 'description', 'criteriaNarrative', 'imageCaption',
 function create({ body }, res) {
   return sequelize.transaction(transaction => {
     return BadgeClass.create({ ...pick(body, inputAttrs) }, transaction)
-      .then(badge => badge.storeImage(body));
+      .then(badge => badge.storeImage(body.image, body.imageHash));
   }).then(badge => res.jsend.success(badge));
 }
 
@@ -29,7 +28,7 @@ function patch({ params, body }, res) {
     return BadgeClass.findById(params.id, { paranoid: false })
       .then(badge => badge || createError(NOT_FOUND, 'Badge does not exist!'))
       .then(badge => badge.update({ ...pick(body, inputAttrs) }, transaction))
-      .then(badge => badge.storeImage(body));
+      .then(badge => badge.storeImage(body.image, body.imageHash));
   }).then(badge => res.jsend.success(badge));
 }
 
