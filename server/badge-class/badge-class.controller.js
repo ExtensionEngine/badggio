@@ -8,7 +8,7 @@ const pick = require('lodash/pick');
 
 const { NOT_FOUND } = HttpStatus;
 const inputAttrs = ['name', 'description', 'criteriaNarrative', 'imageCaption',
-  'imageHash', 'imageAuthorId', 'tags'];
+  'imageHash', 'imageAuthorIri', 'tags'];
 
 function create({ body }, res) {
   return sequelize.transaction(transaction => {
