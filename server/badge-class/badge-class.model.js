@@ -71,8 +71,9 @@ class BadgeClass extends Model {
     };
   }
 
-  storeImage(image, currentHash) {
-    const imageType = image.split(';')[0].split('/')[1];
+  storeImage(imageObj, currentHash) {
+    const imageType = imageObj.split(';')[0].split('/')[1];
+    const image = imageObj.split(',')[1];
     const key = `${this.id}.${imageType}`;
     const item = { key, image };
     return store.fileExists(key).then(() => {
