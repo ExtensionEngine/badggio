@@ -11,7 +11,6 @@
           v-for="(step, index) in steps"
           v-show="isActive(step)"
           v-bind="badge"
-          :show="isActive(step)"
           :key="index"
           :is="step"
           :badgeData="badgeData"
@@ -29,15 +28,14 @@
 import { mapActions } from 'vuex';
 import { withValidation } from '@/validation';
 import cloneDeep from 'lodash/cloneDeep';
-import head from 'lodash/head';
-import CriteriaNarrative from './navigation/steps/CriteriaNarrative';
-import Description from './navigation/steps/Description';
-import ImageSet from './navigation/steps/image';
+import CriteriaNarrative from './CriteriaNarrative';
+import Description from './Description';
+import ImageSet from './Image';
 import isEmpty from 'lodash/isEmpty';
 import Modal from '@/components/common/Modal';
-import Name from './navigation/steps/Name';
-import Navigation from './navigation/Navigation';
-import Tags from './navigation/steps/Tags';
+import Name from './Name';
+import Navigation from './Navigation';
+import Tags from './Tags';
 
 const resetBadge = () => {
   return {
@@ -61,7 +59,7 @@ export default {
   },
   data() {
     return {
-      active: head(navSteps),
+      active: navSteps[0],
       steps: navSteps,
       badge: resetBadge()
     };
@@ -72,7 +70,7 @@ export default {
       return step === this.active;
     },
     resetActive() {
-      return head(navSteps);
+      return navSteps[0];
     },
     activate(step) {
       this.active = step;

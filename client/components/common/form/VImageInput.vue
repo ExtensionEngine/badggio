@@ -15,7 +15,7 @@
         :name="name"
         :prefill="value"
         :alertOnError="false"
-        @change="$emit('input', $event)"
+        @change="input"
         @error="error"
         data-vv-delay="1000"
         data-vv-validate-on="change"
@@ -61,6 +61,9 @@ export default {
   methods: {
     error({ type }) {
       if (type === 'fileSize') this.$emit('input', '');
+    },
+    input(event) {
+      this.$emit('input', event);
     }
   },
   inject: ['$validator'],

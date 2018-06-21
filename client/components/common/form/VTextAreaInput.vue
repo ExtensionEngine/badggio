@@ -10,7 +10,7 @@
         :name="name"
         :data-vv-as="label"
         :placeholder="label"
-        @input="$emit('input', $event.target.value)"
+        @input="input"
         data-vv-delay="1000"
         rows="4"
         class="input textarea"/>
@@ -39,6 +39,11 @@ export default {
     },
     showError() {
       return this.vErrors.has(this.name);
+    }
+  },
+  methods: {
+    input({ target }) {
+      this.$emit('input', target.value);
     }
   },
   inject: ['$validator']

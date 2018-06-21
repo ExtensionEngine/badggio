@@ -13,7 +13,7 @@
         :name="name"
         :data-vv-as="label"
         :placeholder="'Tag'"
-        @input="input($event.target.value, index)"
+        @input="input($event, index)"
         data-vv-delay="1000"
         class="input">
       <button
@@ -54,8 +54,8 @@ export default {
     }
   },
   methods: {
-    input(value, index) {
-      this.tags.splice(index, 1, value);
+    input({ target }, index) {
+      this.tags.splice(index, 1, target.value);
       this.update();
     },
     addTag() {

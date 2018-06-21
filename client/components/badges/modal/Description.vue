@@ -1,5 +1,5 @@
 <template>
-  <v-text-input
+  <v-text-area-input
     :validate="{
       required: true,
       max: 2000,
@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import VTextInput from '@/components/common/form/VTextInput';
+import VTextAreaInput from '@/components/common/form/VTextAreaInput';
 
 export default {
   name: 'description',
@@ -23,6 +23,6 @@ export default {
       this.$emit('input', { description });
     }
   },
-  components: { VTextInput }
+  components: { VTextAreaInput }
 };
 </script>
