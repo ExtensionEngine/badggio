@@ -4,7 +4,7 @@
     <button @click.prevent="addTag" class="button is-small">
       <span class="icon has-text-primary mdi mdi-plus-circle mdi-24px" />
     </button>
-    <div v-for="(tag, index) in tags" :key="index" class="control">
+    <div v-for="(tag, index) in value" :key="index" class="control">
       <input
         v-validate="validate"
         v-bind="$attrs"
@@ -42,9 +42,6 @@ export default {
     value: { type: Array, default: () => [] },
     validate: { type: [String, Object], default: null }
   },
-  data() {
-    return { tags: clone(this.value) };
-  },
   computed: {
     label() {
       return humanize(this.name);
@@ -54,6 +51,9 @@ export default {
     }
   },
   methods: {
+    tags() {
+      return clone(this.value);
+    },
     input({ target }, index) {
       this.tags.splice(index, 1, target.value);
       this.update();
