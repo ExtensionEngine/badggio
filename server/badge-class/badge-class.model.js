@@ -71,15 +71,15 @@ class BadgeClass extends Model {
     };
   }
 
-  storeImage(imageObj, currentHash) {
-    const imageType = imageObj.split(';')[0].split('/')[1];
-    const image = imageObj.split(',')[1];
-    const key = `${this.id}.${imageType}`;
-    const item = { key, image };
-    return store.fileExists(key).then(() => {
-      return store.getItem(key)
-        .then(oldImage => hasha(oldImage) !== currentHash && store.setItem(item));
-    }).catch(() => store.setItem(item)).then(() => this);
+  storeImage({ extension, base64data }, currentHash) {
+    const key = `${this.id}.${extension}`;
+    const item = { key, base64data };
+    return store
+      .fileExists(key)
+      .then(() => store.getItem(key))
+      .then(oldImage => hasha(oldImage) !== currentHash && store.setItem(item))
+      .catch(() => store.setItem(item))
+      .then(() => this);
   }
 }
 

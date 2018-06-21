@@ -13,7 +13,7 @@ const inputAttrs = ['name', 'description', 'criteriaNarrative', 'imageCaption',
 function create({ body }, res) {
   return sequelize.transaction(transaction => {
     return BadgeClass.create({ ...pick(body, inputAttrs) }, transaction)
-      .then(badge => badge.storeImage(body.image, body.imageHash));
+      .then(badge => badge.storeImage(body));
   }).then(badge => res.jsend.success(badge));
 }
 
@@ -28,18 +28,30 @@ function patch({ params, body }, res) {
     return BadgeClass.findById(params.id, { paranoid: false })
       .then(badge => badge || createError(NOT_FOUND, 'Badge does not exist!'))
       .then(badge => badge.update({ ...pick(body, inputAttrs) }, transaction))
-      .then(badge => badge.storeImage(body.image, body.imageHash));
+      .then(badge => badge.storeImage(body));
   }).then(badge => res.jsend.success(badge));
 }
 
-function addImageHash({ body }, res, next) {
-  body.imageHash = hasha(body.image);
+/**
+ * Extracts information from image string and appends them to body.
+ * @middleware
+ * @param {string} body - Contains image string.
+ * @const {string} extension - Extension of parsed image.
+ * @const {string} base64data - Data of image source in base64 format.
+ * @const {string} imageHash - Hashed base64 data.
+ */
+
+function decodeImage({ body }, res, next) {
+  const extension = body.image.split(';')[0].split('/')[1];
+  const base64data = body.image.split(',')[1];
+  const imageHash = hasha(base64data);
+  Object.assign(body, { base64data, extension, imageHash });
   return next();
 }
 
 module.exports = {
   create,
-  addImageHash,
+  decodeImage,
   list,
   patch
 };
