@@ -64,9 +64,6 @@ export default {
     edit(badge) {
       this.context = badge;
       this.showModal = true;
-    },
-    tags(badge) {
-      return badge.tags.join(', ');
     }
   },
   mounted() {
