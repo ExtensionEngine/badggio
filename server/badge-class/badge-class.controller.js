@@ -12,14 +12,14 @@ const inputAttrs = ['name', 'description', 'criteriaNarrative', 'imageCaption',
   'imageAuthorIri', 'tags'];
 
 function create(req, res) {
-  const { body, decodedImage: { imageHash } } = req;
+  const { body, decodedImage } = req;
+  const { imageHash } = decodedImage;
   return sequelize.transaction(transaction => {
-    return BadgeClass.create({ ...pick(body, inputAttrs, imageHash) }, transaction)
-      .then(badge => badge.storeImage(body));
+    return BadgeClass.create({ ...pick(body, inputAttrs), imageHash }, transaction)
+      .then(badge => badge.storeImage(decodedImage));
   }).then(badge => res.jsend.success(badge));
 }
 
-// TODO: finish this when we have created some badges
 function list(req, _, next) {
   return BadgeClass.findAll().then(badges => {
     req.locals = { badges };
@@ -28,12 +28,13 @@ function list(req, _, next) {
 }
 
 function patch(req, res) {
-  const { body, decodedImage: { imageHash }, params } = req;
+  const { body, decodedImage, params } = req;
+  const { imageHash } = decodedImage;
   return sequelize.transaction(transaction => {
     return BadgeClass.findById(params.id, { paranoid: false })
       .then(badge => badge || createError(NOT_FOUND, 'Badge does not exist!'))
-      .then(badge => badge.update({ ...pick(body, inputAttrs, imageHash) }, transaction))
-      .then(badge => badge.storeImage(body));
+      .then(badge => badge.update({ ...pick(body, inputAttrs), imageHash }, transaction))
+      .then(badge => badge.storeImage(decodedImage, badge.imageHash));
   }).then(badge => res.jsend.success(badge));
 }
 
@@ -51,8 +52,7 @@ function decodeImage(req, res, next) {
   const extension = body.image.split(';')[0].split('/')[1];
   const base64data = body.image.split(',')[1];
   const imageHash = hasha(base64data + extension);
-  const decodedImage = { base64data, extension, imageHash };
-  Object.assign(req, decodedImage);
+  req.decodedImage = { base64data, extension, imageHash };
   return next();
 }
 
