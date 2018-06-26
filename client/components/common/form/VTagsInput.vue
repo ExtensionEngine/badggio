@@ -1,7 +1,7 @@
 <template>
   <div class="field">
     <label class="label">{{ label }}</label>
-    <button @click.prevent="addTag" class="button is-small">
+    <button @click.prevent="addTag();update" class="button is-small">
       <span class="icon has-text-primary mdi mdi-plus-circle mdi-24px" />
     </button>
     <div v-for="(tag, index) in value" :key="index" class="control">
@@ -13,11 +13,11 @@
         :name="name"
         :data-vv-as="label"
         :placeholder="'Tag'"
-        @input="input($event, index)"
+        @input="input($event, index);update"
         data-vv-delay="1000"
         class="input">
       <button
-        @click.prevent="removeTag(index)"
+        @click.prevent="removeTag(index);update"
         class="button is-small is-pulled-right">
         <span class="icon mdi mdi-close" />
       </button>
@@ -42,6 +42,9 @@ export default {
     value: { type: Array, default: () => [] },
     validate: { type: [String, Object], default: null }
   },
+  data() {
+    return { tags: clone(this.value) };
+  },
   computed: {
     label() {
       return humanize(this.name);
@@ -51,9 +54,6 @@ export default {
     }
   },
   methods: {
-    tags() {
-      return clone(this.value);
-    },
     input({ target }, index) {
       this.tags.splice(index, 1, target.value);
       this.update();
@@ -68,6 +68,11 @@ export default {
     },
     update() {
       this.$emit('input', this.tags);
+    }
+  },
+  watch: {
+    value(val) {
+      this.tags = clone(val);
     }
   },
   inject: ['$validator'],
