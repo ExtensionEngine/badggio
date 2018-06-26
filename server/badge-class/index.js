@@ -4,11 +4,11 @@ const auth = require('../common/auth').authenticate('jwt');
 const ctrl = require('./badge-class.controller');
 const router = require('express').Router();
 
-const { create, decodeImage, list, patch } = ctrl;
+const { create, encodeImage, decodeImage, list, patch } = ctrl;
 
 router
   .use(auth)
-  .get('/', list)
+  .get('/', list, encodeImage)
   .post('/', decodeImage, create)
   .patch('/:id', decodeImage, patch);
 
