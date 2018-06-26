@@ -3,7 +3,6 @@
 const { Model } = require('sequelize');
 const config = require('../config');
 const createStorage = require('../common/storage');
-const hasha = require('hasha');
 const store = createStorage(config.storage);
 
 class BadgeClass extends Model {
