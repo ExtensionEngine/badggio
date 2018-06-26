@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import cloneDeep from 'lodash/cloneDeep';
+import clone from 'lodash/clone';
 import VTagsInput from '@/components/common/form/VTagsInput';
 
 export default {
@@ -14,7 +14,7 @@ export default {
   },
   computed: {
     data() {
-      return cloneDeep(this.tags);
+      return clone(this.tags);
     }
   },
   methods: {
