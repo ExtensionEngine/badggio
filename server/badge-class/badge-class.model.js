@@ -71,14 +71,14 @@ class BadgeClass extends Model {
     };
   }
 
-  storeImage({ extension, base64data }, currentHash) {
+  storeImage({ extension, base64data, hash }, currentHash) {
     const image = JSON.stringify({ extension, image: base64data });
     const key = this.id.toString();
     const item = { key, image };
     return store
       .fileExists(key)
       .then(() => store.getItem(key))
-      .then(item => hasha(item.image + item.extension) !== currentHash && store.setItem(item))
+      .then(item => hash !== currentHash && store.setItem(item))
       .catch(() => store.setItem(item))
       .then(() => this);
   }

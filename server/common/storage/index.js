@@ -33,13 +33,13 @@ class Storage {
       .then(str => JSON.parse(str));
   }
 
-  setItem({ key, item }) {
+  setItem({ key, image }) {
     return new Promise((resolve, reject) => {
       const stream = this.store.createWriteStream({ key }, (err, result) => {
         if (err) return reject(err);
-        return resolve({ key, item });
+        return resolve({ key, image });
       });
-      stream.end(item);
+      stream.end(image);
     });
   }
 
