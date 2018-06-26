@@ -64,7 +64,6 @@ class BadgeClass extends Model {
     return {
       modelName: 'BadgeClass',
       tableName: 'badge_class',
-      underscored: true,
       timestamps: true,
       paranoid: true,
       freezeTableName: true
