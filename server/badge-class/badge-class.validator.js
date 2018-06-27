@@ -11,10 +11,13 @@ function validate({ body }, res, next) {
     tags: Joi.array().items(Joi.string().trim().min(2).max(255).allow(null)).required()
   });
 
-  Joi.validate(body, schema, (err, val) => {
-    if (err) throw new Error(val);
+  Joi.validate(body, schema, err => {
+    if (err) {
+      throw new Error(err);
+    } else {
+      next();
+    }
   });
-  next();
 }
 
 module.exports = validate;
