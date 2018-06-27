@@ -91,9 +91,21 @@ export default {
     save() {
       this.validate().then(isValid => {
         if (!isValid) return;
-        this.saveBadge(this.badge);
+        const badge = this.prepareData();
+        this.saveBadge(badge);
         this.close();
       });
+    },
+    prepareData() {
+      const { badge } = this;
+      Object.keys(badge).forEach(key => {
+        if (Array.isArray(badge[key])) {
+          badge[key] = badge[key].filter(tag => !!tag.trim());
+        } else {
+          badge[key] = badge[key] || null;
+        }
+      });
+      return badge;
     }
   },
   watch: {
