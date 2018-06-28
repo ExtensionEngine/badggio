@@ -20,7 +20,7 @@ class Recipient extends Model {
         type: DataTypes.CHAR(64),
         unique: true,
         validate: {
-          saltsOnlyHashed() {
+          isHashed() {
             if (!this.hashed) throw new Error('Cannot salt non-hashed recipient.');
           }
         }
