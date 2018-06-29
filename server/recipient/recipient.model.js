@@ -5,36 +5,51 @@ const { Model } = require('sequelize');
 
 class Recipient extends Model {
   static fields(DataTypes) {
+    const { BOOLEAN, CHAR, DATE, STRING, VIRTUAL } = DataTypes;
     return {
       email: {
-        type: DataTypes.STRING,
+        type: STRING,
         allowNull: false,
         validate: { isEmail: true, notEmpty: true },
         unique: { msg: 'This email address is already in use.' }
       },
       hashed: {
-        type: DataTypes.BOOLEAN,
+        type: BOOLEAN,
         allowNull: false
       },
       salt: {
-        type: DataTypes.CHAR(64),
-        unique: true,
+        type: CHAR(64),
+        unique: true
+      },
+      salted: {
+        type: VIRTUAL(BOOLEAN, ['salt']),
+        allowNull: false,
+        get() {
+          return this.getDataValue('salt') !== null;
+        },
+        set(salted) {
+          this.setDataValue('salted', salted);
+          const salt = salted ? crypto.randomBytes(32).toString('hex') : null;
+          this.setDataValue('salt', salt);
+        },
         validate: {
           isHashed() {
-            if (!this.hashed) throw new Error('Cannot salt non-hashed recipient.');
+            if (this.salted && !this.hashed) {
+              throw new Error('Cannot salt non-hashed recipient.');
+            }
           }
         }
       },
       createdAt: {
-        type: DataTypes.DATE,
+        type: DATE,
         field: 'created_at'
       },
       updatedAt: {
-        type: DataTypes.DATE,
+        type: DATE,
         field: 'updated_at'
       },
       deletedAt: {
-        type: DataTypes.DATE,
+        type: DATE,
         field: 'deleted_at'
       }
     };
@@ -47,26 +62,6 @@ class Recipient extends Model {
       paranoid: true,
       freezeTableName: true
     };
-  }
-
-  static hooks() {
-    return {
-      beforeCreate(recipient) {
-        return recipient.generateSalt();
-      },
-      beforeUpdate(recipient) {
-        if (!recipient.changed('salt')) return recipient;
-        return recipient.generateSalt();
-      },
-      beforeBulkCreate(recipients) {
-        return recipients.map(recipient => recipient.generateSalt());
-      }
-    };
-  }
-
-  generateSalt() {
-    this.salt = this.salt ? crypto.randomBytes(32).toString('hex') : null;
-    return this;
   }
 }
 
