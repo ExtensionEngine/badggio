@@ -1,19 +1,19 @@
 'use strict';
 
 const hasha = require('hasha');
+const pickBy = require('lodash/pickBy');
 
-function hash(email, salt = '') {
+function hash(email, salt) {
+  if (!salt) salt = '';
   return 'sha256$' + hasha(email + salt, { algorithm: 'sha256' });
 }
 
-function hashRecipient({ email, hashed, salt }) {
-  if (!hashed) return { identity: email, hashed };
-  if (!salt) return { identity: hash(email), hashed };
-  return { identity: hash(email, salt), hashed, salt };
-}
-
-function identityObject(recipient) {
-  return Object.assign({ type: 'email' }, hashRecipient(recipient));
+function identityObject({ email, hashed, salted, salt }) {
+  return Object.assign(
+    { hashed, type: 'email' },
+    { identity: (salted || hashed) ? hash(email, salt) : email },
+    pickBy({ salt })
+  );
 }
 
 module.exports = {
