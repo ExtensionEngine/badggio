@@ -3,8 +3,9 @@
 const express = require('express');
 
 const badgeClass = require('./badge-class');
-const user = require('./user');
 const issuer = require('./issuer');
+const recipient = require('./recipient');
+const user = require('./user');
 
 const api = express.Router();
 const badging = express.Router();
@@ -12,8 +13,9 @@ const router = express.Router();
 
 api
   .use(badgeClass.path, badgeClass.router)
-  .use(user.path, user.router)
-  .use(issuer.path, issuer.apiRouter);
+  .use(issuer.path, issuer.apiRouter)
+  .use(recipient.path, recipient.apiRouter)
+  .use(user.path, user.router);
 
 badging
   .use(issuer.path, issuer.badgingRouter);
