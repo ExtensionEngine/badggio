@@ -9,6 +9,7 @@ const HttpError = require('http-errors').HttpError;
 const jsend = require('jsend').middleware;
 const morgan = require('morgan');
 const nocache = require('nocache');
+const { Sequelize: { ValidationError } } = require('sequelize');
 require('express-async-errors');
 
 const auth = require('./common/auth');
@@ -45,6 +46,10 @@ app.use(nocache(), router);
 app.use((err, req, res, next) => {
   if ((err instanceof HttpError) || (err instanceof AuthError)) {
     res.status(err.status).jsend.error(err.message);
+    return;
+  }
+  if (err instanceof ValidationError) {
+    res.status(400).jsend.error(err.message);
     return;
   }
   res.status(500).end();
