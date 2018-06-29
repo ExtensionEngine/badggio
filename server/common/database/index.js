@@ -11,6 +11,7 @@ const Umzug = require('umzug');
 // Require models.
 const BadgeClass = require('../../badge-class/badge-class.model');
 const User = require('../../user/user.model');
+const Recipient = require('../../recipient/recipient.model');
 
 const isProduction = process.env.NODE_ENV === 'production';
 const sequelize = new Sequelize(config.url, config);
@@ -21,7 +22,7 @@ const defineModel = Model => {
   const hooks = invoke(Model, 'hooks') || {};
   const scopes = invoke(Model, 'scopes', sequelize) || {};
   const options = invoke(Model, 'options') || {};
-  return Model.init(fields, { sequelize, hooks, scopes, ...options });
+  return Model.init(fields, { sequelize, hooks, ...scopes, ...options });
 };
 
 function initialize() {
@@ -49,7 +50,8 @@ function initialize() {
 
 const models = {
   BadgeClass: defineModel(BadgeClass),
-  User: defineModel(User)
+  User: defineModel(User),
+  Recipient: defineModel(Recipient)
 };
 
 forEach(models, model => {
