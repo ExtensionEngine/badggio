@@ -4,8 +4,10 @@ const { createError } = require('../common/errors');
 const { BadgeClass, sequelize } = require('../common/database');
 const hasha = require('hasha');
 const HttpStatus = require('http-status');
+const forEach = require('lodash/forEach');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
+const pickBy = require('lodash/pickBy');
 
 const { NOT_FOUND } = HttpStatus;
 const inputAttrs = ['name', 'description', 'criteriaNarrative', 'imageCaption',
@@ -22,6 +24,7 @@ function create(req, res) {
 
 function list(req, _, next) {
   return BadgeClass.findAll().then(badges => {
+    forEach(badges, badge => { badge.dataValues = pickBy(badge.dataValues); });
     req.locals = { badges };
     next();
   });
