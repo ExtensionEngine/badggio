@@ -16,7 +16,7 @@ function list(req, res) {
 }
 
 function create({ body }, res) {
-  return Recipient.create(pick(body, outputAttrs))
+  return Recipient.create(pick(body, inputAttrs))
     .then(recipient => res.jsend.success(recipient));
 }
 
