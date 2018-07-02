@@ -56,8 +56,7 @@ function decodeImage(req, res, next) {
   return next();
 }
 
-function encodeImage({ locals: { badges } }, res) {
-  if (!Array.isArray(badges)) badges = [badges];
+function encodeImages({ locals: { badges } }, res) {
   return Promise.all(map(badges, badge => badge.getImage()))
     .then(() => res.jsend.success(badges));
 }
@@ -65,7 +64,7 @@ function encodeImage({ locals: { badges } }, res) {
 module.exports = {
   create,
   decodeImage,
-  encodeImage,
+  encodeImages,
   list,
   patch
 };
