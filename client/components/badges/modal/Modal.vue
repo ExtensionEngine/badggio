@@ -28,10 +28,11 @@
 import { mapActions } from 'vuex';
 import { withValidation } from '@/validation';
 import cloneDeep from 'lodash/cloneDeep';
+import forEach from 'lodash/forEach';
+import isEmpty from 'lodash/isEmpty';
 import CriteriaNarrative from './CriteriaNarrative';
 import Description from './Description';
 import ImageSet from './Image';
-import isEmpty from 'lodash/isEmpty';
 import Modal from '@/components/common/Modal';
 import Name from './Name';
 import Navigation from './Navigation';
@@ -91,28 +92,30 @@ export default {
     save() {
       this.validate().then(isValid => {
         if (!isValid) return;
-        const badge = this.prepareData();
+        const badge = this.cleanBadge();
         this.saveBadge(badge);
         this.close();
       });
     },
-    prepareData() {
-      const { badge } = this;
-      Object.keys(badge).forEach(key => {
-        if (Array.isArray(badge[key])) {
-          badge[key] = badge[key].filter(tag => !!tag.trim());
-        } else {
-          badge[key] = badge[key] || null;
+    cleanBadge() {
+      const cleanBadge = {};
+      forEach(this.badge, (val, key) => {
+        const inputs = Array.isArray(val) ? val : [val];
+        const cleanInput = inputs.filter(input => !!input.toString().trim());
+        if (!isEmpty(cleanInput)) {
+          cleanBadge[key] = Array.isArray(val) ? cleanInput : cleanInput[0];
         }
       });
-      return badge;
+      return cleanBadge;
     }
   },
   watch: {
     show(val) {
       if (!val) return;
       this.vErrors.clear();
-      if (!isEmpty(this.badgeData)) this.badge = cloneDeep(this.badgeData);
+      if (!isEmpty(this.badgeData)) {
+        Object.assign(this.badge, cloneDeep(this.badgeData));
+      }
     }
   },
   components: {
