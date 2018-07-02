@@ -91,12 +91,12 @@ export default {
     save() {
       this.validate().then(isValid => {
         if (!isValid) return;
-        const badge = this.prepareData();
+        const badge = this.cleanBadge();
         this.saveBadge(badge);
         this.close();
       });
     },
-    prepareData() {
+    cleanBadge() {
       const { badge } = this;
       Object.keys(badge).forEach(key => {
         if (Array.isArray(badge[key])) {
