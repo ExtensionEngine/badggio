@@ -71,7 +71,7 @@ export default {
   },
   filters: {
     readable(tags) {
-      return tags.join(', ');
+      return tags && tags.join(', ');
     }
   },
   components: { BadgeModal }
