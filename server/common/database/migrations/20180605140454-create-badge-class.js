@@ -9,7 +9,7 @@ module.exports = {
       allowNull: false
     },
     name: {
-      type: Sequelize.STRING(50),
+      type: Sequelize.STRING,
       allowNull: false
     },
     description: {
@@ -36,7 +36,7 @@ module.exports = {
     },
     tags: {
       type: Sequelize.ARRAY(Sequelize.STRING),
-      defaultValue: []
+      defaultValue: null
     },
     createdAt: {
       type: Sequelize.DATE,

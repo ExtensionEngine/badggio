@@ -7,23 +7,23 @@ const store = createStorage(config.storage);
 
 class BadgeClass extends Model {
   static fields(DataTypes) {
-    const { ARRAY, STRING, TEXT } = DataTypes;
+    const { ARRAY, DATE, STRING, TEXT } = DataTypes;
     return {
       name: {
         type: STRING,
         allowNull: false,
-        validate: { notEmpty: true, len: [2, 50] }
+        validate: { notEmpty: true, len: [1, 255] }
       },
       description: {
         type: TEXT,
         allowNull: false,
-        validate: { notEmpty: true, len: [2, 2000] }
+        validate: { notEmpty: true, len: [1, 2000] }
       },
       criteriaNarrative: {
         type: TEXT,
         allowNull: false,
         field: 'criteria_narrative',
-        validate: { notEmpty: true, len: [2, 2000] }
+        validate: { notEmpty: true, len: [1, 2000] }
       },
       imageHash: {
         type: STRING,
@@ -33,27 +33,27 @@ class BadgeClass extends Model {
       imageCaption: {
         type: STRING,
         field: 'image_caption',
-        validate: { notEmpty: true, len: [2, 255] }
+        validate: { notEmpty: true, len: [1, 255] }
       },
       imageAuthorIri: {
         type: STRING,
         field: 'image_author_iri',
-        validate: { notEmpty: true, len: [2, 255] }
+        validate: { notEmpty: true, len: [1, 255] }
       },
       tags: {
         type: ARRAY(STRING),
-        defaultValue: []
+        defaultValue: null
       },
       createdAt: {
-        type: DataTypes.DATE,
+        type: DATE,
         field: 'created_at'
       },
       deletedAt: {
-        type: DataTypes.DATE,
+        type: DATE,
         field: 'deleted_at'
       },
       updatedAt: {
-        type: DataTypes.DATE,
+        type: DATE,
         field: 'updated_at'
       }
     };
