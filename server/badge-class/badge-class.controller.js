@@ -28,8 +28,9 @@ function list(req, _, next) {
 }
 
 function patch(req, res) {
-  const { body, decodedImage, params } = req;
-  const { imageHash } = decodedImage;
+  const { body, locals, params } = req;
+  const { decodedImage } = locals;
+  const { hash: imageHash } = decodedImage;
   return sequelize.transaction(transaction => {
     return BadgeClass.findById(params.id, { paranoid: false })
       .then(badge => badge || createError(NOT_FOUND, 'Badge does not exist!'))
@@ -51,13 +52,12 @@ function decodeImage(req, res, next) {
   const { body } = req;
   const extension = body.image.split(';')[0].split('/')[1];
   const base64data = body.image.split(',')[1];
-  const imageHash = hasha(base64data + extension);
-  req.decodedImage = { base64data, extension, imageHash };
+  const hash = hasha(base64data + extension);
+  req.locals = { decodedImage: { base64data, extension, hash } };
   return next();
 }
 
-function encodeImage({ locals: { badges } }, res) {
-  if (!Array.isArray(badges)) badges = [badges];
+function encodeImages({ locals: { badges } }, res) {
   return Promise.all(map(badges, badge => badge.getImage()))
     .then(() => res.jsend.success(badges));
 }
@@ -65,7 +65,7 @@ function encodeImage({ locals: { badges } }, res) {
 module.exports = {
   create,
   decodeImage,
-  encodeImage,
+  encodeImages,
   list,
   patch
 };
