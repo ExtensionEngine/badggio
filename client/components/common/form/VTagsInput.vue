@@ -6,15 +6,12 @@
     </button>
     <div v-for="(tag, index) in value" :key="index" class="control">
       <input
-        v-validate="validate"
         v-bind="$attrs"
         :value="tag"
         :type="type"
         :name="name"
-        :data-vv-as="label"
         :placeholder="'Tag'"
         @input="input($event, index);update"
-        data-vv-delay="1000"
         class="input">
       <button
         @click.prevent="removeTag(index);update"
@@ -22,9 +19,6 @@
         <span class="icon mdi mdi-close" />
       </button>
     </div>
-    <p v-visible="showError" class="help is-danger">
-      {{ vErrors.first(name) || '&nbsp;' }}
-    </p>
   </div>
 </template>
 
@@ -39,8 +33,7 @@ export default {
   props: {
     type: { type: String, default: 'text' },
     name: { type: String, required: true },
-    value: { type: Array, default: () => [] },
-    validate: { type: [String, Object], default: null }
+    value: { type: Array, default: () => [] }
   },
   data() {
     return { tags: clone(this.value) };
@@ -48,9 +41,6 @@ export default {
   computed: {
     label() {
       return humanize(this.name);
-    },
-    showError() {
-      return this.vErrors.has(this.name);
     }
   },
   methods: {
@@ -75,7 +65,6 @@ export default {
       this.tags = clone(val);
     }
   },
-  inject: ['$validator'],
   components: { VInput }
 };
 </script>
