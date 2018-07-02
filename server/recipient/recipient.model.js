@@ -28,6 +28,7 @@ class Recipient extends Model {
           return this.getDataValue('salt') !== null;
         },
         set(salted) {
+          if (salted && this.getDataValue('salt')) return;
           this.setDataValue('salted', salted);
           const salt = salted ? crypto.randomBytes(32).toString('hex') : null;
           this.setDataValue('salt', salt);
