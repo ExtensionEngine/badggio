@@ -14,6 +14,7 @@
         :hideChangeButton="hideChangeButton"
         :name="name"
         :prefill="value"
+        :prefillOptions="prefillOptions"
         :alertOnError="false"
         @change="input"
         @error="error"
@@ -56,6 +57,11 @@ export default {
     },
     showError() {
       return this.vErrors.has(this.name);
+    },
+    prefillOptions() {
+      const fileType = this.value.split(';')[0].split('/')[1];
+      const mediaType = this.value.split(';')[0].split(':')[1];
+      return { fileType, mediaType };
     }
   },
   methods: {
