@@ -43,7 +43,7 @@ module.exports = {
   },
   issuer,
   recipients: {
-    hashed: process.env.RECIPIENTS_HASHED,
-    salted: process.env.RECIPIENTS_SALTED
+    hashed: (process.env.RECIPIENTS_HASHED.toLowerCase() === 'true'),
+    salted: (process.env.RECIPIENTS_SALTED.toLowerCase() === 'true')
   }
 };
