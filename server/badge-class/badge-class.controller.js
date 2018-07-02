@@ -12,8 +12,9 @@ const inputAttrs = ['name', 'description', 'criteriaNarrative', 'imageCaption',
   'imageAuthorIri', 'tags'];
 
 function create(req, res) {
-  const { body, decodedImage } = req;
-  const { imageHash } = decodedImage;
+  const { body, locals } = req;
+  const { decodedImage } = locals;
+  const { hash: imageHash } = decodedImage;
   return sequelize.transaction(transaction => {
     return BadgeClass.create({ ...pick(body, inputAttrs), imageHash }, transaction)
       .then(badge => badge.storeImage(decodedImage));
