@@ -21,7 +21,7 @@
         <tr v-for="badge in badges" :key="badge._cid">
           <td>{{ badge.name }}</td>
           <td>{{ badge.description }}</td>
-          <td><img :src="badge.image"/></td>
+          <td><img :src="badge.image" class="image"/></td>
           <td>{{ badge.imageCaption }}</td>
           <td>{{ badge.imageAuthorIri }}</td>
           <td>{{ badge.criteriaNarrative }}</td>
@@ -77,3 +77,13 @@ export default {
   components: { BadgeModal }
 };
 </script>
+
+<style lang="scss" scoped>
+td {
+  width: 12.5%;
+}
+
+.image {
+  width: 28%;
+}
+</style>
