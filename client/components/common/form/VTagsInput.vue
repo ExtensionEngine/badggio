@@ -1,7 +1,7 @@
 <template>
   <div class="field">
     <label class="label">{{ label }}</label>
-    <button @click.prevent="addTag();update" class="button is-small">
+    <button @click.prevent="addTag();" class="button is-small">
       <span class="icon has-text-primary mdi mdi-plus-circle mdi-24px" />
     </button>
     <div v-for="(tag, index) in value" :key="index" class="control">
@@ -11,10 +11,10 @@
         :type="type"
         :name="name"
         :placeholder="'Tag'"
-        @input="input($event, index);update"
+        @input="input($event, index);"
         class="input">
       <button
-        @click.prevent="removeTag(index);update"
+        @click.prevent="removeTag(index);"
         class="button is-small is-pulled-right">
         <span class="icon mdi mdi-close" />
       </button>
