@@ -33,6 +33,16 @@ class Storage {
       .then(str => JSON.parse(str));
   }
 
+  setItem({ key, image }) {
+    return new Promise((resolve, reject) => {
+      const stream = this.store.createWriteStream({ key }, (err, result) => {
+        if (err) return reject(err);
+        return resolve({ key, image });
+      });
+      stream.end(image);
+    });
+  }
+
   fileExists(key) {
     return new Promise((resolve, reject) => {
       this.store.exists({ key }, (err, result) => {
@@ -40,25 +50,6 @@ class Storage {
         resolve(result);
       });
     });
-  }
-
-  getCatalog() {
-    return this.getItem('repository/index.json');
-  }
-
-  getRepository(id) {
-    const key = `repository/${id}/index.json`;
-    return this.getItem(key);
-  }
-
-  getContainer(id, courseId) {
-    const key = `repository/${courseId}/${id}.container.json`;
-    return this.getItem(key);
-  }
-
-  getExam(id, courseId) {
-    const key = `repository/${courseId}/${id}.exam.json`;
-    return this.getItem(key);
   }
 }
 

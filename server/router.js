@@ -1,6 +1,8 @@
 'use strict';
 
 const express = require('express');
+
+const badgeClass = require('./badge-class');
 const user = require('./user');
 const issuer = require('./issuer');
 
@@ -9,6 +11,7 @@ const badging = express.Router();
 const router = express.Router();
 
 api
+  .use(badgeClass.path, badgeClass.router)
   .use(user.path, user.router)
   .use(issuer.path, issuer.apiRouter);
 

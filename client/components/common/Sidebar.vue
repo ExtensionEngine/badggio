@@ -3,6 +3,7 @@
     <p class="menu-label">Administration</p>
     <ul class="menu-list">
       <li><router-link to="/users">Users</router-link></li>
+      <li><router-link to="/badges">Badges</router-link></li>
     </ul>
   </aside>
 </template>

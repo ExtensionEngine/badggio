@@ -1,6 +1,9 @@
 'use strict';
 
 const { Model } = require('sequelize');
+const config = require('../config');
+const createStorage = require('../common/storage');
+const store = createStorage(config.storage);
 
 class BadgeClass extends Model {
   static fields(DataTypes) {
@@ -19,18 +22,22 @@ class BadgeClass extends Model {
       criteriaNarrative: {
         type: TEXT,
         allowNull: false,
+        field: 'criteria_narrative',
         validate: { notEmpty: true, len: [2, 2000] }
       },
       imageHash: {
         type: STRING,
+        field: 'image_hash',
         allowNull: false
       },
       imageCaption: {
         type: STRING,
+        field: 'image_caption',
         validate: { notEmpty: true, len: [2, 255] }
       },
       imageAuthorIri: {
         type: STRING,
+        field: 'image_author_iri',
         validate: { notEmpty: true, len: [2, 255] }
       },
       tags: {
@@ -54,12 +61,32 @@ class BadgeClass extends Model {
 
   static options() {
     return {
-      modelName: 'badge_class',
-      underscored: true,
+      modelName: 'BadgeClass',
+      tableName: 'badge_class',
       timestamps: true,
       paranoid: true,
       freezeTableName: true
     };
+  }
+
+  storeImage({ extension, base64data, hash }, currentHash) {
+    const image = JSON.stringify({ extension, image: base64data });
+    const key = this.id.toString();
+    const item = { key, image };
+    return store
+      .fileExists(key)
+      .then(() => store.getItem(key))
+      .then(item => hash !== currentHash && store.setItem(item))
+      .catch(() => store.setItem(item))
+      .then(() => this);
+  }
+
+  getImage() {
+    const { id, dataValues } = this;
+    const key = id.toString();
+    return store.getItem(key).then(({ image, extension }) => {
+      dataValues.image = `data:image/${extension};base64,${image}`;
+    }).then(() => this);
   }
 }
 
