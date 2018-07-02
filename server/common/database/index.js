@@ -10,8 +10,8 @@ const Umzug = require('umzug');
 
 // Require models.
 const BadgeClass = require('../../badge-class/badge-class.model');
-const User = require('../../user/user.model');
 const Recipient = require('../../recipient/recipient.model');
+const User = require('../../user/user.model');
 
 const isProduction = process.env.NODE_ENV === 'production';
 const sequelize = new Sequelize(config.url, config);
@@ -50,8 +50,8 @@ function initialize() {
 
 const models = {
   BadgeClass: defineModel(BadgeClass),
-  User: defineModel(User),
-  Recipient: defineModel(Recipient)
+  Recipient: defineModel(Recipient),
+  User: defineModel(User)
 };
 
 forEach(models, model => {
