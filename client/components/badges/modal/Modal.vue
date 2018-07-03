@@ -29,6 +29,7 @@ import { mapActions } from 'vuex';
 import { withValidation } from '@/validation';
 import cloneDeep from 'lodash/cloneDeep';
 import isEmpty from 'lodash/isEmpty';
+import pickBy from 'lodash/pickBy';
 import CriteriaNarrative from './CriteriaNarrative';
 import Description from './Description';
 import ImageSet from './Image';
@@ -110,7 +111,9 @@ export default {
     show(val) {
       if (!val) return;
       this.vErrors.clear();
-      if (!isEmpty(this.badgeData)) this.badge = cloneDeep(this.badgeData);
+      if (!isEmpty(this.badgeData)) {
+        Object.assign(this.badge, pickBy(cloneDeep(this.badgeData)));
+      }
     }
   },
   components: {
