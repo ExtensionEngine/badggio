@@ -48,8 +48,6 @@ const resetBadge = () => {
     tags: []
   };
 };
-const badgeKeys = ['name', 'description', 'image', 'imageCaption', 'imageAuthorIri',
-  'criteriaNarrative', 'tags'];
 const navSteps = ['name', 'description', 'imageSet', 'criteriaNarrative', 'tags'];
 
 export default {
@@ -79,7 +77,6 @@ export default {
     },
     updateBadge(data) {
       Object.assign(this.badge, data);
-      console.log('update', this.badge);
     },
     close() {
       this.active = this.resetActive();
@@ -94,35 +91,26 @@ export default {
     save() {
       this.validate().then(isValid => {
         if (!isValid) return;
-        const badge = this.cleanBadge();
-        this.saveBadge(badge);
+        this.cleanBadge(this.badge);
+        this.saveBadge(this.badge);
         this.close();
       });
     },
-    cleanBadge() {
-      const { badge } = this;
-      const cleanBadge = Object.assign({}, this.badgeData);
-      badgeKeys.forEach(key => {
-        const inputs = Array.isArray(badge[key]) ? badge[key] : [badge[key]];
-        const cleanInput = inputs.filter(input => !!input.trim());
-        if (!isEmpty(cleanInput)) {
-          cleanBadge[key] = Array.isArray(badge[key]) ? cleanInput : cleanInput[0];
-        } else {
-          delete cleanBadge[key];
-        }
+    cleanBadge(badge) {
+      const inputs = Object.keys(resetBadge());
+      inputs.forEach(key => {
+        const isArray = Array.isArray(badge[key]);
+        if (isArray) badge[key] = badge[key].map(tag => tag.trim());
+        badge[key] = isArray ? badge[key].filter(tag => !!tag) : badge[key].trim();
+        badge[key] = isEmpty(badge[key]) ? null : badge[key];
       });
-      console.log('cleaning badge ', cleanBadge);
-      return cleanBadge;
     }
   },
   watch: {
     show(val) {
       if (!val) return;
       this.vErrors.clear();
-      if (!isEmpty(this.badgeData)) {
-        console.log('cloned');
-        Object.assign(this.badge, cloneDeep(this.badgeData));
-      }
+      if (!isEmpty(this.badgeData)) this.badge = cloneDeep(this.badgeData);
     }
   },
   components: {
