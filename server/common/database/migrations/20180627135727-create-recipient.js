@@ -13,9 +13,9 @@ module.exports = {
       allowNull: false,
       unique: true
     },
-    hashed: {
-      type: Sequelize.BOOLEAN,
-      allowNull: false
+    hash: {
+      type: Sequelize.CHAR(71),
+      unique: true
     },
     salt: {
       type: Sequelize.CHAR(64),
