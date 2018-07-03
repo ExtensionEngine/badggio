@@ -6,9 +6,12 @@ const cors = require('cors');
 const express = require('express');
 const helmet = require('helmet');
 const HttpError = require('http-errors').HttpError;
+const HttpStatus = require('http-status');
 const jsend = require('jsend').middleware;
 const morgan = require('morgan');
 const nocache = require('nocache');
+const { INTERNAL_SERVER_ERROR, BAD_REQUEST } = HttpStatus;
+const { Sequelize: { ValidationError } } = require('sequelize');
 require('express-async-errors');
 
 const auth = require('./common/auth');
@@ -47,7 +50,11 @@ app.use((err, req, res, next) => {
     res.status(err.status).jsend.error(err.message);
     return;
   }
-  res.status(500).end();
+  if (err instanceof ValidationError) {
+    res.status(BAD_REQUEST).jsend.error(err.message);
+    return;
+  }
+  res.status(INTERNAL_SERVER_ERROR).end();
   logger.error({ err });
 });
 
