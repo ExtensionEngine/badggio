@@ -22,7 +22,7 @@ function create(req, res) {
 }
 
 function list(req, _, next) {
-  return BadgeClass.findAll().then(badges => {
+  return BadgeClass.findAll({ order: [['id']] }).then(badges => {
     req.locals = { badges };
     next();
   });
