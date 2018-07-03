@@ -2,7 +2,6 @@
 
 const crypto = require('crypto');
 const hasha = require('hasha');
-const pickBy = require('lodash/pickBy');
 const { Model } = require('sequelize');
 const { recipients: { hashed, salted } } = require('../config');
 
@@ -12,7 +11,7 @@ function sha256(value) {
 
 class Recipient extends Model {
   static fields(DataTypes) {
-    const { CHAR, DATE, STRING, VIRTUAL } = DataTypes;
+    const { CHAR, DATE, STRING } = DataTypes;
     return {
       email: {
         type: STRING,
@@ -27,17 +26,6 @@ class Recipient extends Model {
       salt: {
         type: CHAR(64),
         unique: true
-      },
-      identityObject: {
-        type: VIRTUAL,
-        get() {
-          const { email, hash, salt } = this;
-          return Object.assign({
-            email: hash || email,
-            hashed: Boolean(hash),
-            type: 'email'
-          }, pickBy({ salt }));
-        }
       },
       createdAt: {
         type: DATE,
