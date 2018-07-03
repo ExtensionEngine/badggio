@@ -41,5 +41,9 @@ module.exports = {
     },
     provider: process.env.STORAGE_PROVIDER
   },
-  issuer
+  issuer,
+  recipients: {
+    hashed: (process.env.RECIPIENTS_HASHED.toLowerCase() === 'true'),
+    salted: (process.env.RECIPIENTS_SALTED.toLowerCase() === 'true')
+  }
 };
