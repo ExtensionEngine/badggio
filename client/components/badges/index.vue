@@ -81,6 +81,10 @@ export default {
 <style lang="scss" scoped>
 td {
   width: 12.5%;
+  max-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .image {
