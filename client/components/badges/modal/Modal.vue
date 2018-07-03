@@ -28,7 +28,6 @@
 import { mapActions } from 'vuex';
 import { withValidation } from '@/validation';
 import cloneDeep from 'lodash/cloneDeep';
-import forEach from 'lodash/forEach';
 import isEmpty from 'lodash/isEmpty';
 import CriteriaNarrative from './CriteriaNarrative';
 import Description from './Description';
@@ -49,6 +48,8 @@ const resetBadge = () => {
     tags: []
   };
 };
+const badgeKeys = ['name', 'description', 'image', 'imageCaption', 'imageAuthorIri',
+  'criteriaNarrative', 'tags'];
 const navSteps = ['name', 'description', 'imageSet', 'criteriaNarrative', 'tags'];
 
 export default {
@@ -78,6 +79,7 @@ export default {
     },
     updateBadge(data) {
       Object.assign(this.badge, data);
+      console.log('update', this.badge);
     },
     close() {
       this.active = this.resetActive();
@@ -98,14 +100,18 @@ export default {
       });
     },
     cleanBadge() {
-      const cleanBadge = {};
-      forEach(this.badge, (val, key) => {
-        const inputs = Array.isArray(val) ? val : [val];
-        const cleanInput = inputs.filter(input => !!input.toString().trim());
+      const { badge } = this;
+      const cleanBadge = Object.assign({}, this.badgeData);
+      badgeKeys.forEach(key => {
+        const inputs = Array.isArray(badge[key]) ? badge[key] : [badge[key]];
+        const cleanInput = inputs.filter(input => !!input.trim());
         if (!isEmpty(cleanInput)) {
-          cleanBadge[key] = Array.isArray(val) ? cleanInput : cleanInput[0];
+          cleanBadge[key] = Array.isArray(badge[key]) ? cleanInput : cleanInput[0];
+        } else {
+          delete cleanBadge[key];
         }
       });
+      console.log('cleaning badge ', cleanBadge);
       return cleanBadge;
     }
   },
@@ -114,6 +120,7 @@ export default {
       if (!val) return;
       this.vErrors.clear();
       if (!isEmpty(this.badgeData)) {
+        console.log('cloned');
         Object.assign(this.badge, cloneDeep(this.badgeData));
       }
     }
