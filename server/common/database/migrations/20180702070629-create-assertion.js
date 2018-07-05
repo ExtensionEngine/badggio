@@ -8,6 +8,12 @@ module.exports = {
       autoIncrement: true,
       allowNull: false
     },
+    uuid: {
+      type: Sequelize.UUID,
+      defaultValue: Sequelize.UUIDV4,
+      allowNull: false,
+      unique: true
+    },
     recipientId: {
       type: Sequelize.INTEGER,
       field: 'recipient_id',
@@ -25,11 +31,6 @@ module.exports = {
         model: 'badge_class',
         key: 'id'
       }
-    },
-    issuedOn: {
-      type: Sequelize.DATE,
-      field: 'issued_on',
-      allowNull: false
     },
     narrative: {
       type: Sequelize.TEXT
@@ -53,10 +54,6 @@ module.exports = {
       type: Sequelize.DATE,
       field: 'updated_at',
       allowNull: false
-    },
-    deletedAt: {
-      type: Sequelize.DATE,
-      field: 'deleted_at'
     }
   }),
   down: (queryInterface, Sequelize) => queryInterface.dropTable('assertion')
