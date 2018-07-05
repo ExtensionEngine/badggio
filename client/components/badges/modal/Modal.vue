@@ -100,8 +100,9 @@ export default {
     cleanBadge(badge) {
       Object.keys(resetBadge()).forEach(key => {
         const val = badge[key];
-        const isArray = Array.isArray(val);
-        badge[key] = isArray ? compact(val.map(tag => tag.trim())) : val.trim();
+        badge[key] = Array.isArray(val)
+          ? compact(val.map(it => it.trim()))
+          : val.trim();
       });
     }
   },
