@@ -33,16 +33,15 @@ class BadgeClass extends Model {
       imageCaption: {
         type: STRING,
         field: 'image_caption',
-        validate: { notEmpty: true, len: [1, 255] }
+        validate: { len: [0, 255] }
       },
       imageAuthorIri: {
         type: STRING,
         field: 'image_author_iri',
-        validate: { notEmpty: true, len: [1, 255] }
+        validate: { len: [0, 255] }
       },
       tags: {
-        type: ARRAY(STRING),
-        defaultValue: null
+        type: ARRAY(STRING)
       },
       createdAt: {
         type: DATE,

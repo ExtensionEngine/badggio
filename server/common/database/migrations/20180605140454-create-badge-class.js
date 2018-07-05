@@ -35,8 +35,7 @@ module.exports = {
       field: 'image_author_iri'
     },
     tags: {
-      type: Sequelize.ARRAY(Sequelize.STRING),
-      defaultValue: null
+      type: Sequelize.ARRAY(Sequelize.STRING)
     },
     createdAt: {
       type: Sequelize.DATE,
