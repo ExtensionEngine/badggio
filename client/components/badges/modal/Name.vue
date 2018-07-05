@@ -10,20 +10,13 @@
 </template>
 
 <script>
-import cloneDeep from 'lodash/cloneDeep';
 import VInput from '@/components/common/form/VInput';
 
 export default {
   name: 'name',
   inheritAttrs: false,
   props: {
-    name: { type: String, default: '' },
-    badgeData: { type: Object, default: () => {} }
-  },
-  computed: {
-    data() {
-      return cloneDeep(this.badgeData);
-    }
+    name: { type: String, default: '' }
   },
   methods: {
     updateData(name) {

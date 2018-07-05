@@ -28,10 +28,11 @@
 import { mapActions } from 'vuex';
 import { withValidation } from '@/validation';
 import cloneDeep from 'lodash/cloneDeep';
+import compact from 'lodash/compact';
+import isEmpty from 'lodash/isEmpty';
 import CriteriaNarrative from './CriteriaNarrative';
 import Description from './Description';
 import ImageSet from './Image';
-import isEmpty from 'lodash/isEmpty';
 import Modal from '@/components/common/Modal';
 import Name from './Name';
 import Navigation from './Navigation';
@@ -91,21 +92,18 @@ export default {
     save() {
       this.validate().then(isValid => {
         if (!isValid) return;
-        const badge = this.cleanBadge();
-        this.saveBadge(badge);
+        this.cleanBadge(this.badge);
+        this.saveBadge(this.badge);
         this.close();
       });
     },
-    cleanBadge() {
-      const { badge } = this;
-      Object.keys(badge).forEach(key => {
-        if (Array.isArray(badge[key])) {
-          badge[key] = badge[key].filter(tag => !!tag.trim());
-        } else {
-          badge[key] = badge[key] || null;
-        }
+    cleanBadge(badge) {
+      Object.keys(resetBadge()).forEach(key => {
+        const val = badge[key];
+        badge[key] = Array.isArray(val)
+          ? compact(val.map(it => it.trim()))
+          : val.trim();
       });
-      return badge;
     }
   },
   watch: {

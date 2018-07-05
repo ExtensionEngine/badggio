@@ -9,7 +9,7 @@ module.exports = {
       allowNull: false
     },
     name: {
-      type: Sequelize.STRING(50),
+      type: Sequelize.STRING,
       allowNull: false
     },
     description: {
@@ -35,8 +35,7 @@ module.exports = {
       field: 'image_author_iri'
     },
     tags: {
-      type: Sequelize.ARRAY(Sequelize.STRING),
-      defaultValue: []
+      type: Sequelize.ARRAY(Sequelize.STRING)
     },
     createdAt: {
       type: Sequelize.DATE,

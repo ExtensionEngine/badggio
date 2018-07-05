@@ -22,7 +22,7 @@ function create(req, res) {
 }
 
 function list(req, _, next) {
-  return BadgeClass.findAll().then(badges => {
+  return BadgeClass.findAll({ order: [['id']] }).then(badges => {
     req.locals = { badges };
     next();
   });
@@ -36,7 +36,7 @@ function patch(req, res) {
     return BadgeClass.findById(params.id, { paranoid: false })
       .then(badge => badge || createError(NOT_FOUND, 'Badge does not exist!'))
       .then(badge => badge.update({ ...pick(body, inputAttrs), imageHash }, transaction))
-      .then(badge => badge.storeImage(decodedImage, badge.imageHash));
+      .then(badge => badge.storeImage(decodedImage, badge.previous(imageHash)));
   }).then(badge => res.jsend.success(badge));
 }
 

@@ -41,9 +41,6 @@ export default {
   computed: {
     label() {
       return humanize(this.name);
-    },
-    showError() {
-      return this.vErrors.has(this.name);
     }
   },
   methods: {
