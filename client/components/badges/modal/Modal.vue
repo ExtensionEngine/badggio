@@ -28,8 +28,8 @@
 import { mapActions } from 'vuex';
 import { withValidation } from '@/validation';
 import cloneDeep from 'lodash/cloneDeep';
+import compact from 'lodash/compact';
 import isEmpty from 'lodash/isEmpty';
-import pickBy from 'lodash/pickBy';
 import CriteriaNarrative from './CriteriaNarrative';
 import Description from './Description';
 import ImageSet from './Image';
@@ -98,12 +98,10 @@ export default {
       });
     },
     cleanBadge(badge) {
-      const inputs = Object.keys(resetBadge());
-      inputs.forEach(key => {
-        const isArray = Array.isArray(badge[key]);
-        if (isArray) badge[key] = badge[key].map(tag => tag.trim());
-        badge[key] = isArray ? badge[key].filter(tag => !!tag) : badge[key].trim();
-        badge[key] = isEmpty(badge[key]) ? null : badge[key];
+      Object.keys(resetBadge()).forEach(key => {
+        const val = badge[key];
+        const isArray = Array.isArray(val);
+        badge[key] = isArray ? compact(val.map(tag => tag.trim())) : val.trim();
       });
     }
   },
@@ -111,9 +109,7 @@ export default {
     show(val) {
       if (!val) return;
       this.vErrors.clear();
-      if (!isEmpty(this.badgeData)) {
-        Object.assign(this.badge, pickBy(cloneDeep(this.badgeData)));
-      }
+      if (!isEmpty(this.badgeData)) this.badge = cloneDeep(this.badgeData);
     }
   },
   components: {

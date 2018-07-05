@@ -14,7 +14,7 @@ export default {
   },
   computed: {
     data() {
-      return clone(this.tags || []);
+      return clone(this.tags);
     }
   },
   methods: {

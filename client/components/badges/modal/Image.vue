@@ -14,11 +14,11 @@
       @input="updateData('image', $event)"
       name="image" />
     <v-input
-      :value="valueCaption"
+      :value="imageCaption"
       @input="updateData('imageCaption', $event)"
       name="imageCaption" />
     <v-input
-      :value="valueAuthorIri"
+      :value="imageAuthorIri"
       @input="updateData('imageAuthorIri', $event)"
       name="imageAuthorIri" />
   </div>
@@ -35,14 +35,6 @@ export default {
     image: { type: String, default: '' },
     imageCaption: { type: String, default: '' },
     imageAuthorIri: { type: String, default: '' }
-  },
-  computed: {
-    valueCaption() {
-      return this.imageCaption || '';
-    },
-    valueAuthorIri() {
-      return this.imageAuthorIri || '';
-    }
   },
   methods: {
     updateData(name, value) {
