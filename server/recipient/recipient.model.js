@@ -2,6 +2,7 @@
 
 const crypto = require('crypto');
 const hasha = require('hasha');
+const pick = require('lodash/pick');
 const { Model } = require('sequelize');
 const { recipients: { hashed, salted } } = require('../config');
 
@@ -38,6 +39,12 @@ class Recipient extends Model {
       deletedAt: {
         type: DATE,
         field: 'deleted_at'
+      },
+      profile: {
+        type: DataTypes.VIRTUAL,
+        get() {
+          return pick(this, ['id', 'email']);
+        }
       }
     };
   }
