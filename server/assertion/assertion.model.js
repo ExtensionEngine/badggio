@@ -1,7 +1,7 @@
 'use strict';
 
 const pick = require('lodash/pick');
-const { Model, Op, ValidationError } = require('sequelize');
+const { Model } = require('sequelize');
 
 class Assertion extends Model {
   static fields(DataTypes) {
@@ -60,27 +60,7 @@ class Assertion extends Model {
     return {
       modelName: 'assertion',
       timestamps: true,
-      freezeTableName: true,
-      validate: {
-        hasActiveEquivalent(next) {
-          const { id, badgeClassId, recipientId } = this;
-          const cond = { id: { [Op.ne]: id }, badgeClassId, recipientId };
-          const msg = 'Recipient already has this achievement.';
-          Assertion.scope('active').count({ where: cond })
-            .then(count => count ? next(msg) : next())
-            .catch(err => next(err));
-        }
-      }
-    };
-  }
-
-  static hooks() {
-    return {
-      beforeUpdate(assertion) {
-        if (assertion.previous('revoked') && !assertion.revoked) {
-          throw new ValidationError('Cannot unrevoke assertion.');
-        }
-      }
+      freezeTableName: true
     };
   }
 
