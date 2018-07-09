@@ -15,7 +15,7 @@ function badge(badge) {
     base(badge),
     { name, description, criteria: criteriaIri(badge), image: imageIri(badge) },
     pickBy({ imageCaption, imageAuthorIri, tags }),
-    { issuer: issuerIri(badge) }
+    { issuer: issuer.issuerUrl }
   );
 }
 
@@ -29,10 +29,6 @@ function imageIri({ id }) {
 
 function badgeClassIri({ id }) {
   return `${root}/${id}.json`;
-}
-
-function issuerIri() {
-  return `${SERVER_URL}/${issuer}`;
 }
 
 function base(badge) {
