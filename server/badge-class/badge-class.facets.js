@@ -13,18 +13,22 @@ function badge(badge) {
 
   return Object.assign(
     base(badge),
-    { name, description, criteria: criteriaIri(badge), image: imageIri(badge) },
+    { name, description, image: imageIri(badge) },
+    { criteria: criteriaClass(badge) },
     pickBy({ imageCaption, imageAuthorIri, tags }),
     { issuer: issuer.issuerUrl }
   );
 }
 
-function criteriaIri({ id, criteriaNarrative }) {
-  return `${root}/${id}${paths.criteria}`;
-}
-
 function imageIri({ id }) {
   return `${root}/${id}${paths.image}`;
+}
+
+function criteriaClass({ id, criteriaNarrative }) {
+  return {
+    id: `${root}/${id}${paths.criteria}`,
+    narrative: criteriaNarrative
+  };
 }
 
 function badgeClassIri({ id }) {
