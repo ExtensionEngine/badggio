@@ -21,12 +21,18 @@ function imageIri({ id }) {
   return `${root}/${id}${paths.image}`;
 }
 
-function idIri({ id }) {
+function badgeClassIri({ id }) {
   return `${root}/${id}.json`;
 }
 
 function base(badge) {
-  return Object.assign(facetBase(), { id: idIri(badge), type: 'BadgeClass' });
+  return Object.assign(
+    facetBase(),
+    { id: badgeClassIri(badge), type: 'BadgeClass' }
+  );
 }
 
-module.exports = { badge };
+module.exports = {
+  badge,
+  badgeClassIri
+};
