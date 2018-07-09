@@ -46,17 +46,18 @@ function decodeImage(req, res, next) {
 }
 
 /**
- * Extracts information from image string.
- * @middleware
- * @param {string} image - Contains image information in a string.
- * @const {string} extension - Extension of parsed image.
- * @const {string} base64data - Data of image source in base64 format.
- * @const {string} imageHash - Hashed base64 data.
+ * Transforming client side image received as a concatenated String into more
+ * suitable format required for backend data persistency.
+ * @param {string} imageString - String with concatenated image information.
+ * @const {string} extension - Extracted image extension information.
+ * @const {string} base64data - Extracted image base64data information.
+ * @const {string} imageHash - Hashed base64data.
+ * @returns {(Object)} - New image format { base64data, extension, hash }.
  */
 
-function extractImageData(image) {
-  const extension = image.split(';')[0].split('/')[1];
-  const base64data = image.split(',')[1];
+function extractImageData(imageString) {
+  const extension = imageString.split(';')[0].split('/')[1];
+  const base64data = imageString.split(',')[1];
   const hash = hasha(base64data + extension);
   return { base64data, extension, hash };
 }
