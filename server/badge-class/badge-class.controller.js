@@ -1,6 +1,7 @@
 'use strict';
 
 const { createError } = require('../common/errors');
+const { badge: badgeFacet } = require('./badge-class.facets');
 const { BadgeClass, sequelize } = require('../common/database');
 const hasha = require('hasha');
 const HttpStatus = require('http-status');
@@ -63,7 +64,14 @@ function encodeImages({ locals: { badges } }, res) {
     .then(() => res.jsend.success(badges));
 }
 
+function badge({ params: { id } }, res) {
+  return BadgeClass.findById(id)
+    .then(badge => badge || createError(NOT_FOUND, 'Badge does not exist!'))
+    .then(badge => res.json(badgeFacet(badge)));
+}
+
 module.exports = {
+  badge,
   create,
   decodeImage,
   encodeImages,
