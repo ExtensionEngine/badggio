@@ -40,22 +40,25 @@ function patch(req, res) {
   }).then(badge => res.jsend.success(badge));
 }
 
+function decodeImage(req, res, next) {
+  req.locals = { decodedImage: extractImageData(req.body.image) };
+  return next();
+}
+
 /**
- * Extracts information from image string and appends them to body.
+ * Extracts information from image string.
  * @middleware
- * @param {string} body - Contains image string.
+ * @param {string} image - Contains image information in a string.
  * @const {string} extension - Extension of parsed image.
  * @const {string} base64data - Data of image source in base64 format.
  * @const {string} imageHash - Hashed base64 data.
  */
 
-function decodeImage(req, res, next) {
-  const { body } = req;
-  const extension = body.image.split(';')[0].split('/')[1];
-  const base64data = body.image.split(',')[1];
+function extractImageData(image) {
+  const extension = image.split(';')[0].split('/')[1];
+  const base64data = image.split(',')[1];
   const hash = hasha(base64data + extension);
-  req.locals = { decodedImage: { base64data, extension, hash } };
-  return next();
+  return { base64data, extension, hash };
 }
 
 function encodeImages({ locals: { badges } }, res) {
