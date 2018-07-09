@@ -3,7 +3,6 @@
 const paths = require('./badge-class.paths');
 const pickBy = require('lodash/pickBy');
 const { base: facetBase } = require('../common/facets');
-const { issuer } = require('../config');
 const { SERVER_URL } = process.env;
 
 const root = SERVER_URL + paths.root;
@@ -22,12 +21,11 @@ function bakedImageIri({ id }) {
   return `${root}/${id}${paths.bakedImage}`;
 }
 
-function id({ id, uuid }) {
-  return issuer.publicKey ? `urn:uuid:${uuid}` : `${root}/${id}.json`;
-}
-
 function base(badge) {
-  return Object.assign(facetBase(), { id: id(badge), type: 'BadgeClass' });
+  return Object.assign(
+    facetBase(),
+    { id: `${root}/${badge.id}.json`, type: 'BadgeClass' }
+  );
 }
 
 module.exports = {
