@@ -38,7 +38,9 @@ module.exports = {
       type: Sequelize.DATE
     },
     revoked: {
-      type: Sequelize.BOOLEAN
+      type: Sequelize.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
     },
     revocationReason: {
       type: Sequelize.STRING,
