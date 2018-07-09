@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-  bakedImage: '/baked-image',
+  image: '/image',
   evidence: '/evidence.json',
   revocationList: '/revocation-list.json',
   root: '/assertions'

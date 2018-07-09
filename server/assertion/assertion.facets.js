@@ -22,7 +22,7 @@ function assertion(assertion) {
       recipient: identityObject(recipient),
       badge: badgeClassIri(badgeClass),
       verification: verificationObject(),
-      image: bakedImageIri(assertion),
+      image: imageIri(assertion),
       issuedOn
     },
     pickBy({
@@ -37,8 +37,8 @@ function badgeClassIri({ id }) {
   return `${SERVER_URL}/badges/${id}.json`;
 }
 
-function bakedImageIri({ id }) {
-  return `${rootUrl}/${id}${paths.bakedImage}`;
+function imageIri({ id }) {
+  return `${rootUrl}/${id}${paths.image}`;
 }
 
 function evidenceIri({ id, evidence }) {
@@ -65,7 +65,7 @@ function base(assertion) {
 
 module.exports = {
   assertion,
-  bakedImageIri,
+  imageIri,
   evidenceIri,
   revocationListIri
 };
