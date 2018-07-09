@@ -64,8 +64,8 @@ class Assertion extends Model {
     };
   }
 
-  static scopes({ Op }) {
-    const nullOrInTheFuture = { [Op.or]: { [Op.eq]: null, [Op.gt]: new Date() } };
+  static scopes({ Op, fn }) {
+    const nullOrInTheFuture = { [Op.or]: { [Op.eq]: null, [Op.gt]: fn('NOW') } };
     return {
       active: { where: { revoked: false, expires: nullOrInTheFuture } },
       revoked: { where: { revoked: true } }
