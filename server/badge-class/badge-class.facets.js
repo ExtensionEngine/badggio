@@ -12,13 +12,13 @@ function badge(badge) {
 
   return Object.assign(
     base(badge),
-    { name, description, criteria, image: bakedImageIri(badge) },
+    { name, description, criteria, image: imageIri(badge) },
     pickBy({ imageCaption, imageAuthorIri, tags })
   );
 }
 
-function bakedImageIri({ id }) {
-  return `${root}/${id}${paths.bakedImage}`;
+function imageIri({ id }) {
+  return `${root}/${id}${paths.image}`;
 }
 
 function base(badge) {
@@ -28,7 +28,4 @@ function base(badge) {
   );
 }
 
-module.exports = {
-  badge,
-  bakedImageIri
-};
+module.exports = { badge };

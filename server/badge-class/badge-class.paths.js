@@ -1,6 +1,6 @@
 'use strict';
 
 module.exports = {
-  bakedImage: '/baked-image',
+  image: '/image',
   root: '/badges'
 };
