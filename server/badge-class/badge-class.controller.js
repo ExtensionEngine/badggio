@@ -46,7 +46,7 @@ function decodeImage(req, res, next) {
 }
 
 /**
- * Transforming client side image received as a concatenated String into more
+ * Transform client side image received as a concatenated String into more
  * suitable format required for backend data persistency.
  * @param {string} imageString - String with concatenated image information.
  * @const {string} extension - Extracted image extension information.
