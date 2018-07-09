@@ -7,7 +7,7 @@ const { identityObject } = require('../recipient/recipient.facets');
 const { issuer } = require('../config');
 const { SERVER_URL } = process.env;
 
-const root = SERVER_URL + paths.root;
+const rootUrl = SERVER_URL + paths.root;
 
 function assertion(assertion) {
   const { badgeClass, recipient, issuedOn, narrative,
@@ -38,22 +38,22 @@ function badgeClassIri({ id }) {
 }
 
 function bakedImageIri({ id }) {
-  return `${root}/${id}${paths.bakedImage}`;
+  return `${rootUrl}/${id}${paths.bakedImage}`;
 }
 
 function evidenceIri({ id, evidence }) {
   if (evidence && !evidence.length) return null;
-  return `${root}/${id}${paths.evidence}`;
+  return `${rootUrl}/${id}${paths.evidence}`;
 }
 
 function revocationListIri() {
   if (!issuer.publicKey) return null;
-  return `${root}${paths.revocationList}`;
+  return `${rootUrl}${paths.revocationList}`;
 }
 
 function id({ id, uuid }) {
   if (issuer.publicKey) return `urn:uuid:${uuid}`;
-  return `${root}/${id}.json`;
+  return `${rootUrl}/${id}.json`;
 }
 
 function base(assertion) {
