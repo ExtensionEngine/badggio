@@ -1,5 +1,6 @@
 'use strict';
 
+const map = require('lodash/map');
 const paths = require('./assertion.paths');
 const pickBy = require('lodash/pickBy');
 const { base: facetBase, verificationObject } = require('../common/facets');
@@ -30,6 +31,18 @@ function assertion(assertion) {
       narrative,
       expires
     }));
+}
+
+function revocationList(assertions) {
+  return Object.assign(
+    facetBase(),
+    {
+      id: revocationListIri(),
+      type: 'RevocationList',
+      issuer: issuer.issuerUrl,
+      revokedAssertions: map(assertions, revoked)
+    }
+  );
 }
 
 // TODO: use badgeClass facets once created
@@ -63,8 +76,17 @@ function base(assertion) {
   });
 }
 
+function revoked(assertion) {
+  if (!assertion.revocationReason) return id(assertion);
+  return {
+    id: id(assertion),
+    revocationReason: assertion.revocationReason
+  };
+}
+
 module.exports = {
   assertion,
+  revocationList,
   imageIri,
   evidenceIri,
   revocationListIri
