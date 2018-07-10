@@ -49,10 +49,8 @@ function decodeImage(req, res, next) {
  * Transform client side image received as a concatenated String into more
  * suitable format required for backend data persistency.
  * @param {string} imageString - String with concatenated image information.
- * @const {string} extension - Extracted image extension information.
- * @const {string} base64data - Extracted image base64data information.
- * @const {string} imageHash - Hashed base64data.
- * @returns {(Object)} - New image format { base64data, extension, hash }.
+ * @returns {(Object)} - image as an object { base64data: base64-encoded image,
+ * extension: image file extension, hash: hashed base64data }.
  */
 
 function extractImageData(imageString) {
