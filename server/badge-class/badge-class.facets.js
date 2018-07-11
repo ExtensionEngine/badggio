@@ -3,8 +3,6 @@
 const paths = require('./badge-class.paths');
 const pickBy = require('lodash/pickBy');
 const { base: facetBase } = require('../common/facets');
-const { criteria } = require('../criteria-class/criteria-class.facets');
-const { image } = require('../image-class/image-class.facets');
 const { issuer: { publicKey } } = require('../config');
 const { profile: issuer } = require('../issuer/issuer.facets');
 const { SERVER_URL } = process.env;
@@ -14,9 +12,31 @@ const root = SERVER_URL + paths.root;
 function badge(badge) {
   const { name, description, tags } = badge;
 
-  return pickBy(
-    Object.assign(base(badge), { name, description, image, criteria, tags, issuer })
+  return pickBy(Object.assign(
+    base(badge),
+    { name, description },
+    { image: image(badge) },
+    { criteria: criteria(badge) },
+    { tags, issuer }
+  )
   );
+}
+
+function criteria({ id, criteriaNarrative }) {
+  return {
+    type: 'ImageObject',
+    id: `${root}/${id}${paths.criteria}`,
+    narrative: criteriaNarrative
+  };
+}
+
+function image({ id, imageCaption, imageAuthorIri }) {
+  return pickBy({
+    type: 'Criteria',
+    id: `${root}/${id}${paths.image}`,
+    imageCaption,
+    imageAuthorIri
+  });
 }
 
 function badgeClassIri({ id, uuid }) {
@@ -29,5 +49,7 @@ function base(badge) {
 
 module.exports = {
   badge,
+  criteria,
+  image,
   badgeClassIri
 };
