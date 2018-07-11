@@ -14,10 +14,14 @@ function badge(badge) {
 
   return pickBy(Object.assign(
     base(badge),
-    { name, description },
-    { image: image(badge) },
-    { criteria: criteria(badge) },
-    { tags, issuer }
+    {
+      name,
+      description,
+      image: image(badge),
+      criteria: criteria(badge),
+      tags,
+      issuer
+    }
   )
   );
 }
