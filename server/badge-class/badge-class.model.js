@@ -7,8 +7,14 @@ const store = createStorage(config.storage);
 
 class BadgeClass extends Model {
   static fields(DataTypes) {
-    const { ARRAY, DATE, STRING, TEXT } = DataTypes;
+    const { ARRAY, DATE, STRING, TEXT, UUID, UUIDV4 } = DataTypes;
     return {
+      uuid: {
+        type: UUID,
+        defaultValue: UUIDV4,
+        allowNull: false,
+        unique: true
+      },
       name: {
         type: STRING,
         allowNull: false,

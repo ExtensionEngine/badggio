@@ -2,17 +2,23 @@
 
 const auth = require('../common/auth').authenticate('jwt');
 const ctrl = require('./badge-class.controller');
-const router = require('express').Router();
+const paths = require('./badge-class.paths');
+const apiRouter = require('express').Router();
+const badgingRouter = require('express').Router();
 
 const { create, encodeImages, decodeImage, list, patch } = ctrl;
 
-router
+apiRouter
   .use(auth)
   .get('/', list, encodeImages)
   .post('/', decodeImage, create)
   .patch('/:id', decodeImage, patch);
 
+badgingRouter
+  .get('/:id', ctrl.badge);
+
 module.exports = {
-  path: '/badges',
-  router
+  path: paths.root,
+  apiRouter,
+  badgingRouter
 };
