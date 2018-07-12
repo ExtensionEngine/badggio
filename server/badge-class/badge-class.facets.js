@@ -7,7 +7,7 @@ const { issuer: { publicKey } } = require('../config');
 const { profile: issuer } = require('../issuer/issuer.facets');
 const { SERVER_URL } = process.env;
 
-const root = SERVER_URL + paths.root;
+const rootUrl = SERVER_URL + paths.root;
 
 function badge(badge) {
   const { name, description, tags } = badge;
@@ -29,7 +29,7 @@ function badge(badge) {
 function criteria({ id, criteriaNarrative }) {
   return {
     type: 'ImageObject',
-    id: `${root}/${id}${paths.criteria}`,
+    id: `${rootUrl}/${id}${paths.criteria}`,
     narrative: criteriaNarrative
   };
 }
@@ -37,14 +37,14 @@ function criteria({ id, criteriaNarrative }) {
 function image({ id, imageCaption, imageAuthorIri }) {
   return pickBy({
     type: 'Criteria',
-    id: `${root}/${id}${paths.image}`,
+    id: `${rootUrl}/${id}${paths.image}`,
     imageCaption,
     imageAuthorIri
   });
 }
 
 function badgeClassIri({ id, uuid }) {
-  return publicKey ? `urn:uuid:${uuid}` : `${root}/${id}.json`;
+  return publicKey ? `urn:uuid:${uuid}` : `${rootUrl}/${id}.json`;
 }
 
 function base(badge) {
