@@ -50,10 +50,12 @@ function badgeClassIri({ id }) {
   return `${SERVER_URL}/badges/${id}.json`;
 }
 
+// TODO: implement this url so it returns assertion's "baked" image
 function imageIri({ id }) {
   return `${rootUrl}/${id}${paths.image}`;
 }
 
+// TODO: implement this url so it returns assertion's evidence
 function evidenceIri({ id, evidence }) {
   if (evidence && !evidence.length) return null;
   return `${rootUrl}/${id}${paths.evidence}`;
