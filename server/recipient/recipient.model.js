@@ -49,6 +49,12 @@ class Recipient extends Model {
     };
   }
 
+  static associate({ Assertion }) {
+    this.hasMany(Assertion, {
+      foreignKey: { name: 'recipientId', field: 'recipient_id' }
+    });
+  }
+
   static options() {
     return {
       modelName: 'recipient',

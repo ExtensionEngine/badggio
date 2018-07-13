@@ -1,8 +1,9 @@
 'use strict';
 
 const pickBy = require('lodash/pickBy');
-const { base: facetBase } = require('../common/facets');
+const { base: facetBase, verificationObject } = require('../common/facets');
 const { issuer } = require('../config');
+const { revocationListIri } = require('../assertion/assertion.facets');
 
 function profile() {
   return pickBy(Object.assign(facetBase(), {
@@ -16,8 +17,7 @@ function profile() {
     email: issuer.email,
     publicKey: issuer.publicKeyUrl,
     verification: verificationObject(),
-    // TODO: load from assertion.paths.js once created
-    revocationList: 'http://example.org/assertions/revocationList.json'
+    revocationList: revocationListIri()
   }));
 }
 
@@ -31,19 +31,7 @@ function publicKey() {
   });
 }
 
-function verificationObject() {
-  // TODO: add verificationProperty, startsWith and allowedOrigins properties
-  if (!issuer.publicKey) {
-    return { type: 'HostedBadge' };
-  }
-  return {
-    type: 'SignedBadge',
-    creator: issuer.publicKeyUrl
-  };
-}
-
 module.exports = {
   profile,
-  publicKey,
-  verificationObject
+  publicKey
 };
