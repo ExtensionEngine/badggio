@@ -17,8 +17,8 @@ function assertion(assertion) {
   if (revoked) {
     return Object.assign(base(assertion), pickBy({ revoked, revocationReason }));
   }
-  return Object.assign(
-    base(assertion),
+
+  return Object.assign(base(assertion),
     {
       recipient: identityObject(recipient),
       badge: badgeClassIri(badgeClass),
