@@ -57,7 +57,7 @@ function imageIri({ id }) {
 
 // TODO: implement this url so it returns assertion's evidence
 function evidenceIri({ id, evidence }) {
-  if (evidence && !evidence.length) return null;
+  if (!evidence || !evidence.length) return null;
   return `${rootUrl}/${id}${paths.evidence}`;
 }
 
