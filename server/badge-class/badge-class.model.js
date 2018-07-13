@@ -59,6 +59,12 @@ class BadgeClass extends Model {
     };
   }
 
+  static associate({ Assertion }) {
+    this.hasMany(Assertion, {
+      foreignKey: { name: 'badgeClassId', field: 'badge_class_id' }
+    });
+  }
+
   static options() {
     return {
       modelName: 'BadgeClass',
