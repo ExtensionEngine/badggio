@@ -43,13 +43,18 @@ class Assertion extends Model {
         type: DATE,
         field: 'updated_at'
       },
+      issuedOn: {
+        type: VIRTUAL,
+        get() {
+          return this.createdAt;
+        }
+      },
       profile: {
         type: VIRTUAL,
         get() {
           return Object.assign(
-            pick(this, ['id', 'uuid', 'narrative', 'expires', 'revoked',
-              'revocationReason', 'badgeClassId', 'recipientId']),
-            { issuedOn: this.createdAt }
+            pick(this, ['id', 'uuid', 'narrative', 'expires', 'issedOn', 'revoked',
+              'revocationReason', 'badgeClassId', 'recipientId'])
           );
         }
       }
