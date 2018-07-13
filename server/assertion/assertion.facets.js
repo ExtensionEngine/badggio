@@ -1,5 +1,6 @@
 'use strict';
 
+const get = require('lodash/get');
 const map = require('lodash/map');
 const paths = require('./assertion.paths');
 const pickBy = require('lodash/pickBy');
@@ -57,7 +58,7 @@ function imageIri({ id }) {
 
 // TODO: implement this url so it returns assertion's evidence
 function evidenceIri({ id, evidence }) {
-  if (!evidence || !evidence.length) return null;
+  if (!get(evidence, 'length')) return null;
   return `${rootUrl}/${id}${paths.evidence}`;
 }
 
