@@ -9,6 +9,7 @@ const map = require('lodash/map');
 const paths = require('./assertion.paths');
 const pickBy = require('lodash/pickBy');
 const store = createStorage(config.storage);
+const { badgeClassIri } = require('../badge-class/badge-class.facets');
 const { base: facetBase, verificationObject } = require('../common/facets');
 const { identityObject } = require('../recipient/recipient.facets');
 const { issuer } = require('../config');
@@ -66,11 +67,6 @@ function revocationList(assertions) {
       revokedAssertions: map(assertions, revoked)
     }
   );
-}
-
-// TODO: use badgeClass facets once created
-function badgeClassIri({ id }) {
-  return `${SERVER_URL}/badges/${id}.json`;
 }
 
 // TODO: implement this url so it returns assertion's "baked" image
