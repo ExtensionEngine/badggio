@@ -6,7 +6,7 @@ const { iTXt } = pngitxt;
 
 function bake(options, callback) {
   options = options || {};
-  let assertion = options.url || options.data || options.assertion || options.signature;
+  let assertion = options.assertion || options.signature || options.url || options.data;
   const { image: imageStream } = options;
 
   if (!imageStream) {
