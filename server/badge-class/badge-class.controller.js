@@ -1,7 +1,11 @@
 'use strict';
 
 const { createError } = require('../common/errors');
-const { badge: badgeFacet } = require('./badge-class.facets');
+const {
+  badge: badgeFacet,
+  criteria: criteriaFacet,
+  image: imageFacet
+} = require('./badge-class.facets');
 const { BadgeClass, sequelize } = require('../common/database');
 const hasha = require('hasha');
 const HttpStatus = require('http-status');
@@ -11,6 +15,11 @@ const pick = require('lodash/pick');
 const { NOT_FOUND } = HttpStatus;
 const inputAttrs = ['name', 'description', 'criteriaNarrative', 'imageCaption',
   'imageAuthorIri', 'tags'];
+
+function findBadgeById({ id }) {
+  return BadgeClass.findById(id, { paranoid: false })
+      .then(badge => badge || createError(NOT_FOUND, 'Badge does not exist!'))
+}
 
 function create(req, res) {
   const { body, locals } = req;
@@ -33,10 +42,10 @@ function patch(req, res) {
   const { body, locals, params } = req;
   const { decodedImage } = locals;
   const { hash: imageHash } = decodedImage;
+  const newVals = { ...pick(body, inputAttrs), imageHash };
   return sequelize.transaction(transaction => {
-    return BadgeClass.findById(params.id, { paranoid: false })
-      .then(badge => badge || createError(NOT_FOUND, 'Badge does not exist!'))
-      .then(badge => badge.update({ ...pick(body, inputAttrs), imageHash }, transaction))
+    return findBadgeById(params.id)
+      .then(badge => badge.update(newVals, transaction))
       .then(badge => badge.storeImage(decodedImage, badge.previous(imageHash)));
   }).then(badge => res.jsend.success(badge));
 }
@@ -67,16 +76,24 @@ function encodeImages({ locals: { badges } }, res) {
 }
 
 function badge({ params: { id } }, res) {
-  return BadgeClass.findById(id)
-    .then(badge => badge || createError(NOT_FOUND, 'Badge does not exist!'))
-    .then(badge => res.json(badgeFacet(badge)));
+  return findBadgeById(id).then(badge => res.json(badgeFacet(badge)));
+}
+
+function criteria({ params: { id } }, res) {
+  return findBadgeById(id).then(badge => res.json(criteriaFacet(badge)));
+}
+
+function image({ params: { id } }, res) {
+  return findBadgeById(id).then(badge => res.json(imageFacet(badge)));
 }
 
 module.exports = {
   badge,
   create,
+  criteria,
   decodeImage,
   encodeImages,
+  image,
   list,
   patch
 };
