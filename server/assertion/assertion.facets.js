@@ -44,14 +44,13 @@ function bake(_assertion, callback) {
   const key = _assertion.badgeClassId.toString();
 
   return store.getItem(key).then(({ image }) => {
-    const options = {
-      image: Buffer.from(image, 'base64'),
-      url: imageIri(_assertion)
-    };
+    const options = { image: Buffer.from(image, 'base64') };
 
-    issuer.publicKey
-      ? options.signature = sign(_assertion)
-      : options.assertion = assertion(_assertion);
+    if (issuer.publicKey) options.signature = sign(_assertion);
+    else {
+      options.assertion = assertion(_assertion);
+      options.url = id(_assertion);
+    }
 
     return bakery.bake(options, callback);
   });
