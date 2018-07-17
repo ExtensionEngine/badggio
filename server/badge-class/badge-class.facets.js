@@ -43,12 +43,16 @@ function image({ id, imageCaption, imageAuthorIri }) {
   });
 }
 
-function badgeClassIri({ id, uuid }) {
-  return publicKey ? `urn:uuid:${uuid}` : `${rootUrl}/${id}.json`;
+function badgeClassIri({ id }) {
+  return `${rootUrl}/${id}.json`;
 }
 
 function base(badge) {
-  return Object.assign(facetBase(), { id: badgeClassIri(badge), type: 'BadgeClass' });
+  return Object.assign(facetBase(), { id: id(badge), type: 'BadgeClass' });
+}
+
+function id({ id, uuid }) {
+  return publicKey ? `urn:uuid:${uuid}` : `${rootUrl}/${id}.json`;
 }
 
 module.exports = {
