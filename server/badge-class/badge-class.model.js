@@ -96,6 +96,8 @@ class BadgeClass extends Model {
     const { id, dataValues } = this;
     const key = id.toString();
     return store.getItem(key).then(({ image, extension }) => {
+      dataValues.imageExtension = extension;
+      dataValues.imageBase64 = image;
       dataValues.image = `data:image/${extension};base64,${image}`;
     }).then(() => this);
   }
