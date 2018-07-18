@@ -1,25 +1,45 @@
 'use strict';
 
 const bakery = require('../common/patched/openbadges-bakery');
+const getStream = require('get-stream');
 const jwt = require('jsonwebtoken');
 const { assertion: assertionFacet, id } = require('./assertion.facets');
+const { Base64: base64 } = require('js-base64');
 const { issuer } = require('../config');
 
-function bake(assertion, callback) {
+function bake(assertion) {
   return assertion.badgeClass.getImage()
     .then(({ dataValues }) => {
-      const { imageBase64 } = dataValues;
-      const options = { image: Buffer.from(imageBase64, 'base64') };
+      const { imageBase64, imageExtension } = dataValues;
+      const options = buildOptions(assertion, Buffer.from(imageBase64, 'base64'));
 
-      if (issuer.publicKey) {
-        options.signature = sign(assertion);
-      } else {
-        options.assertion = assertionFacet(assertion);
-        options.url = id(assertion);
-      }
-
-      return bakery.bake(options, callback);
+      return new Promise((resolve, reject) => {
+        bakery.bake(options, (err, image) => {
+          if (err) return reject(err);
+          return resolve(encode(image, imageExtension));
+        });
+      });
     });
+}
+
+function encode(image, extension) {
+  if (typeof image === 'string') {
+    return { image: base64.encode(image), extension };
+  }
+
+  return getStream(image, { encoding: 'base64' })
+    .then(image => {
+      return { image, extension };
+    });
+}
+
+function buildOptions(assertion, image) {
+  if (issuer.publicKey) return { image, signature: sign(assertion) };
+  return {
+    image,
+    assertion: assertionFacet(assertion),
+    url: id(assertion)
+  };
 }
 
 function sign(assertion) {
