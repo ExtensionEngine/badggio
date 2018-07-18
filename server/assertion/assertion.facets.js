@@ -1,14 +1,9 @@
 'use strict';
 
-const bakery = require('../common/patched/openbadges-bakery');
-const config = require('../config');
-const createStorage = require('../common/storage');
 const get = require('lodash/get');
-const jwt = require('jsonwebtoken');
 const map = require('lodash/map');
 const paths = require('./assertion.paths');
 const pickBy = require('lodash/pickBy');
-const store = createStorage(config.storage);
 const { badgeClassIri } = require('../badge-class/badge-class.facets');
 const { base: facetBase, verificationObject } = require('../common/facets');
 const { identityObject } = require('../recipient/recipient.facets');
@@ -38,22 +33,6 @@ function assertion(assertion) {
       narrative,
       expires
     }));
-}
-
-function bake(_assertion, callback) {
-  const key = _assertion.badgeClassId.toString();
-
-  return store.getItem(key).then(({ image }) => {
-    const options = { image: Buffer.from(image, 'base64') };
-
-    if (issuer.publicKey) options.signature = sign(_assertion);
-    else {
-      options.assertion = assertion(_assertion);
-      options.url = id(_assertion);
-    }
-
-    return bakery.bake(options, callback);
-  });
 }
 
 function revocationList(assertions) {
@@ -104,15 +83,8 @@ function revoked(assertion) {
   };
 }
 
-function sign(_assertion) {
-  return jwt.sign(assertion(_assertion),
-    issuer.privateKey,
-    { algorithm: 'RS256', noTimestamp: true });
-}
-
 module.exports = {
   assertion,
-  bake,
   revocationList,
   imageIri,
   evidenceIri,
