@@ -16,8 +16,8 @@ apiRouter
 
 badgingRouter
   .get('/:id.json', badge)
-  .get(`/:id${paths.image}.json`, image)
-  .get(`/:id${paths.criteria}.json`, criteria);
+  .get(`/:id${paths.image}`, image)
+  .get(`/:id${paths.criteria}`, criteria);
 
 module.exports = {
   path: paths.root,

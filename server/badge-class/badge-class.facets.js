@@ -18,7 +18,7 @@ function badge(badge) {
       name,
       description,
       image: imageIri(badge),
-      criteria: criteriaIri(badge),
+      criteria: criteria(badge),
       tags,
       issuer
     }
@@ -26,28 +26,23 @@ function badge(badge) {
   );
 }
 
-function criteriaIri({ id, criteriaNarrative }) {
-  return `${rootUrl}/${id}${paths.criteria}.json`;
-}
-
 function criteria({ id, criteriaNarrative }) {
   return {
-    id: `${rootUrl}/${id}${paths.criteria}.html`,
+    id: `${rootUrl}/${id}${paths.criteria}`,
     narrative: criteriaNarrative
   };
 }
 
-function imageIri({ id, imageCaption, imageAuthorIri }) {
-  return `${rootUrl}/${id}${paths.image}.json`;
+function humanCriteria({ criteriaNarrative }) {
+  // TODO: return criteriaNarrative embedded in a html file
 }
 
-function image({ id, imageCaption, imageAuthorIri }) {
-  return pickBy({
-    type: 'ImageObject',
-    id: `${rootUrl}/${id}${paths.image}`,
-    imageCaption,
-    imageAuthorIri
-  });
+function imageIri({ id }) {
+  return `${rootUrl}/${id}${paths.image}`;
+}
+
+function image({ id }) {
+  // TODO: return image embedded in a html file
 }
 
 function badgeClassIri({ id, uuid }) {
@@ -60,9 +55,7 @@ function base(badge) {
 
 module.exports = {
   badge,
-  criteria,
-  criteriaIri,
+  humanCriteria,
   image,
-  imageIri,
   badgeClassIri
 };

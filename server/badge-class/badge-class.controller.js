@@ -3,7 +3,7 @@
 const { createError } = require('../common/errors');
 const {
   badge: badgeFacet,
-  criteria: criteriaFacet,
+  humanCriteria: criteriaFacet,
   image: imageFacet
 } = require('./badge-class.facets');
 const { BadgeClass, sequelize } = require('../common/database');
