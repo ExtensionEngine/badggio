@@ -9,14 +9,13 @@ const { issuer } = require('../config');
 
 function bake(assertion) {
   return assertion.badgeClass.getImage()
-    .then(({ dataValues }) => {
-      const { imageBase64, imageExtension } = dataValues;
-      const options = buildOptions(assertion, Buffer.from(imageBase64, 'base64'));
+    .then(({ image, extension }) => {
+      const options = buildOptions(assertion, Buffer.from(image, 'base64'));
 
       return new Promise((resolve, reject) => {
         bakery.bake(options, (err, image) => {
           if (err) return reject(err);
-          return resolve(encode(image, imageExtension));
+          return resolve(encode(image, extension));
         });
       });
     });
