@@ -20,7 +20,7 @@ function badge(badge) {
       image: image(badge),
       criteria: criteria(badge),
       tags,
-      issuer
+      issuer: issuer()
     }
   )
   );
