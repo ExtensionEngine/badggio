@@ -86,6 +86,7 @@
     "passport-jwt": "^4.0.0",
     "pg": "^7.4.1",
     "promise-queue": "^2.2.5",
+    "pug": "^2.0.3",
     "s3-blob-store": "^3.2.0",
     "sass-web-fonts": "^2.0.2",
     "sequelize": "^4.37.6",

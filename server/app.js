@@ -41,6 +41,10 @@ app.use(morgan(format, {
   stream: process.stdout
 }));
 
+// Template engine
+app.set('view engine', 'pug');
+app.set('views', './server/views');
+
 // Mount main router
 app.use(nocache(), router);
 
