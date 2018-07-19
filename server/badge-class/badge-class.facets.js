@@ -33,16 +33,20 @@ function criteria({ id, criteriaNarrative }) {
   };
 }
 
-function humanCriteria({ criteriaNarrative }) {
-  // TODO: return criteriaNarrative embedded in a html file
+function humanCriteria({ name, criteriaNarrative }) {
+  return ['criteria', { name, criteria: criteriaNarrative }];
 }
 
-function imageIri({ id }) {
-  return `${rootUrl}/${id}${paths.image}`;
+function imageIri({ id, imageCaption, imageAuthorIri }) {
+  return pickBy({
+    id: `${rootUrl}/${id}${paths.image}`,
+    caption: imageCaption,
+    author: imageAuthorIri
+  });
 }
 
-function image({ id }) {
-  // TODO: return image embedded in a html file
+function image(badge) {
+  return badge.getImage().then(({ dataValues: { name, image } }) => ['image', { name, image }]);
 }
 
 function badgeClassIri({ id, uuid }) {
