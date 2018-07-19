@@ -4,7 +4,7 @@ const { createError } = require('../common/errors');
 const {
   badge: badgeFacet,
   humanCriteria: criteriaFacet,
-  image: imageFacet
+  imageIri: imageFacet
 } = require('./badge-class.facets');
 const { BadgeClass, sequelize } = require('../common/database');
 const hasha = require('hasha');
