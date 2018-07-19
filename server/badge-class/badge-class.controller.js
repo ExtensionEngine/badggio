@@ -16,9 +16,13 @@ const { NOT_FOUND } = HttpStatus;
 const inputAttrs = ['name', 'description', 'criteriaNarrative', 'imageCaption',
   'imageAuthorIri', 'tags'];
 
-function findBadgeById({ id }) {
-  return BadgeClass.findById(id, { paranoid: false })
-      .then(badge => badge || createError(NOT_FOUND, 'Badge does not exist!'))
+function loadBadge(req, res, next) {
+  return BadgeClass.findById(req.params.id, { paranoid: false })
+    .then(badge => {
+      if (!req.locals) req.locals = {};
+      req.locals.badge = badge;
+      return badge ? next() : next(createError(NOT_FOUND, 'Badge does not exist!'));
+    });
 }
 
 function create(req, res) {
@@ -39,19 +43,19 @@ function list(req, _, next) {
 }
 
 function patch(req, res) {
-  const { body, locals, params } = req;
-  const { decodedImage } = locals;
+  const { body, locals } = req;
+  const { decodedImage, badge } = locals;
   const { hash: imageHash } = decodedImage;
   const newVals = { ...pick(body, inputAttrs), imageHash };
   return sequelize.transaction(transaction => {
-    return findBadgeById(params.id)
-      .then(badge => badge.update(newVals, transaction))
-      .then(badge => badge.storeImage(decodedImage, badge.previous(imageHash)));
+    return badge.update(newVals, transaction)
+    .then(badge => badge.storeImage(decodedImage, badge.previous(imageHash)));
   }).then(badge => res.jsend.success(badge));
 }
 
 function decodeImage(req, res, next) {
-  req.locals = { decodedImage: extractImageData(req.body.image) };
+  if (!req.locals) req.locals = {};
+  req.locals.decodedImage = extractImageData(req.body.image);
   return next();
 }
 
@@ -75,16 +79,16 @@ function encodeImages({ locals: { badges } }, res) {
     .then(() => res.jsend.success(badges));
 }
 
-function badge({ params: { id } }, res) {
-  return findBadgeById(id).then(badge => res.json(badgeFacet(badge)));
+function badge({ locals: { badge } }, res) {
+  return res.json(badgeFacet(badge));
 }
 
-function criteria({ params: { id } }, res) {
-  return findBadgeById(id).then(badge => res.json(criteriaFacet(badge)));
+function criteria({ locals: { badge } }, res) {
+  return res.render(...criteriaFacet(badge));
 }
 
-function image({ params: { id } }, res) {
-  return findBadgeById(id).then(badge => res.json(imageFacet(badge)));
+function image({ locals: { badge } }, res) {
+  return imageFacet(badge).then(renderData => res.render(...renderData));
 }
 
 module.exports = {
@@ -95,5 +99,6 @@ module.exports = {
   encodeImages,
   image,
   list,
+  loadBadge,
   patch
 };
