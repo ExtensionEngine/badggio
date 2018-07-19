@@ -46,7 +46,10 @@ function image({ id, imageCaption, imageAuthorIri }) {
 }
 
 function imageIri(badge) {
-  return badge.getImage().then(({ dataValues: { name, image } }) => ['image', { name, image }]);
+  return badge.getImage().then(({ dataValues }) => {
+    const { name, image, imageCaption: caption } = dataValues;
+    return ['image', { name, image, caption }];
+  });
 }
 
 function badgeClassIri({ id, uuid }) {
