@@ -72,11 +72,19 @@ function badge({ params: { id } }, res) {
     .then(badge => res.json(badgeFacet(badge)));
 }
 
+function image({ params: { id } }, res) {
+  return BadgeClass.findById(id)
+    .then(badge => badge || createError(NOT_FOUND, 'Badge does not exist!'))
+    .then(badge => badge.getImage())
+    .then(({ image, extension }) => res.send(`<img src="data:image/${extension};base64,${image}"/>`));
+}
+
 module.exports = {
   badge,
   create,
   decodeImage,
   encodeImages,
   list,
-  patch
+  patch,
+  image
 };
