@@ -8,6 +8,7 @@ const { badgeClassIri } = require('../badge-class/badge-class.facets');
 const { base: facetBase, verificationObject } = require('../common/facets');
 const { identityObject } = require('../recipient/recipient.facets');
 const { issuer } = require('../config');
+const { revocationListIri } = require('../issuer/issuer.facets');
 const { SERVER_URL } = process.env;
 
 const rootUrl = SERVER_URL + paths.root;
@@ -60,11 +61,6 @@ function imageIri({ id }) {
 function evidenceIri({ id, evidence }) {
   if (!get(evidence, 'length')) return null;
   return `${rootUrl}/${id}${paths.evidence}`;
-}
-
-function revocationListIri() {
-  if (!issuer.publicKey) return null;
-  return `${rootUrl}${paths.revocationList}`;
 }
 
 function base(assertion) {
