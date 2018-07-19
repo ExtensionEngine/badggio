@@ -3,7 +3,7 @@
 const bakery = require('../common/patched/openbadges-bakery');
 const getStream = require('get-stream');
 const jwt = require('jsonwebtoken');
-const { assertion: assertionFacet, id } = require('./assertion.facets');
+const { assertion: assertionFacet, assertionIri } = require('./assertion.facets');
 const { Base64: base64 } = require('js-base64');
 const { issuer } = require('../config');
 
@@ -21,24 +21,22 @@ function bake(assertion) {
     });
 }
 
-function encode(image, extension) {
-  if (typeof image === 'string') {
-    return { image: base64.encode(image), extension };
-  }
-
-  return getStream(image, { encoding: 'base64' })
-    .then(image => {
-      return { image, extension };
-    });
-}
-
 function buildOptions(assertion, image) {
   if (issuer.publicKey) return { image, signature: sign(assertion) };
   return {
     image,
     assertion: assertionFacet(assertion),
-    url: id(assertion)
+    url: assertionIri(assertion)
   };
+}
+
+function encode(image, extension) {
+  if (extension === 'svg+xml') {
+    return { image: base64.encode(image), extension };
+  }
+
+  return getStream(image, { encoding: 'base64' })
+    .then(image => ({ image, extension }));
 }
 
 function sign(assertion) {
