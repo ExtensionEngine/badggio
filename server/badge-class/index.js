@@ -15,8 +15,7 @@ apiRouter
   .patch('/:id', decodeImage, patch);
 
 badgingRouter
-  .get('/:id.json', ctrl.badge)
-  .get('/:id/image', ctrl.image);
+  .get('/:id.json', ctrl.badge);
 
 module.exports = {
   path: paths.root,
