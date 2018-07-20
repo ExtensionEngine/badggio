@@ -34,7 +34,7 @@ function criteria({ id, criteriaNarrative }) {
 }
 
 function humanCriteria({ name, criteriaNarrative }) {
-  return ['criteria', { name, criteria: criteriaNarrative }];
+  return { criteria: criteriaNarrative };
 }
 
 function image({ id, imageCaption, imageAuthorIri }) {
@@ -46,10 +46,7 @@ function image({ id, imageCaption, imageAuthorIri }) {
 }
 
 function imageIri(badge) {
-  return badge.getImage().then(({ dataValues }) => {
-    const { name, image, imageCaption: caption } = dataValues;
-    return ['image', { name, image, caption }];
-  });
+  return badge.getImage().then(({ dataValues }) => ({ image: dataValues.image }));
 }
 
 function badgeClassIri({ id, uuid }) {

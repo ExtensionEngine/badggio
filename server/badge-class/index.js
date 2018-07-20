@@ -10,14 +10,16 @@ const { badge, create, criteria, decodeImage, encodeImages, image, list, loadBad
 
 apiRouter
   .use(auth)
+  .param('id', loadBadge)
   .get('/', list, encodeImages)
   .post('/', decodeImage, create)
-  .patch('/:id', decodeImage, loadBadge, patch);
+  .patch('/:id', decodeImage, patch);
 
 badgingRouter
-  .get('/:id.json', loadBadge, badge)
-  .get(`/:id${paths.image}`, loadBadge, image)
-  .get(`/:id${paths.criteria}`, loadBadge, criteria);
+  .param('id', loadBadge)
+  .get('/:id.json', badge)
+  .get(`/:id${paths.image}`, image)
+  .get(`/:id${paths.criteria}`, criteria);
 
 module.exports = {
   path: paths.root,
