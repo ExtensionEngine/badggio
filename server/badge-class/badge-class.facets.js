@@ -4,7 +4,7 @@ const paths = require('./badge-class.paths');
 const pickBy = require('lodash/pickBy');
 const { base: facetBase } = require('../common/facets');
 const { issuer: { publicKey } } = require('../config');
-const { profile: issuer } = require('../issuer/issuer.facets');
+const { profile } = require('../issuer/issuer.facets');
 const { SERVER_URL } = process.env;
 
 const rootUrl = SERVER_URL + paths.root;
@@ -20,7 +20,7 @@ function badge(badge) {
       image: image(badge),
       criteria: criteria(badge),
       tags,
-      issuer
+      issuer: profile()
     }
   )
   );
