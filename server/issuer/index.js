@@ -14,7 +14,8 @@ apiRouter
 badgingRouter
   .get(paths.image, ctrl.image)
   .get(paths.issuer, ctrl.profile)
-  .get(paths.publicKey, ctrl.publicKey);
+  .get(paths.publicKey, ctrl.publicKey)
+  .get(paths.revocationList, ctrl.revokedAssertions);
 
 module.exports = {
   apiRouter,

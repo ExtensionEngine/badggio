@@ -3,9 +3,11 @@
 const facets = require('./issuer.facets');
 const HttpStatus = require('http-status');
 const omit = require('lodash/omit');
+const { Assertion } = require('../common/database');
 const { createError } = require('../common/errors');
 const { issuer } = require('../config');
 const { NOT_FOUND } = HttpStatus;
+const { revocationList } = require('../assertion/assertion.facets');
 
 function get(req, res) {
   const omitAttrs = ['imagePath', 'privateKey', 'privateKeyPath', 'publicKeyPath'];
@@ -30,9 +32,18 @@ function publicKey(req, res) {
   res.json(facets.publicKey());
 }
 
+function revokedAssertions(req, res) {
+  if (!issuer.publicKeyPath) {
+    return createError(NOT_FOUND, 'Hosted verification in use, thus no revocation list.');
+  }
+  return Assertion.scope('revoked').findAll()
+    .then(assertions => res.json(revocationList(assertions)));
+}
+
 module.exports = {
   get,
   image,
   profile,
-  publicKey
+  publicKey,
+  revokedAssertions
 };
