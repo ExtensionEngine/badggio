@@ -1,6 +1,7 @@
 'use strict';
 
 const HttpStatus = require('http-status');
+const map = require('lodash/map');
 const pick = require('lodash/pick');
 const { Assertion, Recipient } = require('../common/database');
 const { assertion: assertionFacet } = require('./assertion.facets');
@@ -34,6 +35,11 @@ function create({ body }, res) {
     .then(assertion => res.jsend.success(assertion.profile));
 }
 
+function list(req, res) {
+  return Assertion.findAll()
+    .then(assertions => res.jsend.success(map(assertions, 'profile')));
+}
+
 function patch({ body, locals: { assertion } }, res) {
   return assertion.update(pick(body, inputAttrs.slice(1)))
     .then(assertion => res.jsend.success(assertion.profile));
@@ -43,5 +49,6 @@ module.exports = {
   loadAssertion,
   badgeAssertion,
   create,
+  list,
   patch
 };
