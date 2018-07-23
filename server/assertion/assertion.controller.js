@@ -5,6 +5,7 @@ const map = require('lodash/map');
 const pick = require('lodash/pick');
 const { Assertion, Recipient } = require('../common/database');
 const { assertion: assertionFacet } = require('./assertion.facets');
+const { bake } = require('./assertion.helpers');
 const { createError } = require('../common/errors');
 const { NOT_FOUND, GONE } = HttpStatus;
 
@@ -45,10 +46,19 @@ function patch({ body, locals: { assertion } }, res) {
     .then(assertion => res.jsend.success(assertion.profile));
 }
 
+function image({ locals: { assertion } }, res) {
+  return bake(assertion)
+    .then(({ image, extension }) => {
+      res.set('content-type', `image/${extension}`);
+      res.send(Buffer.from(image, 'base64'));
+    });
+}
+
 module.exports = {
   loadAssertion,
   badgeAssertion,
   create,
   list,
-  patch
+  patch,
+  image
 };

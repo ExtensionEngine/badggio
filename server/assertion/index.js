@@ -16,7 +16,8 @@ apiRouter
 
 badgingRouter
   .param('id', ctrl.loadAssertion)
-  .get('/:id.json', ctrl.badgeAssertion);
+  .get('/:id.json', ctrl.badgeAssertion)
+  .get('/:id/image', ctrl.image);
 
 module.exports = {
   apiRouter,
