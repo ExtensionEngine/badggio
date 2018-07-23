@@ -22,7 +22,11 @@ class Assertion extends Model {
       revoked: {
         type: BOOLEAN,
         allowNull: false,
-        defaultValue: false
+        defaultValue: false,
+        set(value) {
+          if (!value) this.revocationReason = null;
+          this.setDataValue('revoked', value);
+        }
       },
       revocationReason: {
         type: STRING,

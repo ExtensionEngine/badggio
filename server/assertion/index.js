@@ -9,7 +9,9 @@ const badgingRouter = require('express').Router();
 
 apiRouter
   .use(auth)
-  .post('/', ctrl.create);
+  .param('id', ctrl.loadAssertion)
+  .post('/', ctrl.create)
+  .patch('/:id', ctrl.patch);
 
 badgingRouter
   .param('id', ctrl.loadAssertion)

@@ -34,8 +34,14 @@ function create({ body }, res) {
     .then(assertion => res.jsend.success(assertion.profile));
 }
 
+function patch({ body, locals: { assertion } }, res) {
+  return assertion.update(pick(body, inputAttrs.slice(1)))
+    .then(assertion => res.jsend.success(assertion.profile));
+}
+
 module.exports = {
   loadAssertion,
   badgeAssertion,
-  create
+  create,
+  patch
 };
