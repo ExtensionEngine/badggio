@@ -13,6 +13,7 @@ const badging = express.Router();
 const router = express.Router();
 
 api
+  .use(assertion.path, assertion.apiRouter)
   .use(badgeClass.path, badgeClass.apiRouter)
   .use(issuer.path, issuer.apiRouter)
   .use(recipient.path, recipient.apiRouter)

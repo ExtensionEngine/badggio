@@ -1,10 +1,14 @@
 'use strict';
 
 const HttpStatus = require('http-status');
-const { Assertion } = require('../common/database');
+const pick = require('lodash/pick');
+const { Assertion, Recipient } = require('../common/database');
 const { assertion: assertionFacet } = require('./assertion.facets');
 const { createError } = require('../common/errors');
 const { NOT_FOUND, GONE } = HttpStatus;
+
+const inputAttrs = ['badgeClassId', 'narrative', 'expires',
+  'revoked', 'revocationReason'];
 
 function loadAssertion(req, res, next, id) {
   Assertion.findById(id, { include: { all: true } })
@@ -20,7 +24,18 @@ function badgeAssertion({ locals: { assertion } }, res) {
   return res.json(assertionFacet(assertion));
 }
 
+function create({ body }, res) {
+  const email = body.recipientEmail;
+  return Recipient.findOrCreate({ where: { email } })
+    .spread(({ id }) => {
+      const attrs = { ...pick(body, inputAttrs), recipientId: id };
+      return Assertion.create(attrs);
+    })
+    .then(assertion => res.jsend.success(assertion.profile));
+}
+
 module.exports = {
+  loadAssertion,
   badgeAssertion,
-  loadAssertion
+  create
 };
