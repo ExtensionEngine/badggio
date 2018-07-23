@@ -11,7 +11,7 @@ const inputAttrs = ['badgeClassId', 'narrative', 'expires',
   'revoked', 'revocationReason'];
 
 function loadAssertion(req, res, next, id) {
-  Assertion.findById(id, { include: { all: true } })
+  return Assertion.findById(id, { include: { all: true } })
     .then(assertion => assertion || createError(NOT_FOUND, 'Assertion does not exist!'))
     .then(assertion => {
       req.locals = { assertion };
