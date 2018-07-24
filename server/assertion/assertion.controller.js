@@ -3,7 +3,7 @@
 const HttpStatus = require('http-status');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
-const { Assertion, Recipient } = require('../common/database');
+const { Assertion, Recipient, sequelize } = require('../common/database');
 const { assertion: assertionFacet } = require('./assertion.facets');
 const { bake } = require('./assertion.helpers');
 const { createError } = require('../common/errors');
@@ -28,12 +28,11 @@ function badgeAssertion({ locals: { assertion } }, res) {
 
 function create({ body }, res) {
   const email = body.recipientEmail;
-  return Recipient.findOrCreate({ where: { email } })
-    .spread(({ id }) => {
-      const attrs = { ...pick(body, inputAttrs), recipientId: id };
-      return Assertion.create(attrs);
-    })
-    .then(assertion => res.jsend.success(assertion.profile));
+  return sequelize.transaction(transaction => {
+    return Recipient.findOrCreate({ where: { email }, transaction })
+      .spread(({ id }) => ({ ...pick(body, inputAttrs), recipientId: id }))
+      .then(attrs => Assertion.create(attrs, { transaction }));
+  }).then(assertion => res.jsend.success(assertion.profile));
 }
 
 function list(req, res) {
