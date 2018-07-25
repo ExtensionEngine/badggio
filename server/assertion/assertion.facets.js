@@ -80,7 +80,7 @@ function revoked(assertion) {
 module.exports = {
   assertion,
   assertionIri,
-  revocationList,
+  evidenceIri,
   imageIri,
-  evidenceIri
+  revocationList
 };

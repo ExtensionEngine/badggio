@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-  image: '/image',
   evidence: '/evidence.json',
+  image: '/image',
   root: '/assertions'
 };

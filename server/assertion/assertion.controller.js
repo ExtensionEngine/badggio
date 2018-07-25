@@ -61,10 +61,10 @@ function image(req, res) {
 }
 
 module.exports = {
-  loadAssertion,
   badgeAssertion,
   create,
+  image,
   list,
-  patch,
-  image
+  loadAssertion,
+  patch
 };
