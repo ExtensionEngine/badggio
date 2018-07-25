@@ -9,8 +9,8 @@ const {
 const { BadgeClass, sequelize } = require('../common/database');
 const hasha = require('hasha');
 const HttpStatus = require('http-status');
-const map = require('lodash/map');
 const pick = require('lodash/pick');
+const Promise = require('bluebird');
 
 const { NOT_FOUND } = HttpStatus;
 const inputAttrs = ['name', 'description', 'criteriaNarrative', 'imageCaption',
@@ -72,9 +72,10 @@ function extractImageData(imageString) {
   return { base64data, extension, hash };
 }
 
-function encodeImages(req, res) {
+function encodeImages(_, res) {
   const { badges } = res.locals;
-  return Promise.all(map(badges, badge => badge.getImage()))
+  return Promise.map(badges, badge => badge.loadImage())
+
     .then(() => res.jsend.success(badges));
 }
 

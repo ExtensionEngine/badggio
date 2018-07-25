@@ -3,7 +3,6 @@
 const paths = require('./badge-class.paths');
 const pickBy = require('lodash/pickBy');
 const { base: facetBase } = require('../common/facets');
-const { issuer: { publicKey } } = require('../config');
 const { profile } = require('../issuer/issuer.facets');
 const { SERVER_URL } = process.env;
 
@@ -22,8 +21,7 @@ function badge(badge) {
       tags,
       issuer: profile()
     }
-  )
-  );
+  ));
 }
 
 function criteria({ id, criteriaNarrative }) {
@@ -49,12 +47,16 @@ function imageIri(badge) {
   return badge.getImage().then(({ dataValues }) => ({ image: dataValues.image }));
 }
 
-function badgeClassIri({ id, uuid }) {
-  return publicKey ? `urn:uuid:${uuid}` : `${rootUrl}/${id}.json`;
+function badgeClassIri({ id }) {
+  return `${rootUrl}/${id}.json`;
 }
 
 function base(badge) {
-  return Object.assign(facetBase(), { id: badgeClassIri(badge), type: 'BadgeClass' });
+  return Object.assign(facetBase(),
+    {
+      id: badgeClassIri(badge),
+      type: 'BadgeClass'
+    });
 }
 
 module.exports = {

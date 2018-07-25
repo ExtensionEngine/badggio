@@ -3,7 +3,10 @@
 const pickBy = require('lodash/pickBy');
 const { base: facetBase, verificationObject } = require('../common/facets');
 const { issuer } = require('../config');
-const { revocationListIri } = require('../assertion/assertion.facets');
+
+const { SERVER_URL } = process.env;
+const paths = require('./issuer.paths');
+const rootUrl = SERVER_URL + paths.root;
 
 function profile() {
   return pickBy(Object.assign(facetBase(), {
@@ -31,7 +34,13 @@ function publicKey() {
   });
 }
 
+function revocationListIri() {
+  if (!issuer.publicKey) return null;
+  return rootUrl + paths.revocationList;
+}
+
 module.exports = {
   profile,
-  publicKey
+  publicKey,
+  revocationListIri
 };
