@@ -25,7 +25,7 @@ function patch({ body: { email }, params: { id } }, res) {
 }
 
 module.exports = {
-  list,
   create,
+  list,
   patch
 };

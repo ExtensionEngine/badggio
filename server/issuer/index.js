@@ -7,14 +7,17 @@ const paths = require('./issuer.paths');
 const apiRouter = require('express').Router();
 const badgingRouter = require('express').Router();
 
+const { get, image, profile, publicKey, revokedAssertions } = ctrl;
+
 apiRouter
   .use(auth)
-  .get('/', ctrl.get);
+  .get('/', get);
 
 badgingRouter
-  .get(paths.image, ctrl.image)
-  .get(paths.issuer, ctrl.profile)
-  .get(paths.publicKey, ctrl.publicKey);
+  .get(paths.image, image)
+  .get(paths.issuer, profile)
+  .get(paths.publicKey, publicKey)
+  .get(paths.revocationList, revokedAssertions);
 
 module.exports = {
   apiRouter,

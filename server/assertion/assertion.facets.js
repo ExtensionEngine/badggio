@@ -52,7 +52,6 @@ function assertionIri({ id }) {
   return `${rootUrl}/${id}.json`;
 }
 
-// TODO: implement this url so it returns assertion's "baked" image
 function imageIri({ id }) {
   return `${rootUrl}/${id}${paths.image}`;
 }
@@ -81,7 +80,7 @@ function revoked(assertion) {
 module.exports = {
   assertion,
   assertionIri,
-  revocationList,
+  evidenceIri,
   imageIri,
-  evidenceIri
+  revocationList
 };
