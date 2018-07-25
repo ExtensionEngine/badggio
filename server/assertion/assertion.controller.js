@@ -12,22 +12,25 @@ const { NOT_FOUND, GONE } = HttpStatus;
 const inputAttrs = ['badgeClassId', 'narrative', 'expires',
   'revoked', 'revocationReason'];
 
-function loadAssertion(req, res, next, id) {
+function loadAssertion(req, { locals }, next, id) {
   return Assertion.findById(id, { include: { all: true } })
     .then(assertion => assertion || createError(NOT_FOUND, 'Assertion does not exist!'))
     .then(assertion => {
-      req.locals = { assertion };
+      locals.assertion = assertion;
       next();
     }).catch(err => next(err));
 }
 
-function badgeAssertion({ locals: { assertion } }, res) {
+function badgeAssertion(req, res) {
+  const { assertion } = res.locals;
+
   if (assertion.revoked) res.status(GONE);
   return res.json(assertionFacet(assertion));
 }
 
 function create({ body }, res) {
   const email = body.recipientEmail;
+
   return sequelize.transaction(transaction => {
     return Recipient.findOrCreate({ where: { email }, transaction })
       .spread(({ id }) => ({ ...pick(body, inputAttrs), recipientId: id }))
@@ -40,12 +43,16 @@ function list(req, res) {
     .then(assertions => res.jsend.success(map(assertions, 'profile')));
 }
 
-function patch({ body, locals: { assertion } }, res) {
+function patch({ body }, res) {
+  const { assertion } = res.locals;
+
   return assertion.update(pick(body, inputAttrs.slice(1)))
     .then(assertion => res.jsend.success(assertion.profile));
 }
 
-function image({ locals: { assertion } }, res) {
+function image(req, res) {
+  const { assertion } = res.locals;
+
   return bake(assertion)
     .then(({ image, extension }) => {
       res.set('content-type', `image/${extension}`);
