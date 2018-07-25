@@ -102,7 +102,8 @@ class BadgeClass extends Model {
     const { dataValues } = this;
     return this.getImage().then(({ image, extension }) => {
       dataValues.image = `data:image/${extension};base64,${image}`;
-    }).then(() => this);
+      return this;
+    });
   }
 }
 

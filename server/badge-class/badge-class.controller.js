@@ -1,7 +1,11 @@
 'use strict';
 
 const { createError } = require('../common/errors');
-const { badge: badgeFacet } = require('./badge-class.facets');
+const {
+  badge: badgeFacet,
+  humanCriteria: criteriaFacet,
+  imageIri: imageFacet
+} = require('./badge-class.facets');
 const { BadgeClass, sequelize } = require('../common/database');
 const hasha = require('hasha');
 const HttpStatus = require('http-status');
@@ -12,9 +16,17 @@ const { NOT_FOUND } = HttpStatus;
 const inputAttrs = ['name', 'description', 'criteriaNarrative', 'imageCaption',
   'imageAuthorIri', 'tags'];
 
+function loadBadge(req, res, next) {
+  return BadgeClass.findById(req.params.id, { paranoid: false })
+    .then(badge => {
+      res.locals.badge = badge;
+      return badge ? next() : next(createError(NOT_FOUND, 'Badge does not exist!'));
+    });
+}
+
 function create(req, res) {
-  const { body, locals } = req;
-  const { decodedImage } = locals;
+  const { body } = req;
+  const { decodedImage } = res.locals;
   const { hash: imageHash } = decodedImage;
   return sequelize.transaction(transaction => {
     return BadgeClass.create({ ...pick(body, inputAttrs), imageHash }, transaction)
@@ -22,27 +34,26 @@ function create(req, res) {
   }).then(badge => res.jsend.success(badge));
 }
 
-function list(req, _, next) {
+function list(req, res, next) {
   return BadgeClass.findAll({ order: [['id']] }).then(badges => {
-    req.locals = { badges };
+    res.locals.badges = badges;
     next();
   });
 }
 
 function patch(req, res) {
-  const { body, locals, params } = req;
-  const { decodedImage } = locals;
+  const { body } = req;
+  const { decodedImage, badge } = res.locals;
   const { hash: imageHash } = decodedImage;
+  const newVals = { ...pick(body, inputAttrs), imageHash };
   return sequelize.transaction(transaction => {
-    return BadgeClass.findById(params.id, { paranoid: false })
-      .then(badge => badge || createError(NOT_FOUND, 'Badge does not exist!'))
-      .then(badge => badge.update({ ...pick(body, inputAttrs), imageHash }, transaction))
-      .then(badge => badge.storeImage(decodedImage, badge.previous(imageHash)));
+    return badge.update(newVals, transaction)
+    .then(badge => badge.storeImage(decodedImage, badge.previous(imageHash)));
   }).then(badge => res.jsend.success(badge));
 }
 
 function decodeImage(req, res, next) {
-  req.locals = { decodedImage: extractImageData(req.body.image) };
+  res.locals.decodedImage = extractImageData(req.body.image);
   return next();
 }
 
@@ -61,22 +72,33 @@ function extractImageData(imageString) {
   return { base64data, extension, hash };
 }
 
-function encodeImages({ locals: { badges } }, res) {
+function encodeImages(_, res) {
+  const { badges } = res.locals;
   return Promise.map(badges, badge => badge.loadImage())
+
     .then(() => res.jsend.success(badges));
 }
 
-function badge({ params: { id } }, res) {
-  return BadgeClass.findById(id)
-    .then(badge => badge || createError(NOT_FOUND, 'Badge does not exist!'))
-    .then(badge => res.json(badgeFacet(badge)));
+function badge(_, res) {
+  return res.json(badgeFacet(res.locals.badge));
+}
+
+function criteria(_, res) {
+  return res.render('criteria', criteriaFacet(res.locals.badge));
+}
+
+function image(_, res) {
+  return imageFacet(res.locals.badge).then(renderData => res.render('image', renderData));
 }
 
 module.exports = {
   badge,
   create,
+  criteria,
   decodeImage,
   encodeImages,
+  image,
   list,
+  loadBadge,
   patch
 };

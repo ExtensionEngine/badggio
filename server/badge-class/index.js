@@ -6,16 +6,20 @@ const paths = require('./badge-class.paths');
 const apiRouter = require('express').Router();
 const badgingRouter = require('express').Router();
 
-const { create, encodeImages, decodeImage, list, patch } = ctrl;
+const { badge, create, criteria, decodeImage, encodeImages, image, list, loadBadge, patch } = ctrl;
 
 apiRouter
   .use(auth)
   .get('/', list, encodeImages)
   .post('/', decodeImage, create)
+  .param('id', loadBadge)
   .patch('/:id', decodeImage, patch);
 
 badgingRouter
-  .get('/:id.json', ctrl.badge);
+  .param('id', loadBadge)
+  .get('/:id.json', badge)
+  .get(`/:id${paths.image}`, image)
+  .get(`/:id${paths.criteria}`, criteria);
 
 module.exports = {
   path: paths.root,
