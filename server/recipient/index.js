@@ -5,11 +5,13 @@ const ctrl = require('./recipient.controller');
 
 const apiRouter = require('express').Router();
 
+const { create, list, patch } = ctrl;
+
 apiRouter
   .use(auth)
-  .get('/', ctrl.list)
-  .post('/', ctrl.create)
-  .patch('/:id', ctrl.patch);
+  .get('/', list)
+  .post('/', create)
+  .patch('/:id', patch);
 
 module.exports = {
   apiRouter,
