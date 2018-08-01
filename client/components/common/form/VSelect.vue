@@ -8,8 +8,11 @@
         :value="resolvedValue"
         :name="name"
         @input="it => $emit('input', isValueObj ? (it && it.value) : it)"
+        @select="select"
+        @tag="tag"
         @close="close"
         @open="open"
+        @remove="remove"
         @search-change="val => $emit('search-change', val)"
         data-vv-delay="1000">
       </multiselect>
@@ -24,6 +27,7 @@
 import find from 'lodash/find';
 import first from 'lodash/first';
 import humanize from 'humanize-string';
+import intersectionBy from 'lodash/intersectionBy';
 import isObject from 'lodash/isObject';
 import Multiselect from 'vue-multiselect';
 
@@ -32,7 +36,7 @@ export default {
   inheritAttrs: true,
   props: {
     name: { type: String, required: true },
-    value: { type: [String, Number, Object], default: null },
+    value: { type: [String, Number, Object, Array], default: null },
     validate: { type: [String, Object], default: null }
   },
   computed: {
@@ -50,9 +54,12 @@ export default {
       return isObject(first(options));
     },
     resolvedValue() {
-      const { value } = this;
+      const { value, options: { multiple, options, trackBy } } = this;
+      const compValue = isObject(value) ? value[trackBy] : value;
+
       if (!value || !this.isValueObj) return value;
-      return find(this.options.options, { value });
+      if (multiple) return intersectionBy(value, options, trackBy);
+      return find(options, [trackBy, compValue]);
     },
     label() {
       return humanize(this.name);
@@ -67,6 +74,15 @@ export default {
     },
     close(id) {
       this.$emit('close', id);
+    },
+    select(option, id) {
+      this.$emit('select', option, id);
+    },
+    tag(val) {
+      this.$emit('tag', val);
+    },
+    remove(option, id) {
+      this.$emit('remove', option, id);
     }
   },
   components: { Multiselect },
