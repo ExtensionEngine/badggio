@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import store from './store';
 import Vue from 'vue';
 
+import Assertions from '@/components/assertions';
 import Auth from '@/components/auth';
 import Badges from '@/components/badges';
 import ForgotPassword from '@/components/auth/ForgotPassword';
@@ -51,6 +52,10 @@ const router = new Router({
       path: '/badges',
       name: 'badges',
       component: Badges
+    }, {
+      path: '/assertions',
+      name: 'assertions',
+      component: Assertions
     }, fallbackRoute]
   }, fallbackRoute]
 });
