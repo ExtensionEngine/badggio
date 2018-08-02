@@ -1,8 +1,7 @@
 <template>
   <v-select
     :disabled="disabled"
-    :multiple="multiple"
-    :name="name"
+    :multiple="true"
     :options="recipients"
     :taggable="taggable"
     :value="selected"
@@ -10,6 +9,7 @@
     @select="select"
     @tag="append"
     label="email"
+    name="Recipients"
     trackBy="id">
   </v-select>
 </template>
@@ -27,8 +27,7 @@ export default {
   props: {
     disabled: { type: Boolean, default: false },
     taggable: { type: Boolean, default: true },
-    multiple: { type: Boolean, default: false },
-    recipient: { type: [Array, Object], default: null }
+    recipient: { type: [Array], default: () => ([]) }
   },
   data() {
     return {
@@ -37,10 +36,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('recipients', { recipients: ({ items }) => values(items) }),
-    name() {
-      return this.multiple ? 'Recipients' : 'Recipient';
-    }
+    ...mapState('recipients', { recipients: ({ items }) => values(items) })
   },
   methods: {
     ...mapActions('recipients', ['fetch']),
@@ -51,49 +47,21 @@ export default {
       this.select(recipient);
     },
     pruneAppended() {
-      const { multiple, recipients, remove, selected } = this;
+      const { recipients, remove, selected } = this;
       const appended = filter(recipients, ({ id }) => id < 0);
-
-      if (!multiple) {
-        pullAllBy(appended, [selected], 'id');
-        return remove(appended);
-      }
 
       pullAllBy(appended, selected, 'id');
       remove(appended);
     },
     deselect(recipient) {
-      const { pruneAppended, multiple, selected } = this;
+      const { pruneAppended, selected } = this;
 
-      if (!multiple) {
-        this.selected = null;
-        return pruneAppended();
-      }
       // Doesn't work with `_.remove` although it uses `.splice` internally
       selected.splice(findIndex(selected, { id: recipient.id }), 1);
       pruneAppended();
     },
     select(recipient) {
-      const { pruneAppended, multiple, selected } = this;
-
-      if (multiple) return selected.push(recipient);
-      this.selected = recipient;
-      pruneAppended();
-    }
-  },
-  created() {
-    const { multiple, recipient } = this;
-
-    if (!recipient) {
-      this.selected = multiple ? [] : null;
-      return;
-    }
-
-    if (multiple ^ Array.isArray(recipient)) {
-      const expected = multiple ? 'Array' : 'Object';
-      throw Error('Invalid configuration: ' +
-        `"multiple" prop is set to "${multiple}" - ` +
-        `"recipient" prop should be an ${expected}, ${typeof recipient} given.`);
+      this.selected.push(recipient);
     }
   },
   mounted() {
