@@ -26,8 +26,8 @@ export default {
   name: 'recipient-select',
   props: {
     disabled: { type: Boolean, default: false },
-    taggable: { type: Boolean, default: true },
-    recipient: { type: [Array], default: () => ([]) }
+    recipient: { type: [Array], default: () => ([]) },
+    taggable: { type: Boolean, default: true }
   },
   data() {
     return {
@@ -46,19 +46,19 @@ export default {
       this.add(recipient);
       this.select(recipient);
     },
-    pruneAppended() {
-      const { recipients, remove, selected } = this;
-      const appended = filter(recipients, ({ id }) => id < 0);
-
-      pullAllBy(appended, selected, 'id');
-      remove(appended);
-    },
     deselect(recipient) {
       const { pruneAppended, selected } = this;
 
       // Doesn't work with `_.remove` although it uses `.splice` internally
       selected.splice(findIndex(selected, { id: recipient.id }), 1);
       pruneAppended();
+    },
+    pruneAppended() {
+      const { recipients, remove, selected } = this;
+      const appended = filter(recipients, ({ id }) => id < 0);
+
+      pullAllBy(appended, selected, 'id');
+      remove(appended);
     },
     select(recipient) {
       this.selected.push(recipient);
