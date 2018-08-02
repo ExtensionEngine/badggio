@@ -2,7 +2,7 @@
   <v-select
     :disabled="disabled"
     :multiple="true"
-    :options="recipients"
+    :options="options"
     :taggable="taggable"
     :value="selected"
     @remove="deselect"
@@ -26,17 +26,17 @@ export default {
   name: 'recipient-select',
   props: {
     disabled: { type: Boolean, default: false },
-    recipient: { type: [Array], default: () => ([]) },
+    recipients: { type: [Array], default: () => ([]) },
     taggable: { type: Boolean, default: true }
   },
   data() {
     return {
       id: -1,
-      selected: this.recipient
+      selected: this.recipients
     };
   },
   computed: {
-    ...mapState('recipients', { recipients: ({ items }) => values(items) })
+    ...mapState('recipients', { options: ({ items }) => values(items) })
   },
   methods: {
     ...mapActions('recipients', ['fetch']),
@@ -54,8 +54,8 @@ export default {
       pruneAppended();
     },
     pruneAppended() {
-      const { recipients, remove, selected } = this;
-      const appended = filter(recipients, ({ id }) => id < 0);
+      const { options, remove, selected } = this;
+      const appended = filter(options, ({ id }) => id < 0);
 
       pullAllBy(appended, selected, 'id');
       remove(appended);
