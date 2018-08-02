@@ -58,7 +58,7 @@ export default {
       const compValue = isObject(value) ? value[trackBy] : value;
 
       if (!value || !this.isValueObj) return value;
-      if (multiple) return intersectionBy(value, options, trackBy);
+      if (multiple) return intersectionBy(options, value, trackBy);
       return find(options, [trackBy, compValue]);
     },
     label() {
