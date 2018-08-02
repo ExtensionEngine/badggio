@@ -50,7 +50,7 @@ export default {
       this.add(recipient);
       this.select(recipient);
     },
-    clearAppended() {
+    pruneAppended() {
       const { multiple, recipients, remove, selected } = this;
       const appended = filter(recipients, ({ id }) => id < 0);
 
@@ -63,22 +63,22 @@ export default {
       remove(appended);
     },
     deselect(recipient) {
-      const { clearAppended, multiple, selected } = this;
+      const { pruneAppended, multiple, selected } = this;
 
       if (!multiple) {
         this.selected = null;
-        return clearAppended();
+        return pruneAppended();
       }
       // Doesn't work with `_.remove` although it uses `.splice` internally
       selected.splice(findIndex(selected, { id: recipient.id }), 1);
-      clearAppended();
+      pruneAppended();
     },
     select(recipient) {
-      const { clearAppended, multiple, selected } = this;
+      const { pruneAppended, multiple, selected } = this;
 
       if (multiple) return selected.push(recipient);
       this.selected = recipient;
-      clearAppended();
+      pruneAppended();
     }
   },
   created() {
