@@ -96,6 +96,7 @@
     "umzug": "^2.1.0",
     "url-join": "^4.0.0",
     "v-hotkey": "^0.2.0",
+    "validator": "^10.4.0",
     "vee-validate": "^2.0.6",
     "vue": "^2.5.16",
     "vue-multiselect": "^2.1.0",

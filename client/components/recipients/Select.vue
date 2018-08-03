@@ -5,6 +5,7 @@
     :options="options"
     :taggable="taggable"
     :value="selected"
+    :tagValidator="emailValidator"
     @remove="deselect"
     @select="select"
     @tag="append"
@@ -18,6 +19,7 @@
 import { mapActions, mapMutations, mapState } from 'vuex';
 import filter from 'lodash/filter';
 import findIndex from 'lodash/findIndex';
+import isEmail from 'validator/lib/isEmail';
 import pullAllBy from 'lodash/pullAllBy';
 import values from 'lodash/values';
 import VSelect from '@/components/common/form/VSelect';
@@ -62,6 +64,12 @@ export default {
     },
     select(recipient) {
       this.selected.push(recipient);
+    },
+    emailValidator() {
+      return {
+        validate: (value) => isEmail(value),
+        msg: 'Inserted email is not valid'
+      };
     }
   },
   mounted() {
