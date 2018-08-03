@@ -18,7 +18,7 @@
       </multiselect>
     </div>
     <p v-visible="showError" class="help is-danger">
-      {{ vErrors.first(name) || '&nbsp;' }}
+      {{ error || vErrors.first(name) || '&nbsp;' }}
     </p>
   </div>
 </template>
@@ -30,6 +30,7 @@ import humanize from 'humanize-string';
 import intersectionBy from 'lodash/intersectionBy';
 import isObject from 'lodash/isObject';
 import Multiselect from 'vue-multiselect';
+import noop from 'lodash/noop';
 
 export default {
   name: 'v-select',
@@ -37,7 +38,13 @@ export default {
   props: {
     name: { type: String, required: true },
     value: { type: [String, Number, Object, Array], default: null },
-    validate: { type: [String, Object], default: null }
+    validate: { type: [String, Object], default: null },
+    tagValidator: { type: Function, default: () => noop }
+  },
+  data() {
+    return {
+      error: null
+    };
   },
   computed: {
     options() {
@@ -65,7 +72,7 @@ export default {
       return humanize(this.name);
     },
     showError() {
-      return this.vErrors.has(this.name);
+      return this.error || this.vErrors.has(this.name);
     }
   },
   methods: {
@@ -76,12 +83,20 @@ export default {
       this.$emit('close', id);
     },
     select(option, id) {
+      this.error = null;
       this.$emit('select', option, id);
     },
     tag(val) {
-      this.$emit('tag', val);
+      const { msg, validate } = this.tagValidator();
+
+      if (!validate || validate(val)) {
+        this.error = null;
+        return this.$emit('tag', val);
+      }
+      this.error = msg || 'Value not valid';
     },
     remove(option, id) {
+      this.error = null;
       this.$emit('remove', option, id);
     }
   },
