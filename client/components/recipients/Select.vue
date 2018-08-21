@@ -28,7 +28,7 @@ export default {
   name: 'recipient-select',
   props: {
     disabled: { type: Boolean, default: false },
-    recipients: { type: [Array], default: () => ([]) },
+    recipients: { type: Array, default: () => ([]) },
     taggable: { type: Boolean, default: true }
   },
   data() {
