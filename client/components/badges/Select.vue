@@ -51,7 +51,7 @@ export default {
       this.selected = badge;
     }
   },
-  mounted() {
+  created() {
     this.fetch();
   },
   components: { VSelect }
