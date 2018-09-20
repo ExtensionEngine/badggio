@@ -1,14 +1,14 @@
 'use strict';
 
 const ajv = require('../common/ajv');
-const explorer = require('cosmiconfig')('issuer');
 const fs = require('fs');
+const JoyCon = require('joycon');
 const paths = require('./issuer.paths');
 const pickBy = require('lodash/pickBy');
 const schema = require('./issuer.schema.json');
 const { SERVER_URL } = process.env;
 
-const { config: issuer } = explorer.searchSync();
+const { data: issuer } = new JoyCon().loadSync({ files: ['.issuerrc.json'] });
 
 function loadKeyPairs() {
   if (!issuer.publicKeyPath) return {};
