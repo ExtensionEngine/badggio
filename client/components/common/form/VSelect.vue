@@ -15,6 +15,28 @@
         @remove="remove"
         @search-change="val => $emit('search-change', val)"
         data-vv-delay="1000">
+        <template v-if="anyHasImage" slot="singleLabel" slot-scope="{ option: { alt, desc, image, title } }">
+          <div class="option">
+            <img v-if="image" :alt="alt || title" :src="image" class="image">
+            <div class="desc">
+              <div class="title">
+                <b>{{ title }}</b>
+              </div>
+              <div class="small">{{ desc }}</div>
+            </div>
+          </div>
+        </template>
+        <template v-if="anyHasImage" slot="option" slot-scope="{ option: { alt, desc, image, title } }">
+          <div class="option">
+            <img v-if="image" :alt="alt || title" :src="image" class="image">
+            <div class="desc">
+              <div class="title">
+                <b>{{ title }}</b>
+              </div>
+              <div class="small">{{ desc }}</div>
+            </div>
+          </div>
+        </template>
       </multiselect>
     </div>
     <p v-visible="showError" class="help is-danger">
@@ -31,6 +53,7 @@ import intersectionBy from 'lodash/intersectionBy';
 import isObject from 'lodash/isObject';
 import Multiselect from 'vue-multiselect';
 import noop from 'lodash/noop';
+import some from 'lodash/some';
 
 export default {
   name: 'v-select',
@@ -73,6 +96,9 @@ export default {
     },
     showError() {
       return this.error || this.vErrors.has(this.name);
+    },
+    anyHasImage() {
+      return some(this.options.options, 'image');
     }
   },
   methods: {
@@ -107,4 +133,31 @@ export default {
 
 <style lang="scss">
 @import '~vue-multiselect/dist/vue-multiselect.min';
+.option {
+  display: flex;
+  max-height: 70px;
+
+  .image {
+    max-width: 70px;
+  }
+
+  .desc {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-left: 10px;
+
+    .title {
+      font-size: 16px;
+      margin: 0;
+    }
+
+    .small {
+      font-size: 13px;
+      line-height: normal;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
+}
 </style>
