@@ -15,28 +15,18 @@
         @remove="remove"
         @search-change="val => $emit('search-change', val)"
         data-vv-delay="1000">
-        <template v-if="anyHaveImage" slot="singleLabel" slot-scope="{ option: { alt, desc, image, title } }">
-          <div class="option">
-            <img v-if="image" :alt="alt || title" :src="image" class="image">
-            <div class="desc">
-              <div class="title">
-                <b>{{ title }}</b>
-              </div>
-              <div class="small">{{ desc }}</div>
-            </div>
-          </div>
-        </template>
-        <template v-if="anyHaveImage" slot="option" slot-scope="{ option: { alt, desc, image, title } }">
-          <div class="option">
-            <img v-if="image" :alt="alt || title" :src="image" class="image">
-            <div class="desc">
-              <div class="title">
-                <b>{{ title }}</b>
-              </div>
-              <div class="small">{{ desc }}</div>
-            </div>
-          </div>
-        </template>
+        <image-slot
+          v-if="anyHaveImage"
+          slot="option"
+          slot-scope="{ option }"
+          v-bind="option">
+        </image-slot>
+        <image-slot
+          v-if="anyHaveImage"
+          slot="singleLabel"
+          slot-scope="{ option }"
+          v-bind="option">
+        </image-slot>
       </multiselect>
     </div>
     <p v-visible="showError" class="help is-danger">
@@ -49,6 +39,7 @@
 import find from 'lodash/find';
 import first from 'lodash/first';
 import humanize from 'humanize-string';
+import ImageSlot from './ImageSlot';
 import intersectionBy from 'lodash/intersectionBy';
 import isObject from 'lodash/isObject';
 import Multiselect from 'vue-multiselect';
@@ -126,38 +117,7 @@ export default {
       this.$emit('remove', option, id);
     }
   },
-  components: { Multiselect },
+  components: { ImageSlot, Multiselect },
   inject: ['$validator']
 };
 </script>
-
-<style lang="scss">
-@import '~vue-multiselect/dist/vue-multiselect.min';
-.option {
-  display: flex;
-  max-height: 70px;
-
-  .image {
-    max-width: 70px;
-  }
-
-  .desc {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    margin-left: 10px;
-
-    .title {
-      font-size: 16px;
-      margin: 0;
-    }
-
-    .small {
-      font-size: 13px;
-      line-height: normal;
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
-  }
-}
-</style>
