@@ -15,7 +15,7 @@
         @remove="remove"
         @search-change="val => $emit('search-change', val)"
         data-vv-delay="1000">
-        <template v-if="anyHasImage" slot="singleLabel" slot-scope="{ option: { alt, desc, image, title } }">
+        <template v-if="anyHaveImage" slot="singleLabel" slot-scope="{ option: { alt, desc, image, title } }">
           <div class="option">
             <img v-if="image" :alt="alt || title" :src="image" class="image">
             <div class="desc">
@@ -26,7 +26,7 @@
             </div>
           </div>
         </template>
-        <template v-if="anyHasImage" slot="option" slot-scope="{ option: { alt, desc, image, title } }">
+        <template v-if="anyHaveImage" slot="option" slot-scope="{ option: { alt, desc, image, title } }">
           <div class="option">
             <img v-if="image" :alt="alt || title" :src="image" class="image">
             <div class="desc">
@@ -97,7 +97,7 @@ export default {
     showError() {
       return this.error || this.vErrors.has(this.name);
     },
-    anyHasImage() {
+    anyHaveImage() {
       return some(this.options.options, 'image');
     }
   },
