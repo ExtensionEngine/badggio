@@ -119,3 +119,7 @@ export default {
   inject: ['$validator']
 };
 </script>
+
+<style lang="scss">
+@import '~vue-multiselect/dist/vue-multiselect.min';
+</style>
