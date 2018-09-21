@@ -34,7 +34,6 @@ export default {
   .desc {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     margin-left: 10px;
 
     .title {
