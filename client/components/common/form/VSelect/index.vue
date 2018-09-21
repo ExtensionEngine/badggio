@@ -16,15 +16,13 @@
         @search-change="val => $emit('search-change', val)"
         data-vv-delay="1000">
         <image-slot
-          v-if="anyHaveImage"
-          slot="option"
           slot-scope="{ option }"
+          :slot="anyHaveImage && 'option'"
           v-bind="option">
         </image-slot>
         <image-slot
-          v-if="anyHaveImage"
-          slot="singleLabel"
           slot-scope="{ option }"
+          :slot="anyHaveImage && 'singleLabel'"
           v-bind="option">
         </image-slot>
       </multiselect>
