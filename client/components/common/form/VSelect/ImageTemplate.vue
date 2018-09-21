@@ -12,7 +12,7 @@
 
 <script>
 export default {
-  name: 'image-slot',
+  name: 'image-template',
   props: {
     alt: { type: String, default: null },
     desc: { type: String, default: null },

@@ -15,16 +15,16 @@
         @remove="remove"
         @search-change="val => $emit('search-change', val)"
         data-vv-delay="1000">
-        <image-slot
+        <image-template
           slot-scope="{ option }"
           :slot="anyHaveImage && 'option'"
           v-bind="option">
-        </image-slot>
-        <image-slot
+        </image-template>
+        <image-template
           slot-scope="{ option }"
           :slot="anyHaveImage && 'singleLabel'"
           v-bind="option">
-        </image-slot>
+        </image-template>
       </multiselect>
     </div>
     <p v-visible="showError" class="help is-danger">
@@ -37,7 +37,7 @@
 import find from 'lodash/find';
 import first from 'lodash/first';
 import humanize from 'humanize-string';
-import ImageSlot from './ImageSlot';
+import ImageTemplate from './ImageTemplate';
 import intersectionBy from 'lodash/intersectionBy';
 import isObject from 'lodash/isObject';
 import Multiselect from 'vue-multiselect';
@@ -115,7 +115,7 @@ export default {
       this.$emit('remove', option, id);
     }
   },
-  components: { ImageSlot, Multiselect },
+  components: { ImageTemplate, Multiselect },
   inject: ['$validator']
 };
 </script>
