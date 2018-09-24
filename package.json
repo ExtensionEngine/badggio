@@ -8,6 +8,8 @@
     "db": "node -r dotenv/config ./server/script/sequelize",
     "db:reset": "npm run db drop && npm run db create && npm run db migrate",
     "db:seed": "npm run db seed:all",
+    "integration:add": "node  -r dotenv/config ./server/script/integration-user.js create",
+    "integration:token": "node  -r dotenv/config ./server/script/integration-user.js token",
     "user:add": "node  -r dotenv/config ./server/script/add-user.js",
     "lint:js": "eslint --ext .js,.vue server client",
     "lint:scss": "stylelint client/**/*.vue client/**/*.scss --syntax scss",
