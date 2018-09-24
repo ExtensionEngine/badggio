@@ -132,7 +132,8 @@ class User extends Model {
   }
 
   createToken(options = {}) {
-    const payload = pick(this, ['id', 'username']);
+    const propertyName = this.role === INTEGRATION ? 'username' : 'email';
+    const payload = pick(this, ['id', propertyName]);
     return jwt.sign(payload, config.secret, options);
   }
 }
