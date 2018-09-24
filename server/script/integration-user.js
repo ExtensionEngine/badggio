@@ -14,7 +14,7 @@ set(User, 'sequelize.options.logging', noop);
 
 const actions = {
   create: data => create(data),
-  token: data => getToken(data)
+  token: data => get(data)
 };
 const action = actions[process.argv[2]];
 
@@ -41,7 +41,7 @@ function create({ username, password }) {
     .then(user => console.log(`Integration created: ${user.username}`) || user);
 }
 
-function getToken({ username, password }) {
+function get({ username, password }) {
   return User.findOne({ where: { username, role: INTEGRATION } })
   .then(user => user || Promise.reject(Error(`Integration "${username}" does not exist.`)))
   .then(user => user.authenticate(password))
