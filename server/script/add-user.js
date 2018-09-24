@@ -7,17 +7,19 @@ const humanize = require('humanize-string');
 const inRange = require('lodash/inRange');
 const isEmail = require('is-email-like');
 const map = require('lodash/map');
+const omit = require('lodash/omit');
 const set = require('lodash/set');
 
 const noop = Function.prototype;
 const notEmpty = input => input.length > 0;
+const roles = omit(role, [role.INTEGRATION]);
 
 // Disable Sequelize SQL logging.
 set(User, 'sequelize.options.logging', noop);
 
 const questions = [{
   type: 'input',
-  name: 'email',
+  name: 'username',
   message: 'Enter email:',
   validate: isEmail
 }, {
@@ -39,7 +41,7 @@ const questions = [{
 }, {
   type: 'list',
   name: 'role',
-  choices: map(role, value => ({ name: humanize(value), value })),
+  choices: map(roles, value => ({ name: humanize(value), value })),
   message: 'Select role:'
 }];
 
