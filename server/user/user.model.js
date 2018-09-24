@@ -16,9 +16,10 @@ const { INTEGRATION } = role;
 
 class User extends Model {
   static fields(DataTypes) {
+    const { DATE, ENUM, STRING, VIRTUAL } = DataTypes;
     return {
       username: {
-        type: DataTypes.STRING,
+        type: STRING,
         allowNull: false,
         validate: {
           notEmpty: true,
@@ -30,46 +31,46 @@ class User extends Model {
         unique: { msg: 'This username is already in use.' }
       },
       password: {
-        type: DataTypes.STRING,
+        type: STRING,
         validate: { notEmpty: true, len: [5, 255] }
       },
       role: {
-        type: DataTypes.ENUM(values(role)),
+        type: ENUM(values(role)),
         allowNull: false,
         defaultValue: role.STUDENT
       },
       token: {
-        type: DataTypes.STRING,
+        type: STRING,
         validate: { notEmpty: true, len: [10, 500] }
       },
       firstName: {
-        type: DataTypes.STRING,
+        type: STRING,
         field: 'first_name'
       },
       lastName: {
-        type: DataTypes.STRING,
+        type: STRING,
         field: 'last_name'
       },
       createdAt: {
-        type: DataTypes.DATE,
+        type: DATE,
         field: 'created_at'
       },
       updatedAt: {
-        type: DataTypes.DATE,
+        type: DATE,
         field: 'updated_at'
       },
       deletedAt: {
-        type: DataTypes.DATE,
+        type: DATE,
         field: 'deleted_at'
       },
       email: {
-        type: DataTypes.VIRTUAL(DataTypes.STRING, ['username']),
+        type: VIRTUAL(STRING, ['username']),
         get() {
           return this.username;
         }
       },
       profile: {
-        type: DataTypes.VIRTUAL,
+        type: VIRTUAL,
         get() {
           return pick(this, ['id', 'firstName', 'lastName', 'email', 'role']);
         }
