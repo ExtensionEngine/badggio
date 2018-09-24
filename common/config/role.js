@@ -1,5 +1,6 @@
 'use strict';
 
 module.exports = {
-  ADMIN: 'ADMIN'
+  ADMIN: 'ADMIN',
+  INTEGRATION: 'INTEGRATION'
 };
