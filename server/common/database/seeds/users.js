@@ -9,7 +9,7 @@ const now = new Date();
 const users = [{
   first_name: 'Admin',
   last_name: 'Example',
-  email: 'admin@example.org',
+  username: 'admin@example.org',
   password: 'admin123',
   role: role.ADMIN,
   created_at: now,
@@ -17,7 +17,7 @@ const users = [{
 }, {
   first_name: 'Admin2',
   last_name: 'Example',
-  email: 'admin2@example.org',
+  username: 'admin2@example.org',
   password: 'admin123',
   role: role.ADMIN,
   created_at: now,
