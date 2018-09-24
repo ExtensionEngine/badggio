@@ -7,13 +7,13 @@ const map = require('lodash/map');
 const pick = require('lodash/pick');
 
 const { BAD_REQUEST, NOT_FOUND } = HttpStatus;
-const inputAttrs = ['email', 'role', 'firstName', 'lastName'];
+const inputAttrs = ['username', 'role', 'firstName', 'lastName'];
 const Op = Sequelize.Op;
 
 function list({ query: { email, emailLike, role } }, res) {
   const cond = [];
-  if (email) cond.push({ email });
-  if (emailLike) cond.push({ email: { [Op.iLike]: `%${emailLike}%` } });
+  if (email) cond.push({ username: email });
+  if (emailLike) cond.push({ username: { [Op.iLike]: `%${emailLike}%` } });
   if (role) cond.push({ role });
   return User.findAll({ where: { [Op.and]: cond } })
     .then(users => res.jsend.success(map(users, 'profile')));
@@ -22,7 +22,7 @@ function list({ query: { email, emailLike, role } }, res) {
 function create(req, res) {
   const { body } = req;
   const origin = req.origin();
-  return User.findOne({ where: { email: body.email } })
+  return User.findOne({ where: { username: body.email } })
     .then(user => !user || createError(NOT_FOUND, 'User already exists!'))
     .then(() => User.invite(pick(body, inputAttrs), { origin }))
     .then(user => res.jsend.success(user.profile));
@@ -41,7 +41,7 @@ function login({ body }, res) {
     return createError(BAD_REQUEST, 'Please enter email and password!');
   }
 
-  return User.find({ where: { email } })
+  return User.find({ where: { username: email } })
     .then(user => user || createError(NOT_FOUND, 'User does not exist!'))
     .then(user => user.authenticate(password))
     .then(user => user || createError(NOT_FOUND, 'Wrong password!'))
@@ -54,7 +54,7 @@ function login({ body }, res) {
 function forgotPassword(req, res) {
   const { email } = req.body;
   const origin = req.origin();
-  return User.find({ where: { email } })
+  return User.find({ where: { username: email } })
     .then(user => user || createError(NOT_FOUND, 'User not found!'))
     .then(user => user.sendResetToken({ origin }))
     .then(() => res.end());
