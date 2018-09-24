@@ -4,6 +4,7 @@ const { auth: config = {} } = require('../config');
 const { Model } = require('sequelize');
 const { role } = require('../../common/config');
 const bcrypt = require('bcrypt');
+const isEmail = require('is-email-like');
 const jwt = require('jsonwebtoken');
 const logger = require('../common/logger')();
 const mail = require('../common/mail');
@@ -11,14 +12,22 @@ const pick = require('lodash/pick');
 const Promise = require('bluebird');
 const values = require('lodash/values');
 
+const { INTEGRATION } = role;
+
 class User extends Model {
   static fields(DataTypes) {
     return {
-      email: {
+      username: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: { isEmail: true, notEmpty: true },
-        unique: { msg: 'This email address is already in use.' }
+        validate: {
+          notEmpty: true,
+          isEmail(username) {
+            if (this.role === INTEGRATION || isEmail(username)) return;
+            throw Error('Username should be an email.');
+          }
+        },
+        unique: { msg: 'This username is already in use.' }
       },
       password: {
         type: DataTypes.STRING,
@@ -53,6 +62,12 @@ class User extends Model {
         type: DataTypes.DATE,
         field: 'deleted_at'
       },
+      email: {
+        type: DataTypes.VIRTUAL(DataTypes.STRING, ['username']),
+        get() {
+          return this.username;
+        }
+      },
       profile: {
         type: DataTypes.VIRTUAL,
         get() {
@@ -74,9 +89,11 @@ class User extends Model {
   static hooks() {
     return {
       beforeCreate(user) {
+        if (user.role === INTEGRATION) user.token = user.createToken();
         return user.encryptPassword();
       },
       beforeUpdate(user) {
+        if (user.role === INTEGRATION) user.token = user.createToken();
         return user.changed('password')
           ? user.encryptPassword()
           : Promise.resolve(user);
@@ -114,7 +131,7 @@ class User extends Model {
   }
 
   createToken(options = {}) {
-    const payload = pick(this, ['id', 'email']);
+    const payload = pick(this, ['id', 'username']);
     return jwt.sign(payload, config.secret, options);
   }
 }
