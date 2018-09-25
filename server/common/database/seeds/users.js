@@ -1,8 +1,6 @@
 'use strict';
 
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const pick = require('lodash/pick');
 const Promise = require('bluebird');
 const { auth: config = {} } = require('../../../config');
 const { role } = require('../../../../common/config');
@@ -42,20 +40,13 @@ const users = [{
 
 module.exports = {
   up(queryInterface, Sequelize) {
-    return Promise.map(users, user => {
-      if (user.role === INTEGRATION) user.token = createToken(user);
-      return encryptPassword(user);
-    }).then(users => queryInterface.bulkInsert('user', users, {}));
+    return Promise.map(users, user => encryptPassword(user))
+      .then(users => queryInterface.bulkInsert('user', users, {}));
   },
   down(queryInterface, Sequelize) {
     return queryInterface.bulkDelete('user', null, {});
   }
 };
-
-function createToken(user) {
-  const payload = pick(user, ['id', 'username']);
-  return jwt.sign(payload, config.secret);
-}
 
 function encryptPassword(user) {
   return bcrypt.hash(user.password, config.saltRounds)

@@ -32,7 +32,7 @@ const questions = [{
 
 prompt(questions)
   .then(data => console.log() || action(data))
-  .then(user => console.log(`Integration token: ${user.token}`))
+  .then(user => console.log(`Integration token: ${user.createToken()}`))
   .catch(err => console.error(err.message) || 1)
   .then((code = 0) => process.exit(code));
 
