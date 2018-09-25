@@ -34,23 +34,17 @@
   },
   "required": ["name", "url", "email"],
   "if": {
-    "anyOf": [
-      { "properties":
-        { "publicKeyPath": { "minLength": 1 } }
-      },
-      { "properties":
-        { "privateKeyPath": { "minLength": 1 } }
-      }
-    ]
+    "anyOf": [{
+      "properties": { "publicKeyPath": { "minLength": 1 } }
+    }, {
+      "properties": { "privateKeyPath": { "minLength": 1 } }
+    }]
   },
   "then": {
-    "allOf": [
-      { "properties":
-        { "publicKeyPath": { "minLength": 1, "fileExists": null } }
-      },
-      { "properties":
-        { "privateKeyPath": { "minLength": 1, "fileExists": null } }
-      }
-    ]
+    "allOf": [{
+      "properties": { "publicKeyPath": { "minLength": 1, "fileExists": null } }
+    }, {
+      "properties": { "privateKeyPath": { "minLength": 1, "fileExists": null } }
+    }]
   }
 }
