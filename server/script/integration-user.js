@@ -14,7 +14,6 @@ set(User, 'sequelize.options.logging', noop);
 
 const actions = {
   create: data => create(data),
-  refresh: data => refreshToken(data),
   token: data => get(data)
 };
 const action = actions[process.argv[2]];
@@ -47,10 +46,6 @@ function get({ username, password }) {
     .then(user => user || Promise.reject(Error(`Integration "${username}" does not exist.`)))
     .then(user => user.authenticate(password))
     .then(user => user || Promise.reject(Error('Invalid password.')));
-}
-
-function refreshToken(data) {
-  return get(data).then(user => (user.token = user.createToken()) && user.save());
 }
 
 function getValidator(Model, attribute) {
