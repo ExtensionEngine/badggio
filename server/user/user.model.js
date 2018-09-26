@@ -4,7 +4,7 @@ const { auth: config = {} } = require('../config');
 const { Model } = require('sequelize');
 const { role } = require('../../common/config');
 const bcrypt = require('bcrypt');
-const isEmail = require('is-email-like');
+const hasha = require('hasha');
 const jwt = require('jsonwebtoken');
 const logger = require('../common/logger')();
 const mail = require('../common/mail');
@@ -14,78 +14,126 @@ const values = require('lodash/values');
 
 const { INTEGRATION } = role;
 
-class User extends Model {
+const timestamps = ({ DATE }) => ({
+  createdAt: {
+    type: DATE,
+    field: 'created_at'
+  },
+  updatedAt: {
+    type: DATE,
+    field: 'updated_at'
+  },
+  deletedAt: {
+    type: DATE,
+    field: 'deleted_at'
+  }
+});
+
+const options = {
+  modelName: 'user',
+  timestamps: true,
+  paranoid: true,
+  freezeTableName: true
+};
+
+class Integration extends Model {
+  constructor(values = {}, options = {}) {
+    super({ ...values, role: INTEGRATION }, options);
+  }
+
   static fields(DataTypes) {
-    const { DATE, ENUM, STRING, VIRTUAL } = DataTypes;
     return {
-      username: {
-        type: STRING,
+      email: {
+        type: DataTypes.STRING,
         allowNull: false,
-        validate: {
-          notEmpty: true,
-          isEmail(username) {
-            if (this.role === INTEGRATION || isEmail(username)) return;
-            throw Error('Username should be an email.');
-          }
-        },
-        unique: { msg: 'This username is already in use.' }
+        validate: { isEmail: true, notEmpty: true },
+        unique: { msg: 'This integration already exists.' }
       },
-      password: {
-        type: STRING,
-        validate: { notEmpty: true, len: [5, 255] }
+      name: {
+        type: DataTypes.STRING,
+        field: 'first_name',
+        set(name) {
+          this.setDataValue('name', name);
+          this.setDataValue('email', `${encrypt(name, 14)}_integration@localhost.com`);
+        },
+        validate: { notEmpty: true }
       },
       role: {
-        type: ENUM(values(role)),
+        type: DataTypes.ENUM(INTEGRATION),
         allowNull: false,
-        defaultValue: role.STUDENT
+        defaultValue: INTEGRATION
       },
       token: {
-        type: STRING,
-        validate: { notEmpty: true, len: [10, 500] }
-      },
-      firstName: {
-        type: STRING,
-        field: 'first_name'
-      },
-      lastName: {
-        type: STRING,
-        field: 'last_name'
-      },
-      createdAt: {
-        type: DATE,
-        field: 'created_at'
-      },
-      updatedAt: {
-        type: DATE,
-        field: 'updated_at'
-      },
-      deletedAt: {
-        type: DATE,
-        field: 'deleted_at'
-      },
-      email: {
-        type: VIRTUAL(STRING, ['username']),
+        type: DataTypes.VIRTUAL,
         get() {
-          return this.username;
+          const payload = pick(this, ['id', 'name']);
+          return jwt.sign(payload, config.secret);
         }
       },
-      profile: {
-        type: VIRTUAL,
-        get() {
-          return pick(this, ['id', 'firstName', 'lastName', 'email', 'role']);
-        }
-      }
+      ...timestamps(DataTypes)
     };
   }
 
-  static options() {
+  static options() { return options; }
+
+  get isIntegration() {
+    return true;
+  }
+
+  static get role() {
+    return INTEGRATION;
+  }
+
+  static isIntegration(model) {
+    return model.role === this.role;
+  }
+}
+
+class User extends Model {
+  constructor(...args) {
+    super(...args);
+    if (Integration.isIntegration(this)) return new Integration(...args);
+  }
+
+  static fields(DataTypes) {
     return {
-      modelName: 'user',
-      timestamps: true,
-      paranoid: true,
-      freezeTableName: true
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+        validate: { isEmail: true, notEmpty: true }
+      },
+      password: {
+        type: DataTypes.STRING,
+        validate: { notEmpty: true, len: [5, 255] }
+      },
+      role: {
+        type: DataTypes.ENUM(values(role)),
+        allowNull: false
+      },
+      token: {
+        type: DataTypes.STRING,
+        validate: { notEmpty: true, len: [10, 500] }
+      },
+      firstName: {
+        type: DataTypes.STRING,
+        field: 'first_name'
+      },
+      lastName: {
+        type: DataTypes.STRING,
+        field: 'last_name'
+      },
+      profile: {
+        type: DataTypes.VIRTUAL,
+        get() {
+          return pick(this, ['id', 'firstName', 'lastName', 'email', 'role']);
+        }
+      },
+      ...timestamps(DataTypes)
     };
   }
+
+  static options() { return options; }
 
   static hooks() {
     return {
@@ -132,10 +180,16 @@ class User extends Model {
   }
 
   createToken(options = {}) {
-    const propertyName = this.role === INTEGRATION ? 'username' : 'email';
-    const payload = pick(this, ['id', propertyName]);
+    const payload = pick(this, ['id', 'email']);
     return jwt.sign(payload, config.secret, options);
   }
 }
 
+Object.assign(User, { Integration });
+
 module.exports = User;
+
+function encrypt(value, length) {
+  const hash = hasha(value, { algorithm: 'sha1' });
+  return hash.substring(hash.length - length);
+}
