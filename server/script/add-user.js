@@ -15,7 +15,7 @@ setLogging(User, false);
 
 const questions = [{
   type: 'input',
-  name: 'username',
+  name: 'email',
   message: 'Enter email:',
   validate: isEmail
 }, {
