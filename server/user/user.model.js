@@ -12,8 +12,6 @@ const pick = require('lodash/pick');
 const Promise = require('bluebird');
 const values = require('lodash/values');
 
-const { INTEGRATION } = role;
-
 const timestamps = ({ DATE }) => ({
   createdAt: {
     type: DATE,
@@ -38,7 +36,7 @@ const options = {
 
 class Integration extends Model {
   constructor(values = {}, options = {}) {
-    super({ ...values, role: INTEGRATION }, options);
+    super({ ...values, role: 'INTEGRATION' }, options);
   }
 
   static fields(DataTypes) {
@@ -59,9 +57,9 @@ class Integration extends Model {
         validate: { notEmpty: true }
       },
       role: {
-        type: DataTypes.ENUM(INTEGRATION),
+        type: DataTypes.ENUM('INTEGRATION'),
         allowNull: false,
-        defaultValue: INTEGRATION
+        defaultValue: 'INTEGRATION'
       },
       token: {
         type: DataTypes.VIRTUAL,
@@ -81,7 +79,7 @@ class Integration extends Model {
   }
 
   static get role() {
-    return INTEGRATION;
+    return 'INTEGRATION';
   }
 
   static isIntegration(model) {

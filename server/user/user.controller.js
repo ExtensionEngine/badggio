@@ -1,8 +1,7 @@
 'use strict';
 
 const { createError } = require('../common/errors');
-const { role: { INTEGRATION } } = require('../../common/config');
-const { Sequelize, User } = require('../common/database');
+const { Sequelize, User, Integration } = require('../common/database');
 const HttpStatus = require('http-status');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
@@ -12,7 +11,7 @@ const inputAttrs = ['email', 'role', 'firstName', 'lastName'];
 const Op = Sequelize.Op;
 
 function list({ query: { email, emailLike, role } }, res) {
-  const cond = [{ role: { [Op.ne]: INTEGRATION } }];
+  const cond = [{ role: { [Op.ne]: Integration.role } }];
   if (email) cond.push({ email });
   if (emailLike) cond.push({ email: { [Op.iLike]: `%${emailLike}%` } });
   if (role) cond.push({ role });

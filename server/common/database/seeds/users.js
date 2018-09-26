@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const hasha = require('hasha');
 const Promise = require('bluebird');
 const { auth: config = {} } = require('../../../config');
-const { role: { ADMIN, INTEGRATION } } = require('../../../../common/config');
+const { role } = require('../../../../common/config');
 
 const now = new Date();
 const users = [{
@@ -12,7 +12,7 @@ const users = [{
   last_name: 'Example',
   email: 'admin@example.org',
   password: 'admin123',
-  role: ADMIN,
+  role: role.ADMIN,
   created_at: now,
   updated_at: now
 }, {
@@ -20,17 +20,17 @@ const users = [{
   last_name: 'Example',
   email: 'admin2@example.org',
   password: 'admin123',
-  role: ADMIN,
+  role: role.ADMIN,
   created_at: now,
   updated_at: now
 }, {
   first_name: 'lms',
-  role: INTEGRATION,
+  role: 'INTEGRATION',
   created_at: now,
   updated_at: now
 }, {
   first_name: 'tailor',
-  role: INTEGRATION,
+  role: 'INTEGRATION',
   created_at: now,
   updated_at: now
 }];
@@ -38,7 +38,7 @@ const users = [{
 module.exports = {
   up(queryInterface, Sequelize) {
     return Promise.map(users, user => {
-      if (user.role !== INTEGRATION) encryptPassword(user);
+      if (user.role !== 'INTEGRATION') encryptPassword(user);
       else user.email = `${sha1(user.first_name, 14)}@integration.localhost`;
       return user;
     })

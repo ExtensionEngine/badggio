@@ -7,9 +7,6 @@ const { User } = require('../common/database');
 const humanize = require('humanize-string');
 const isEmail = require('is-email-like');
 const map = require('lodash/map');
-const omit = require('lodash/omit');
-
-const roles = omit(role, [role.INTEGRATION]);
 
 setLogging(User, false);
 
@@ -37,7 +34,7 @@ const questions = [{
 }, {
   type: 'list',
   name: 'role',
-  choices: map(roles, value => ({ name: humanize(value), value })),
+  choices: map(role, value => ({ name: humanize(value), value })),
   message: 'Select role:'
 }];
 
