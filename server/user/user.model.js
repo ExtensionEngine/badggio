@@ -138,11 +138,9 @@ class User extends Model {
   static hooks() {
     return {
       beforeCreate(user) {
-        if (user.role === INTEGRATION) user.token = user.createToken();
         return user.encryptPassword();
       },
       beforeUpdate(user) {
-        if (user.role === INTEGRATION) user.token = user.createToken();
         return user.changed('password')
           ? user.encryptPassword()
           : Promise.resolve(user);
