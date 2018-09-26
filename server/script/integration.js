@@ -32,7 +32,7 @@ function create({ name }) {
 }
 
 function findOne({ name }) {
-  return Integration.findOne({ where: { name } })
+  return Integration.findOne({ where: { name, role: Integration.role } })
     .then(integration => {
       if (integration) return integration;
       return Promise.reject(new Error(`Integration "${name}" does not exist.`));
