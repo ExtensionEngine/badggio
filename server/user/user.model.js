@@ -54,7 +54,7 @@ class Integration extends Model {
         field: 'first_name',
         set(name) {
           this.setDataValue('name', name);
-          this.setDataValue('email', `${encrypt(name, 14)}_integration@localhost.com`);
+          this.setDataValue('email', `${encrypt(name, 14)}@integration.localhost`);
         },
         validate: { notEmpty: true }
       },
