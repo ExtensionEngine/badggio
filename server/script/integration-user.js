@@ -1,54 +1,37 @@
 'use strict';
 
+const { getValidator, setLogging } = require('../common/database/helpers');
+const { Integration } = require('../common/database');
 const { prompt } = require('inquirer');
-const { role: { INTEGRATION } } = require('../../common/config');
-const { User } = require('../common/database');
-const inRange = require('lodash/inRange');
-const set = require('lodash/set');
 
-const noop = Function.prototype;
-const notEmpty = input => input.length > 0;
-
-// Disable Sequelize SQL logging.
-set(User, 'sequelize.options.logging', noop);
+setLogging(Integration, false);
 
 const actions = {
-  create: data => create(data),
-  token: data => get(data)
+  create,
+  token: get,
+  default: get
 };
-const action = actions[process.argv[2]];
+const action = actions[process.argv[2]] || actions.default;
 
 const questions = [{
   type: 'input',
-  name: 'username',
+  name: 'name',
   message: 'Enter integration name:',
-  validate: getValidator(User, 'username')
+  validate: getValidator(Integration, 'name')
 }];
 
 prompt(questions)
   .then(data => console.log() || action(data))
-  .then(user => console.log(`Integration token: ${user.token}`))
+  .then(integration => console.log(`Integration token: ${integration.token}`))
   .catch(err => console.error(err.message) || 1)
   .then((code = 0) => process.exit(code));
 
-function create({ username }) {
-  return User.create({ username, role: INTEGRATION })
-    .then(user => console.log(`Integration created: ${user.username}`) || user);
+function create({ name }) {
+  return Integration.create({ name })
+    .then(integration => console.log(`Integration created: ${name}`) || integration);
 }
 
-function get({ username }) {
-  return User.findOne({ where: { username, role: INTEGRATION } })
-    .then(user => user || Promise.reject(Error(`Integration "${username}" does not exist.`)));
-}
-
-function getValidator(Model, attribute) {
-  return function validate(input) {
-    const validator = Model.prototype.validators[attribute];
-    if (!validator || !validator.len) {
-      return notEmpty(input) || `"${attribute}" can not be empty`;
-    }
-    const [min, max] = validator.len;
-    return inRange(input.length, min, max) ||
-      `"${attribute}" must be between ${min} and ${max} characters long`;
-  };
+function get({ name }) {
+  return Integration.findOne({ where: { name } })
+    .then(integration => integration || Promise.reject(Error(`Integration "${name}" does not exist.`)));
 }
