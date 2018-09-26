@@ -8,7 +8,8 @@ const pickBy = require('lodash/pickBy');
 const schema = require('./issuer.schema.json');
 const { SERVER_URL } = process.env;
 
-const { data: issuer } = new JoyCon().loadSync({ files: ['.issuerrc.json'] });
+const files = ['.issuerrc.json'];
+const { data: issuer } = new JoyCon().loadSync({ files });
 
 function loadKeyPairs() {
   if (!issuer.publicKeyPath) return {};
@@ -39,9 +40,10 @@ function loadUrls() {
  * @returns {object} Issuer.
  */
 function load() {
+  if (!issuer) throw Error(`Missing "${files.join('|')}" config file.`);
   const valid = ajv.validate(schema, issuer);
   if (!valid) {
-    throw new Error(ajv.errors.map(error =>
+    throw Error(ajv.errors.map(error =>
       `Issuer${error.dataPath}: ${error.message}`).join(', '));
   }
 
