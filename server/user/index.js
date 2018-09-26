@@ -1,13 +1,10 @@
 'use strict';
 
-const { setUsername } = require('./user.middleware');
-
 const auth = require('../common/auth').authenticate('jwt');
 const ctrl = require('./user.controller');
 const router = require('express').Router();
 
 router
-  .use(setUsername)
   .post('/login', ctrl.login)
   .use(auth)
   .get('/', ctrl.list)
