@@ -50,9 +50,12 @@ import humanize from 'humanize-string';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
 import Modal from '@/components/common/Modal';
+import omit from 'lodash/omit';
 import request from '@/api/request';
 import VInput from '@/components/common/form/VInput';
 import VSelect from '@/components/common/form/VSelect';
+
+const roles = omit(role, [role.INTEGRATION]);
 
 const resetUser = () => {
   return {
@@ -75,7 +78,7 @@ export default {
   },
   computed: {
     roles() {
-      return map(role, it => ({ label: humanize(it), value: it }));
+      return map(roles, it => ({ label: humanize(it), value: it }));
     }
   },
   methods: {
