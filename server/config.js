@@ -1,7 +1,9 @@
 'use strict';
 
-const path = require('path');
 const issuer = require('./issuer/issuer.loader').load();
+const path = require('path');
+
+const parseBool = (str = '') => str.toLowerCase() === 'true';
 
 module.exports = {
   hostname: process.env.HOSTNAME,
@@ -43,7 +45,7 @@ module.exports = {
   },
   issuer,
   recipients: {
-    hashed: (process.env.RECIPIENTS_HASHED.toLowerCase() === 'true'),
-    salted: (process.env.RECIPIENTS_SALTED.toLowerCase() === 'true')
+    hashed: parseBool(process.env.RECIPIENTS_HASHED),
+    salted: parseBool(process.env.RECIPIENTS_SALTED)
   }
 };
