@@ -27,11 +27,15 @@ const timestamps = ({ DATE }) => ({
   }
 });
 
-const options = {
-  modelName: 'user',
-  timestamps: true,
-  paranoid: true,
-  freezeTableName: true
+const UserBase = {
+  options() {
+    return {
+      modelName: 'user',
+      timestamps: true,
+      paranoid: true,
+      freezeTableName: true
+    };
+  }
 };
 
 class Integration extends Model {
@@ -72,8 +76,6 @@ class Integration extends Model {
     };
   }
 
-  static options() { return options; }
-
   get isIntegration() {
     return true;
   }
@@ -86,6 +88,8 @@ class Integration extends Model {
     return model.role === this.role;
   }
 }
+
+Object.assign(Integration, UserBase);
 
 class User extends Model {
   constructor(...args) {
@@ -130,8 +134,6 @@ class User extends Model {
       ...timestamps(DataTypes)
     };
   }
-
-  static options() { return options; }
 
   static hooks() {
     return {
@@ -181,7 +183,7 @@ class User extends Model {
   }
 }
 
-Object.assign(User, { Integration });
+Object.assign(User, UserBase, { Integration });
 
 module.exports = User;
 
