@@ -40,7 +40,7 @@ const UserBase = {
 
 class Integration extends Model {
   constructor(values = {}, options = {}) {
-    super({ ...values, role: 'INTEGRATION' }, options);
+    super({ ...values, role: Integration.role }, options);
   }
 
   static fields(DataTypes) {
@@ -61,9 +61,9 @@ class Integration extends Model {
         validate: { notEmpty: true }
       },
       role: {
-        type: DataTypes.ENUM('INTEGRATION'),
+        type: DataTypes.ENUM(Integration.role),
         allowNull: false,
-        defaultValue: 'INTEGRATION'
+        defaultValue: Integration.role
       },
       token: {
         type: DataTypes.VIRTUAL,
@@ -187,7 +187,7 @@ Object.assign(User, UserBase, { Integration });
 
 module.exports = User;
 
-function encrypt(value, length) {
+function encrypt(value, length = 7) {
   const hash = hasha(value, { algorithm: 'sha1' });
   return hash.substring(hash.length - length);
 }

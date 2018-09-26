@@ -8,8 +8,8 @@ setLogging(Integration, false);
 
 const actions = {
   create,
-  token: get,
-  default: get
+  token: findOne,
+  default: findOne
 };
 const action = actions[process.argv[2]] || actions.default;
 
@@ -31,7 +31,10 @@ function create({ name }) {
     .then(integration => console.log(`Integration created: ${name}`) || integration);
 }
 
-function get({ name }) {
+function findOne({ name }) {
   return Integration.findOne({ where: { name } })
-    .then(integration => integration || Promise.reject(Error(`Integration "${name}" does not exist.`)));
+    .then(integration => {
+      if (integration) return integration;
+      return Promise.reject(new Error(`Integration "${name}" does not exist.`));
+    });
 }
