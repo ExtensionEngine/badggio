@@ -2,7 +2,7 @@
   <div class="auth-container">
     <div class="auth-panel">
       <div class="auth-header">
-        <h1>APP STARTER</h1>
+        <h1>BADGGIO</h1>
       </div>
       <div class="auth-body">
         <router-view></router-view>

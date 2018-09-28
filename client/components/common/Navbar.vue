@@ -4,7 +4,7 @@
     role="navigation"
     aria-label="main navigation">
     <div class="navbar-brand">
-      <router-link to="/" class="navbar-item">APP STARTER</router-link>
+      <router-link to="/" class="navbar-item">BADGGIO</router-link>
     </div>
     <div class="navbar-menu">
       <div v-if="user" class="navbar-end">
