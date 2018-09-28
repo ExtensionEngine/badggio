@@ -6,6 +6,7 @@ import Vue from 'vue';
 import Auth from '@/components/auth';
 import BadgeList from '@/components/badges/list';
 import Badges from '@/components/badges';
+import BadgeSave from '@/components/badges/save';
 import ForgotPassword from '@/components/auth/ForgotPassword';
 import Index from '@/components/index';
 import Login from '@/components/auth/Login';
@@ -56,6 +57,14 @@ const router = new Router({
         path: '',
         name: 'badge-list',
         component: BadgeList
+      }, {
+        path: 'create',
+        name: 'badge-create',
+        component: BadgeSave
+      }, {
+        path: ':id',
+        name: 'badge-edit',
+        component: BadgeSave
       }, fallbackRoute]
     }, fallbackRoute]
   }, fallbackRoute]
