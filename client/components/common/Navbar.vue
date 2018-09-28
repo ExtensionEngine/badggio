@@ -53,6 +53,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '~bulma/sass/utilities/initial-variables.sass';
+
 .mdi-logout {
   margin-left: -5px;
 }
@@ -73,7 +75,7 @@ export default {
       height: 1px;
       width: 96%;
       margin-left: 2%;
-      background-color: hsl(0, 0%, 86%);
+      background-color: $grey-lighter;
     }
     .navbar-item {
       padding-right: 1rem;
