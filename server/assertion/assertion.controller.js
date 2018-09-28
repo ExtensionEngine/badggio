@@ -3,18 +3,19 @@
 const HttpStatus = require('http-status');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
-const { Assertion, Recipient, sequelize } = require('../common/database');
+const { Assertion, Recipient, Sequelize, sequelize } = require('../common/database');
 const { assertion: assertionFacet } = require('./assertion.facets');
 const { bake } = require('./assertion.helpers');
 const { createError } = require('../common/errors');
 const { NOT_FOUND, GONE } = HttpStatus;
 
+const { EmptyResultError } = Sequelize;
 const inputAttrs = ['badgeClassId', 'narrative', 'expires',
   'revoked', 'revocationReason'];
 
 function loadAssertion(req, { locals }, next, id) {
-  return Assertion.findById(id, { include: { all: true } })
-    .then(assertion => assertion || createError(NOT_FOUND, 'Assertion does not exist!'))
+  return Assertion.findById(id, { include: { all: true }, rejectOnEmpty: true })
+    .catch(EmptyResultError, () => createError(NOT_FOUND, 'Assertion does not exist!'))
     .then(assertion => {
       locals.assertion = assertion;
       next();
