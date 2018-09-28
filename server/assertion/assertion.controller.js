@@ -13,11 +13,11 @@ const { EmptyResultError } = Sequelize;
 const inputAttrs = ['badgeClassId', 'narrative', 'expires',
   'revoked', 'revocationReason'];
 
-function loadAssertion(req, { locals }, next, id) {
+function loadAssertion(req, res, next, id) {
   return Assertion.findById(id, { include: { all: true }, rejectOnEmpty: true })
     .catch(EmptyResultError, () => createError(NOT_FOUND, 'Assertion does not exist!'))
     .then(assertion => {
-      locals.assertion = assertion;
+      res.locals.assertion = assertion;
       next();
     }).catch(err => next(err));
 }
