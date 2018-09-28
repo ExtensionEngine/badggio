@@ -37,3 +37,10 @@ export default {
   flex: 1;
 }
 </style>
+
+<style lang="scss">
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+</style>
