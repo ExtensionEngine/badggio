@@ -34,17 +34,17 @@
         </tr>
       </tbody>
     </table>
-    <badge-modal
+    <save-badge
       :show="showModal"
       :badgeData="context"
       @close="showModal = false">
-    </badge-modal>
+    </save-badge>
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex';
-import BadgeModal from './modal/Modal';
+import SaveBadge from './save';
 
 export default {
   name: 'badge-list',
@@ -74,7 +74,7 @@ export default {
       return tags && tags.join(', ');
     }
   },
-  components: { BadgeModal }
+  components: { SaveBadge }
 };
 </script>
 
