@@ -41,7 +41,10 @@ action()
 
 function list() {
   return Integration.findAll({ where: { role: Integration.role } })
-    .each(integration => console.log(template(integration)));
+    .then(integrations => {
+      console.log(integrations.map(it => template(it).trim()).join('\n\n'));
+      console.log();
+    });
 }
 
 function create() {
