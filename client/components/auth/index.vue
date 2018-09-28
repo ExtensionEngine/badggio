@@ -1,5 +1,5 @@
 <template>
-  <div class="auth-container">
+  <div class="auth-container container">
     <div class="auth-panel">
       <div class="auth-header">
         <h1>BADGGIO</h1>
@@ -14,10 +14,13 @@
 <style lang="scss" scoped>
 .auth-container {
   padding-top: 7%;
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 .auth-panel {
-  width: 500px;
+  width: 100%;
+  max-width: 500px;
   margin: auto;
   background-color: #fff;
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
