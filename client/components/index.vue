@@ -5,10 +5,7 @@
     </header>
     <main class="app-content container">
       <div class="columns">
-        <div class="column is-2">
-          <sidebar/>
-        </div>
-        <div class="column is-10">
+        <div class="column">
           <router-view></router-view>
         </div>
       </div>
@@ -19,7 +16,6 @@
 <script>
 import { mapActions } from 'vuex';
 import Navbar from '@/components/common/Navbar';
-import Sidebar from '@/components/common/Sidebar';
 
 export default {
   name: 'admin',
@@ -27,16 +23,14 @@ export default {
   created() {
     this.fetch();
   },
-  components: { Navbar, Sidebar }
+  components: { Navbar }
 };
 </script>
 
 <style lang="scss" scoped>
 .app-container {
-  display: flex;
-  flex-direction: column;
   height: 100%;
-  padding: 32px 0;
+  padding: 32px 16px 0;
 }
 
 .app-content {
