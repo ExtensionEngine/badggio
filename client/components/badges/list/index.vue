@@ -1,9 +1,11 @@
 <template>
   <div>
-    <button
-      class="btn-create button is-primary is-pulled-right">
-      Create
-    </button>
+    <router-link :to="{ name: 'badge-create' }">
+      <button
+        class="btn-create button is-primary is-pulled-right">
+        Create
+      </button>
+    </router-link>
     <table class="table is-fullwidth is-hoverable">
       <thead>
         <th>Name</th>
@@ -25,9 +27,11 @@
           <td>{{ badge.criteriaNarrative }}</td>
           <td>{{ badge.tags | readable }}</td>
           <td>
-            <button class="button is-small is-pulled-right is-outlined">
-              <span class="mdi mdi-pencil"></span>
-            </button>
+            <router-link :to="{ name: 'badge-edit', params: { id: badge.id } }">
+              <button class="button is-small is-pulled-right is-outlined">
+                <span class="mdi mdi-pencil"></span>
+              </button>
+            </router-link>
           </td>
         </tr>
       </tbody>
