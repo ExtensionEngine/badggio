@@ -16,6 +16,7 @@
         :prefill="value"
         :prefillOptions="prefillOptions"
         :alertOnError="false"
+        :zIndex="10"
         @change="input"
         @error="error"
         data-vv-delay="1000"
@@ -77,15 +78,14 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 #picture-input {
-  padding: 10px;
-  border: 1px solid transparent;
-  border-style: solid;
-  border-color: rgb(219, 219, 219);
-
   .picture-inner-text {
     font-size: 1.35em;
   }
+}
+
+.help.is-danger {
+  text-align: center;
 }
 </style>
