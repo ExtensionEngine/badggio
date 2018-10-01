@@ -11,7 +11,7 @@
                 <p class="subtitle">Image data</p>
                 <div class="content">
                   <image-set
-                    :criteriaNarrative="badge.criteriaNarrative"
+                    :image="badge.image"
                     :imageCaption="badge.imageCaption"
                     :imageAuthorIri="badge.imageAuthorIri">
                   </image-set>
