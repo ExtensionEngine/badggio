@@ -1,27 +1,67 @@
 <template>
-  <modal :show="show" @close="close">
-    <div class="badge-modal">
-      <h2 class="title is-4">{{ badgeData ? 'Edit' : 'Create' }} Badge</h2>
-      <form @submit.prevent="save">
-        <navigation
-          :steps="steps"
-          :active="active"
-          @activate="activate" />
-        <component
-          v-for="(step, index) in steps"
-          v-show="isActive(step)"
-          v-bind="badge"
-          :key="index"
-          :is="step"
-          :badgeData="badgeData"
-          @input="updateBadge" />
-        <div class="controls field is-grouped is-grouped-right">
-          <button @click="close" class="control button" type="button">Cancel</button>
-          <button class="control button is-primary" type="submit">Save</button>
+  <div class="badge-form">
+    <h2 class="title is-4">{{ id ? 'Edit' : 'Create' }} Badge</h2>
+    <form @submit.prevent="save">
+      <div class="tile is-ancestor is-vertical">
+        <div class="tile is-parent">
+          <div class="tile is-child notification box">
+            <div class="columns">
+              <div class="column">
+                <p class="title">Basic info</p>
+                <p class="subtitle">Image data</p>
+                <div class="content">
+                  <image-set
+                    :criteriaNarrative="badge.criteriaNarrative"
+                    :imageCaption="badge.imageCaption"
+                    :imageAuthorIri="badge.imageAuthorIri">
+                  </image-set>
+                </div>
+              </div>
+              <div class="column">
+                <p class="subtitle">Name and description</p>
+                <div class="content">
+                  <name :name="badge.name"></name>
+                  <description :description="badge.description"></description>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </form>
-    </div>
-  </modal>
+        <div class="tile is-parent">
+          <div class="tile is-child notification box">
+            <p class="title">Citeria</p>
+            <div class="content">
+              <criteria-narrative :criteriaNarrative="badge.criteriaNarrative">
+              </criteria-narrative>
+            </div>
+          </div>
+        </div>
+        <div class="tile">
+          <div class="tile">
+            <div class="tile is-parent">
+              <div class="tile is-child notification box">
+                <p class="title">Badge Tags</p>
+                <div class="content">
+                  <tags :tags="badge.tags" @input="updateBadge"></tags>
+                </div>
+              </div>
+            </div>
+            <div class="tile is-parent">
+              <div class="tile is-child notification box">
+                <p class="title">Submit</p>
+                <div class="content">
+                  <div class="controls field is-grouped is-grouped-right">
+                    <button @click="close" class="control button" type="button">Cancel</button>
+                    <button class="control button is-primary" type="submit">Save</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
 </template>
 
 <script>
@@ -52,16 +92,13 @@ const resetBadge = () => {
 const navSteps = ['name', 'description', 'imageSet', 'criteriaNarrative', 'tags'];
 
 export default {
-  name: 'badge-modal',
+  name: 'badge-form',
   mixins: [withValidation()],
   props: {
-    show: { type: Boolean, default: false },
-    badgeData: { type: Object, default() { return {}; } }
+    id: { type: Number, default: null }
   },
   data() {
     return {
-      active: navSteps[0],
-      steps: navSteps,
       badge: resetBadge()
     };
   },
@@ -124,3 +161,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.badge-form {
+  margin-bottom: 100px;
+}
+</style>
