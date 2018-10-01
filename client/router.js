@@ -1,4 +1,5 @@
 import get from 'lodash/get';
+import mapValues from 'lodash/mapValues';
 import Router from 'vue-router';
 import store from './store';
 import Vue from 'vue';
@@ -15,6 +16,8 @@ import ResetPassword from '@/components/auth/ResetPassword';
 import Users from '@/components/users';
 
 Vue.use(Router);
+
+const paramsNumParser = route => mapValues(route.params, Number);
 
 // Handle 404
 const fallbackRoute = {
@@ -64,7 +67,8 @@ const router = new Router({
       }, {
         path: ':id',
         name: 'badge-edit',
-        component: BadgeSave
+        component: BadgeSave,
+        props: paramsNumParser
       }, fallbackRoute]
     }, fallbackRoute]
   }, fallbackRoute]
