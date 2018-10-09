@@ -13,15 +13,18 @@
                   <image-set
                     :image="badge.image"
                     :imageCaption="badge.imageCaption"
-                    :imageAuthorIri="badge.imageAuthorIri">
+                    :imageAuthorIri="badge.imageAuthorIri"
+                    @input="updateBadge">
                   </image-set>
                 </div>
               </div>
               <div class="column">
                 <p class="subtitle">Name and description</p>
                 <div class="content">
-                  <name :name="badge.name"></name>
-                  <description :description="badge.description"></description>
+                  <name :name="badge.name" @input="updateBadge"></name>
+                  <description
+                    :description="badge.description"
+                    @input="updateBadge"></description>
                 </div>
               </div>
             </div>
@@ -31,7 +34,9 @@
           <div class="tile is-child notification box">
             <p class="title">Citeria</p>
             <div class="content">
-              <criteria-narrative :criteriaNarrative="badge.criteriaNarrative">
+              <criteria-narrative
+                :criteriaNarrative="badge.criteriaNarrative"
+                @input="updateBadge">
               </criteria-narrative>
             </div>
           </div>
@@ -51,8 +56,8 @@
                 <p class="title">Submit</p>
                 <div class="content">
                   <div class="controls field is-grouped is-grouped-right">
-                    <button @click="close" class="control button" type="button">Cancel</button>
-                    <button class="control button is-primary" type="submit">Save</button>
+                    <button @click="reset" class="control button" type="button">Cancel</button>
+                    <button @click="save" class="control button is-primary" type="submit">Save</button>
                   </div>
                 </div>
               </div>
@@ -65,17 +70,16 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import { withValidation } from '@/validation';
 import cloneDeep from 'lodash/cloneDeep';
-import compact from 'lodash/compact';
 import isEmpty from 'lodash/isEmpty';
 import CriteriaNarrative from './CriteriaNarrative';
 import Description from './Description';
 import ImageSet from './Image';
+import isNaN from 'lodash/isNaN';
 import Modal from '@/components/common/Modal';
 import Name from './Name';
-import Navigation from './Navigation';
 import Tags from './Tags';
 
 const resetBadge = () => {
@@ -89,7 +93,6 @@ const resetBadge = () => {
     tags: []
   };
 };
-const navSteps = ['name', 'description', 'imageSet', 'criteriaNarrative', 'tags'];
 
 export default {
   name: 'badge-form',
@@ -102,24 +105,11 @@ export default {
       badge: resetBadge()
     };
   },
+  computed: mapGetters('badges', { getBadge: 'getById' }),
   methods: {
-    ...mapActions('badges', { saveBadge: 'save' }),
-    isActive(step) {
-      return step === this.active;
-    },
-    resetActive() {
-      return navSteps[0];
-    },
-    activate(step) {
-      this.active = step;
-    },
+    ...mapActions('badges', { saveBadge: 'save', get: 'get' }),
     updateBadge(data) {
       Object.assign(this.badge, data);
-    },
-    close() {
-      this.active = this.resetActive();
-      this.badge = resetBadge();
-      this.$emit('close');
     },
     validate() {
       return this.$validator.validateAll()
@@ -129,26 +119,28 @@ export default {
     save() {
       this.validate().then(isValid => {
         if (!isValid) return;
-        this.cleanBadge(this.badge);
         this.saveBadge(this.badge);
-        this.close();
       });
     },
-    cleanBadge(badge) {
-      Object.keys(resetBadge()).forEach(key => {
-        const val = badge[key];
-        badge[key] = Array.isArray(val)
-          ? compact(val.map(it => it.trim()))
-          : val.trim();
-      });
+    reset() {
+      const { getBadge, id } = this;
+      this.badge = id ? cloneDeep(getBadge(id)) : resetBadge();
+    },
+    initRoute() {
+      if (isNaN(this.id)) return this.$router.push({ name: 'badge-list' });
+      if (!this.id) return this.reset();
+      this.get(this.id.toString()).then(() => this.reset())
+        .catch(() => this.$router.push({ name: 'badge-list' }));
     }
   },
   watch: {
-    show(val) {
-      if (!val) return;
+    id(val) {
       this.vErrors.clear();
-      if (!isEmpty(this.badgeData)) this.badge = cloneDeep(this.badgeData);
+      this.initRoute();
     }
+  },
+  mounted() {
+    this.initRoute();
   },
   components: {
     CriteriaNarrative,
@@ -156,7 +148,6 @@ export default {
     ImageSet,
     Modal,
     Name,
-    Navigation,
     Tags
   }
 };
