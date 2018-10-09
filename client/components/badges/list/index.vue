@@ -17,7 +17,7 @@
         <th>Tags</th>
         <th></th>
       </thead>
-      <tbody>
+      <tbody v-if="badges">
         <tr v-for="badge in badges" :key="badge._cid">
           <td>{{ badge.name }}</td>
           <td>{{ badge.description }}</td>
@@ -40,11 +40,15 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'badge-list',
   computed: mapState('badges', { badges: 'items' }),
+  methods: mapActions('badges', ['fetch']),
+  created() {
+    this.fetch();
+  },
   filters: {
     readable(tags) {
       return tags && tags.join(', ');

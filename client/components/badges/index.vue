@@ -6,13 +6,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-
 export default {
-  name: 'badges',
-  methods: mapActions('badges', ['fetch']),
-  created() {
-    this.fetch();
-  }
+  name: 'badges'
 };
 </script>
