@@ -41,6 +41,10 @@ function list(req, res, next) {
   });
 }
 
+function get(req, { jsend, locals: { badge } }) {
+  return badge.loadImage().then(badge => jsend.success(badge));
+}
+
 function patch(req, res) {
   const { body } = req;
   const { decodedImage, badge } = res.locals;
@@ -97,6 +101,7 @@ module.exports = {
   criteria,
   decodeImage,
   encodeImages,
+  get,
   image,
   list,
   loadBadge,
