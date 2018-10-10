@@ -1,3 +1,4 @@
+import includes from 'lodash/includes';
 import VeeValidate from 'vee-validate';
 
 const alphanumerical = {
@@ -9,7 +10,17 @@ const alphanumerical = {
   }
 };
 
+const unique = {
+  getMessage: field => {
+    return `The value is already present in the ${field}.`;
+  },
+  validate: (value, collection) => {
+    return !includes(collection, value);
+  }
+};
+
 VeeValidate.Validator.extend('alphanumerical', alphanumerical);
+VeeValidate.Validator.extend('unique', unique);
 
 export default VeeValidate;
 
