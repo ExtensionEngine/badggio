@@ -47,7 +47,11 @@
               <div class="tile is-child notification box">
                 <p class="title">Badge Tags</p>
                 <div class="content">
-                  <tags :tags="badge.tags" @input="updateBadge"></tags>
+                  <tags
+                    :tags="badge.tags"
+                    :validate="{ min: 2, unique: badge.tags }"
+                    @input="updateBadge">
+                  </tags>
                 </div>
               </div>
             </div>
