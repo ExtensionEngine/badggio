@@ -1,7 +1,6 @@
 <template>
   <div>
     <v-image-input
-      :validate="'required'"
       :value="image"
       :width="300"
       :height="300"
@@ -12,6 +11,7 @@
       }"
       :hideChangeButton="true"
       @input="updateData('image', $event)"
+      validate="required"
       name="image" />
     <v-input
       :value="imageCaption"
