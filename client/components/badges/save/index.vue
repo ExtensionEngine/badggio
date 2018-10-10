@@ -1,5 +1,13 @@
 <template>
   <div class="badge-form">
+    <div class="is-pulled-right">
+      <router-link :to="{ name: 'badge-list' }">
+        <a class="button is-white has-text-link">Badge list</a>
+      </router-link>
+      <router-link v-if="id" :to="{ name: 'badge-create' }">
+        <button class="btn-create button is-primary" type="button">Create</button>
+      </router-link>
+    </div>
     <h2 class="title is-4">{{ id ? 'Edit' : 'Create' }} Badge</h2>
     <form @submit.prevent="save">
       <div class="tile is-ancestor is-vertical">
