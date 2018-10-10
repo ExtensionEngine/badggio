@@ -2,12 +2,19 @@
   <div>
     <div class="tag-input">
       <v-input
-        :name="name"
-        v-bind="$attrs"
         v-model="currentTag"
-        @keydown.enter.prevent="addTag"/>
-      <button @click.prevent="addTag" class="button is-small">
-        <span class="icon has-text-primary mdi mdi-plus-circle mdi-24px" />
+        :name="name"
+        :validate="{ min: 2, 'alpha_num': true, unique: value }"
+        @keydown.enter.prevent.native="addTag"/>
+      <button
+        :disabled="!hasInput"
+        @click="addTag"
+        type="button"
+        class="button is-small">
+        <span
+          :class="{ 'has-text-primary': hasInput }"
+          class="icon mdi mdi-plus-circle mdi-24px">
+        </span>
       </button>
     </div>
     <div class="tags control">
@@ -29,7 +36,6 @@ export default {
   mixins: [withValidation()],
   inheritAttrs: false,
   props: {
-    type: { type: String, default: 'text' },
     name: { type: String, required: true },
     value: { type: Array, default: () => [] }
   },
@@ -42,12 +48,15 @@ export default {
   computed: {
     label() {
       return humanize(this.name);
+    },
+    hasInput() {
+      return !!this.currentTag;
     }
   },
   methods: {
     addTag() {
       this.$validator.validate(this.name).then(isValid => {
-        if (!isValid) return;
+        if (!isValid || !this.hasInput) return;
         this.tags.push(this.currentTag);
         this.currentTag = '';
         this.update();
