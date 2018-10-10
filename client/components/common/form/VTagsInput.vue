@@ -19,12 +19,14 @@
 </template>
 
 <script>
+import { withValidation } from '@/validation';
 import clone from 'lodash/clone';
 import humanize from 'humanize-string';
 import VInput from './VInput';
 
 export default {
   name: 'v-tags-input',
+  mixins: [withValidation()],
   inheritAttrs: false,
   props: {
     type: { type: String, default: 'text' },
@@ -44,9 +46,12 @@ export default {
   },
   methods: {
     addTag() {
-      this.tags.push(this.currentTag);
-      this.currentTag = '';
-      this.update();
+      this.$validator.validate(this.name).then(isValid => {
+        if (!isValid) return;
+        this.tags.push(this.currentTag);
+        this.currentTag = '';
+        this.update();
+      });
     },
     removeTag(index) {
       this.tags.splice(index, 1);
