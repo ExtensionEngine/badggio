@@ -1,5 +1,5 @@
 <template>
-  <v-tags-input :value="data" @input="updateData" name="tags" />
+  <v-tags-input v-bind="$attrs" :value="data" @input="updateData" name="tags" />
 </template>
 
 <script>
