@@ -13,10 +13,9 @@
       <div class="tile is-ancestor is-vertical">
         <div class="tile is-parent">
           <div class="tile is-child notification box">
-            <div class="columns">
+            <p class="title"><span class="icon mdi mdi-clipboard-text-outline"></span>Basic info</p>
+            <div class="columns is-8 is-variable">
               <div class="column">
-                <p class="title">Basic info</p>
-                <p class="subtitle">Image data</p>
                 <div class="content">
                   <image-set
                     :image="badge.image"
@@ -27,12 +26,12 @@
                 </div>
               </div>
               <div class="column">
-                <p class="subtitle">Name and description</p>
                 <div class="content">
                   <name :name="badge.name" @input="updateBadge"></name>
                   <description
                     :description="badge.description"
-                    @input="updateBadge"></description>
+                    @input="updateBadge">
+                  </description>
                 </div>
               </div>
             </div>
@@ -40,7 +39,7 @@
         </div>
         <div class="tile is-parent">
           <div class="tile is-child notification box">
-            <p class="title">Citeria</p>
+            <p class="title"><span class="icon mdi mdi-clipboard-check-outline"></span>Criteria</p>
             <div class="content">
               <criteria-narrative
                 :criteriaNarrative="badge.criteriaNarrative"
@@ -49,25 +48,21 @@
             </div>
           </div>
         </div>
-        <div class="tile">
-          <div class="tile">
-            <div class="tile is-parent">
-              <div class="tile is-child notification box">
-                <p class="title">Badge Tags</p>
-                <div class="content">
-                  <tags :tags="badge.tags" @input="updateBadge"></tags>
-                </div>
-              </div>
+        <div class="tile is-parent">
+          <div class="tile is-child notification box">
+            <p class="title"><span class="icon mdi mdi-tag-text-outline"></span>Badge Tags</p>
+            <div class="content">
+              <tags :tags="badge.tags" @input="updateBadge"></tags>
             </div>
-            <div class="tile is-parent">
-              <div class="tile is-child notification box">
-                <p class="title">Submit</p>
-                <div class="content">
-                  <div class="controls field is-grouped is-grouped-right">
-                    <button @click="reset" class="control button" type="button">Cancel</button>
-                    <button @click="save" class="control button is-primary" type="submit">Save</button>
-                  </div>
-                </div>
+          </div>
+        </div>
+        <div class="tile is-parent">
+          <div class="tile is-child notification box">
+            <p class="title">Submit</p>
+            <div class="content">
+              <div class="controls field is-grouped is-grouped-right">
+                <button @click="reset" class="control button" type="button">Cancel</button>
+                <button @click="save" class="control button is-primary" type="submit">Save</button>
               </div>
             </div>
           </div>
@@ -164,5 +159,34 @@ export default {
 <style lang="scss" scoped>
 .badge-form {
   margin-bottom: 100px;
+
+  .tile.is-child {
+    padding: 2rem 3rem;
+  }
+
+  .tile .content {
+    padding: 0 2rem;
+  }
+
+  /deep/ form {
+    .title {
+      font-size: 1.75rem;
+      font-weight: 300;
+
+      .icon {
+        margin-right: 8px;
+      }
+    }
+
+    .label {
+      font-weight: 300;
+    }
+  }
+}
+
+@media (max-width: 1023px) {
+  .badge-form .tile .content {
+      padding: 0;
+  }
 }
 </style>
