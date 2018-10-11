@@ -1,6 +1,6 @@
 <template>
   <div class="field">
-    <label class="label">{{ label }}</label>
+    <label v-if="showLabel" class="label">{{ label }}</label>
     <div class="control">
       <picture-input
         v-validate="validate"
@@ -50,7 +50,8 @@ export default {
     accept: { type: String, default: '' },
     size: { type: Number, default: DEFAULT_IMAGE_SIZE },
     customStrings: { type: Object, default: () => {} },
-    hideChangeButton: { type: Boolean, default: false }
+    hideChangeButton: { type: Boolean, default: false },
+    showLabel: { type: Boolean, default: false }
   },
   computed: {
     label() {
@@ -86,6 +87,6 @@ export default {
 }
 
 .help.is-danger {
-  text-align: center;
+    text-align: center;
 }
 </style>
