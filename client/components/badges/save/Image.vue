@@ -6,9 +6,7 @@
       :height="300"
       :accept="'image/svg+xml,image/png'"
       :size="0.256"
-      :customStrings="{
-        drag: 'Drag an image or <br>click here to select a file'
-      }"
+      :customStrings="messages"
       :hideChangeButton="true"
       @input="updateData('image', $event)"
       validate="required"
@@ -28,6 +26,10 @@
 import VInput from '@/components/common/form/VInput';
 import VImageInput from '@/components/common/form/VImageInput';
 
+const messages = {
+  drag: 'Drag an image or <br>click here to select a file'
+};
+
 export default {
   name: 'image-input',
   inheritAttrs: false,
@@ -35,6 +37,9 @@ export default {
     image: { type: String, default: '' },
     imageCaption: { type: String, default: '' },
     imageAuthorIri: { type: String, default: '' }
+  },
+  computed: {
+    messages: () => messages
   },
   methods: {
     updateData(name, value) {
