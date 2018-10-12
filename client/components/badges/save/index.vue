@@ -1,6 +1,6 @@
 <template>
   <div class="badge-form">
-    <div class="is-pulled-right">
+    <div class="buttons">
       <router-link :to="{ name: 'badge-list' }">
         <a class="button is-white has-text-link">Badge list</a>
       </router-link>
@@ -8,67 +8,70 @@
         <button class="btn-create button is-primary" type="button">Create</button>
       </router-link>
     </div>
-    <h2 class="title is-4">{{ id ? 'Edit' : 'Create' }} Badge</h2>
-    <form @submit.prevent="save">
-      <div class="tile is-ancestor is-vertical">
-        <div class="tile is-parent">
-          <div class="tile is-child notification box">
-            <p class="title"><span class="icon mdi mdi-clipboard-text-outline"></span>Basic info</p>
-            <div class="columns is-8 is-variable">
-              <div class="column">
-                <div class="content">
-                  <image-set
-                    :image="badge.image"
-                    :imageCaption="badge.imageCaption"
-                    :imageAuthorIri="badge.imageAuthorIri"
-                    @input="updateBadge">
-                  </image-set>
+    <v-form-group @submit.prevent="save" title="Some form title">
+      <template slot="title">
+        <span v-if="id" class="mdi mdi-pencil"></span>
+        <span v-else class="mdi mdi-plus-circle-outline"></span>
+        <h2 class="is-inline">{{ id ? 'Edit' : 'Create' }} Badge</h2>
+      </template>
+      <template slot="content">
+        <div class="tile is-ancestor is-vertical">
+          <div class="tile is-parent">
+            <div class="tile is-child notification box">
+              <p class="title"><span class="icon mdi mdi-clipboard-text-outline"></span>Basic info</p>
+              <div class="columns is-8 is-variable">
+                <div class="column">
+                  <div class="content">
+                    <image-set
+                      :image="badge.image"
+                      :imageCaption="badge.imageCaption"
+                      :imageAuthorIri="badge.imageAuthorIri"
+                      @input="updateBadge">
+                    </image-set>
+                  </div>
+                </div>
+                <div class="column">
+                  <div class="content">
+                    <name :name="badge.name" @input="updateBadge"></name>
+                    <description
+                      :description="badge.description"
+                      @input="updateBadge">
+                    </description>
+                  </div>
                 </div>
               </div>
-              <div class="column">
-                <div class="content">
-                  <name :name="badge.name" @input="updateBadge"></name>
-                  <description
-                    :description="badge.description"
-                    @input="updateBadge">
-                  </description>
-                </div>
+            </div>
+          </div>
+          <div class="tile is-parent">
+            <div class="tile is-child notification box">
+              <p class="title"><span class="icon mdi mdi-clipboard-check-outline"></span>Criteria</p>
+              <div class="content">
+                <criteria-narrative
+                  :criteriaNarrative="badge.criteriaNarrative"
+                  @input="updateBadge">
+                </criteria-narrative>
+              </div>
+            </div>
+          </div>
+          <div class="tile is-parent">
+            <div class="tile is-child notification box">
+              <p class="title"><span class="icon mdi mdi-tag-text-outline"></span>Badge Tags</p>
+              <div class="content">
+                <tags :tags="badge.tags" @input="updateBadge"></tags>
               </div>
             </div>
           </div>
         </div>
-        <div class="tile is-parent">
-          <div class="tile is-child notification box">
-            <p class="title"><span class="icon mdi mdi-clipboard-check-outline"></span>Criteria</p>
-            <div class="content">
-              <criteria-narrative
-                :criteriaNarrative="badge.criteriaNarrative"
-                @input="updateBadge">
-              </criteria-narrative>
-            </div>
+      </template>
+      <template slot="footer">
+        <div class="is-pulled-right">
+          <div class="controls field is-grouped">
+            <button @click="reset" class="control button" type="button">Cancel</button>
+            <button class="control button is-primary" type="submit">Save</button>
           </div>
         </div>
-        <div class="tile is-parent">
-          <div class="tile is-child notification box">
-            <p class="title"><span class="icon mdi mdi-tag-text-outline"></span>Badge Tags</p>
-            <div class="content">
-              <tags :tags="badge.tags" @input="updateBadge"></tags>
-            </div>
-          </div>
-        </div>
-        <div class="tile is-parent">
-          <div class="tile is-child notification box">
-            <p class="title">Submit</p>
-            <div class="content">
-              <div class="controls field is-grouped is-grouped-right">
-                <button @click="reset" class="control button" type="button">Cancel</button>
-                <button @click="save" class="control button is-primary" type="submit">Save</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </form>
+      </template>
+    </v-form-group>
   </div>
 </template>
 
@@ -84,6 +87,7 @@ import isNaN from 'lodash/isNaN';
 import Modal from '@/components/common/Modal';
 import Name from './Name';
 import Tags from './Tags';
+import VFormGroup from '@/components/common/form/VFormGroup';
 
 const resetBadge = () => {
   return {
@@ -151,7 +155,8 @@ export default {
     ImageSet,
     Modal,
     Name,
-    Tags
+    Tags,
+    VFormGroup
   }
 };
 </script>
@@ -159,6 +164,12 @@ export default {
 <style lang="scss" scoped>
 .badge-form {
   margin-bottom: 100px;
+  display: relative;
+
+  .buttons {
+    justify-content: flex-end;
+    margin-bottom: 0;
+  }
 
   .tile.is-child {
     padding: 2rem 3rem;
