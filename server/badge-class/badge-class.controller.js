@@ -23,7 +23,7 @@ function loadBadge(req, res, next, id) {
     .then(badge => {
       res.locals.badge = badge;
       next();
-    }).catch(err => next(err));
+    });
 }
 
 function create(req, res) {

@@ -19,7 +19,7 @@ function loadAssertion(req, res, next, id) {
     .then(assertion => {
       res.locals.assertion = assertion;
       next();
-    }).catch(err => next(err));
+    });
 }
 
 function badgeAssertion(req, res) {
