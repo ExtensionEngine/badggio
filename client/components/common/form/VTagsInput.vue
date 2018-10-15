@@ -4,11 +4,11 @@
       <v-input
         v-model="currentTag"
         :name="name"
-        :validate="{ min: 2, 'alpha_num': true, unique: value }"
-        @keydown.enter.prevent.native="addTag"/>
+        :validate="{ min: 2, 'alpha_num': true, unique: tags }"
+        @keydown.enter.prevent.native="add"/>
       <button
         :disabled="!hasInput"
-        @click="addTag"
+        @click="add"
         type="button"
         class="button is-small">
         <span
@@ -18,8 +18,8 @@
       </button>
     </div>
     <div class="tags control">
-      <span v-for="(tag, index) in value" :key="index" class="tag is-primary">{{ tag }} &nbsp;
-        <button @click.prevent="removeTag(index)" class="delete is-small"></button>
+      <span v-for="tag in tags" :key="tag" class="tag is-primary">{{ tag }} &nbsp;
+        <button @click.prevent="remove(tag)" class="delete is-small"></button>
       </span>
     </div>
   </div>
@@ -27,9 +27,9 @@
 
 <script>
 import { withValidation } from '@/validation';
-import clone from 'lodash/clone';
 import humanize from 'humanize-string';
 import VInput from './VInput';
+import without from 'lodash/without';
 
 export default {
   name: 'v-tags-input',
@@ -37,13 +37,10 @@ export default {
   inheritAttrs: false,
   props: {
     name: { type: String, required: true },
-    value: { type: Array, default: () => [] }
+    tags: { type: Array, default: () => [] }
   },
   data() {
-    return {
-      currentTag: '',
-      tags: clone(this.value)
-    };
+    return { currentTag: '' };
   },
   computed: {
     label() {
@@ -54,25 +51,18 @@ export default {
     }
   },
   methods: {
-    addTag() {
+    add() {
       this.$validator.validate(this.name).then(isValid => {
         if (!isValid || !this.hasInput) return;
-        this.tags.push(this.currentTag);
+        this.update([...this.tags, this.currentTag]);
         this.currentTag = '';
-        this.update();
       });
     },
-    removeTag(index) {
-      this.tags.splice(index, 1);
-      this.update();
+    remove(tag) {
+      this.update(without(this.tags, tag));
     },
-    update() {
-      this.$emit('input', this.tags);
-    }
-  },
-  watch: {
-    value(val) {
-      this.tags = clone(val);
+    update(tags) {
+      this.$emit('update:tags', tags);
     }
   },
   components: { VInput }
