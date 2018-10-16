@@ -69,7 +69,7 @@ const router = new Router({
         name: 'badge-edit',
         component: BadgeSave,
         props: paramsNumParser
-      }, fallbackRoute]
+      }]
     }, fallbackRoute]
   }, fallbackRoute]
 });
