@@ -26,16 +26,14 @@ export default {
 .app-container {
   height: 100%;
   padding: 32px 16px 0;
-}
 
-.app-content {
-  flex: 1;
-}
-</style>
+  .app-content {
+    flex: 1;
 
-<style lang="scss">
-.table-container {
-  width: 100%;
-  overflow-x: auto;
+    /deep/ .table-container {
+      width: 100%;
+      overflow-x: auto;
+    }
+  }
 }
 </style>
