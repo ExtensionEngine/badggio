@@ -6,21 +6,23 @@ const {
   humanCriteria: criteriaFacet,
   imageIri: imageFacet
 } = require('./badge-class.facets');
-const { BadgeClass, sequelize } = require('../common/database');
+const { BadgeClass, Sequelize, sequelize } = require('../common/database');
 const hasha = require('hasha');
 const HttpStatus = require('http-status');
 const pick = require('lodash/pick');
 const Promise = require('bluebird');
 
+const { EmptyResultError } = Sequelize;
 const { NOT_FOUND } = HttpStatus;
 const inputAttrs = ['name', 'description', 'criteriaNarrative', 'imageCaption',
   'imageAuthorIri', 'tags'];
 
-function loadBadge(req, res, next) {
-  return BadgeClass.findById(req.params.id, { paranoid: false })
+function loadBadge(req, res, next, id) {
+  return BadgeClass.findById(id, { paranoid: false, rejectOnEmpty: true })
+    .catch(EmptyResultError, () => createError(NOT_FOUND, 'Badge does not exist!'))
     .then(badge => {
       res.locals.badge = badge;
-      return badge ? next() : next(createError(NOT_FOUND, 'Badge does not exist!'));
+      next();
     });
 }
 

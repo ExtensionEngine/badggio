@@ -10,9 +10,9 @@ const { badge, create, criteria, decodeImage, encodeImages, get, image, list, lo
 
 apiRouter
   .use(auth)
+  .param('id', loadBadge)
   .get('/', list, encodeImages)
   .post('/', decodeImage, create)
-  .param('id', loadBadge)
   .get('/:id', get)
   .patch('/:id', decodeImage, patch);
 
@@ -23,7 +23,7 @@ badgingRouter
   .get(`/:id${paths.criteria}`, criteria);
 
 module.exports = {
-  path: paths.root,
   apiRouter,
-  badgingRouter
+  badgingRouter,
+  path: paths.root
 };
