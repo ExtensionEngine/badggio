@@ -63,6 +63,11 @@ const resetBadge = () => {
   };
 };
 
+const routes = {
+  edit: id => ({ name: 'badge-edit', params: { id } }),
+  list: () => ({ name: 'badge-list' })
+};
+
 export default {
   name: 'badge-form',
   mixins: [withValidation()],
@@ -78,10 +83,10 @@ export default {
   methods: {
     ...mapActions('badges', { saveBadge: 'save', get: 'get' }),
     initRoute() {
-      if (isNaN(this.id)) return this.$router.push({ name: 'badge-list' });
+      if (isNaN(this.id)) return this.$router.push(routes.list());
       if (!this.id) return this.reset();
       this.get(this.id.toString()).then(() => this.reset())
-        .catch(() => this.$router.push({ name: 'badge-list' }));
+        .catch(() => this.$router.push(routes.list()));
     },
     reset() {
       const { id } = this;
@@ -90,7 +95,10 @@ export default {
     save() {
       this.validate().then(isValid => {
         if (!isValid) return;
-        this.saveBadge(this.badge);
+        this.saveBadge(this.badge).then(badge => {
+          if (this.id) return;
+          this.$router.push(routes.edit(badge.id));
+        });
       });
     },
     validate() {
