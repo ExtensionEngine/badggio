@@ -19,7 +19,7 @@
     </div>
     <div class="tags control">
       <span v-for="tag in tags" :key="tag" class="tag is-primary">{{ tag }} &nbsp;
-        <button @click.prevent="remove(tag)" class="delete is-small"></button>
+        <button @click.prevent="remove(tag)" class="delete is-small" type="button"></button>
       </span>
     </div>
   </div>
