@@ -14,15 +14,10 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
 import Navbar from '@/components/common/Navbar';
 
 export default {
   name: 'admin',
-  methods: mapActions('programs', ['fetch']),
-  created() {
-    this.fetch();
-  },
   components: { Navbar }
 };
 </script>
