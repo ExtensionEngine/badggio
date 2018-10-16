@@ -1,9 +1,21 @@
 <template>
-  <v-tags-input v-bind="$attrs" :value="data" @input="updateData" name="tags" />
+  <div class="tile is-parent">
+    <div class="tile is-child notification box">
+      <p class="title">
+        <span class="icon mdi mdi-tag-text-outline"></span>Badge Tags
+      </p>
+      <div class="content">
+        <v-tags-input
+          v-bind="$attrs"
+          :tags="tags"
+          v-on="$listeners"
+          name="tags" />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import clone from 'lodash/clone';
 import VTagsInput from '@/components/common/form/VTagsInput';
 
 export default {
@@ -11,16 +23,6 @@ export default {
   inheritAttrs: false,
   props: {
     tags: { type: Array, default: () => [] }
-  },
-  computed: {
-    data() {
-      return clone(this.tags);
-    }
-  },
-  methods: {
-    updateData(tags) {
-      this.$emit('input', { tags });
-    }
   },
   components: { VTagsInput }
 };

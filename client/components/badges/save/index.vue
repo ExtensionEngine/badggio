@@ -8,7 +8,7 @@
         <button class="btn-create button is-primary" type="button">Create</button>
       </router-link>
     </div>
-    <v-form-group @submit.prevent="save" title="Some form title">
+    <v-form-group @submit="save">
       <template slot="title">
         <span v-if="id" class="mdi mdi-pencil"></span>
         <span v-else class="mdi mdi-plus-circle-outline"></span>
@@ -16,51 +16,16 @@
       </template>
       <template slot="content">
         <div class="tile is-ancestor is-vertical">
-          <div class="tile is-parent">
-            <div class="tile is-child notification box">
-              <p class="title"><span class="icon mdi mdi-clipboard-text-outline"></span>Basic info</p>
-              <div class="columns is-8 is-variable">
-                <div class="column">
-                  <div class="content">
-                    <image-set
-                      :image="badge.image"
-                      :imageCaption="badge.imageCaption"
-                      :imageAuthorIri="badge.imageAuthorIri"
-                      @input="updateBadge">
-                    </image-set>
-                  </div>
-                </div>
-                <div class="column">
-                  <div class="content">
-                    <name :name="badge.name" @input="updateBadge"></name>
-                    <description
-                      :description="badge.description"
-                      @input="updateBadge">
-                    </description>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="tile is-parent">
-            <div class="tile is-child notification box">
-              <p class="title"><span class="icon mdi mdi-clipboard-check-outline"></span>Criteria</p>
-              <div class="content">
-                <criteria-narrative
-                  :criteriaNarrative="badge.criteriaNarrative"
-                  @input="updateBadge">
-                </criteria-narrative>
-              </div>
-            </div>
-          </div>
-          <div class="tile is-parent">
-            <div class="tile is-child notification box">
-              <p class="title"><span class="icon mdi mdi-tag-text-outline"></span>Badge Tags</p>
-              <div class="content">
-                <tags :tags="badge.tags" @input="updateBadge"></tags>
-              </div>
-            </div>
-          </div>
+          <basic-info
+            :description.sync="badge.description"
+            :image.sync="badge.image"
+            :imageAuthorIri.sync="badge.imageAuthorIri"
+            :imageCaption.sync="badge.imageCaption"
+            :name.sync="badge.name" />
+          <criteria-narrative
+            :criteriaNarrative.sync="badge.criteriaNarrative">
+          </criteria-narrative>
+          <tags :tags.sync="badge.tags"></tags>
         </div>
       </template>
       <template slot="footer">
@@ -78,14 +43,11 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import { withValidation } from '@/validation';
+import BasicInfo from './BasicInfo';
 import cloneDeep from 'lodash/cloneDeep';
 import isEmpty from 'lodash/isEmpty';
 import CriteriaNarrative from './CriteriaNarrative';
-import Description from './Description';
-import ImageSet from './Image';
 import isNaN from 'lodash/isNaN';
-import Modal from '@/components/common/Modal';
-import Name from './Name';
 import Tags from './Tags';
 import VFormGroup from '@/components/common/form/VFormGroup';
 
@@ -115,13 +77,15 @@ export default {
   computed: mapGetters('badges', { getBadge: 'getById' }),
   methods: {
     ...mapActions('badges', { saveBadge: 'save', get: 'get' }),
-    updateBadge(data) {
-      Object.assign(this.badge, data);
+    initRoute() {
+      if (isNaN(this.id)) return this.$router.push({ name: 'badge-list' });
+      if (!this.id) return this.reset();
+      this.get(this.id.toString()).then(() => this.reset())
+        .catch(() => this.$router.push({ name: 'badge-list' }));
     },
-    validate() {
-      return this.$validator.validateAll()
-        .then(() => this.$validator.validate('image', this.badge.image))
-        .then(() => isEmpty(this.vErrors.items));
+    reset() {
+      const { id } = this;
+      this.badge = id ? cloneDeep(this.getBadge(id)) : resetBadge();
     },
     save() {
       this.validate().then(isValid => {
@@ -129,15 +93,10 @@ export default {
         this.saveBadge(this.badge);
       });
     },
-    reset() {
-      const { getBadge, id } = this;
-      this.badge = id ? cloneDeep(getBadge(id)) : resetBadge();
-    },
-    initRoute() {
-      if (isNaN(this.id)) return this.$router.push({ name: 'badge-list' });
-      if (!this.id) return this.reset();
-      this.get(this.id.toString()).then(() => this.reset())
-        .catch(() => this.$router.push({ name: 'badge-list' }));
+    validate() {
+      return this.$validator.validateAll()
+        .then(() => this.$validator.validate('image', this.badge.image))
+        .then(() => isEmpty(this.vErrors.items));
     }
   },
   watch: {
@@ -150,11 +109,8 @@ export default {
     this.initRoute();
   },
   components: {
+    BasicInfo,
     CriteriaNarrative,
-    Description,
-    ImageSet,
-    Modal,
-    Name,
     Tags,
     VFormGroup
   }
@@ -171,12 +127,14 @@ export default {
     margin-bottom: 0;
   }
 
-  .tile.is-child {
-    padding: 2rem 3rem;
-  }
+  /deep/ .tile {
+    .content {
+      padding: 0 2rem;
+    }
 
-  .tile .content {
-    padding: 0 2rem;
+    &.is-child {
+      padding: 2rem 3rem;
+    }
   }
 
   /deep/ form {
@@ -196,7 +154,7 @@ export default {
 }
 
 @media (max-width: 1023px) {
-  .badge-form .tile .content {
+  .badge-form /deep/ .tile .content {
       padding: 0;
   }
 }

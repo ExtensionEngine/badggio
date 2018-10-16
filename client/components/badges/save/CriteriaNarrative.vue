@@ -1,12 +1,18 @@
 <template>
-  <v-input
-    :validate="{
-      max: 255,
-      required: true
-    }"
-    :value="criteriaNarrative"
-    @input="updateData"
-    name="criteriaNarrative" />
+  <div class="tile is-parent">
+    <div class="tile is-child notification box">
+      <p class="title">
+        <span class="icon mdi mdi-clipboard-check-outline"></span>Criteria
+      </p>
+      <div class="content">
+        <v-input
+          :validate="{ max: 255, required: true }"
+          :value="criteriaNarrative"
+          @input="$emit('update:criteriaNarrative', $event)"
+          name="criteriaNarrative" />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -17,11 +23,6 @@ export default {
   inheritAttrs: false,
   props: {
     criteriaNarrative: { type: String, default: '' }
-  },
-  methods: {
-    updateData(criteriaNarrative) {
-      this.$emit('input', { criteriaNarrative });
-    }
   },
   components: { VInput }
 };
