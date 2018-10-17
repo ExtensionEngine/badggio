@@ -4,8 +4,9 @@ const bakery = require('../common/patched/openbadges-bakery');
 const getStream = require('get-stream');
 const jwt = require('jsonwebtoken');
 const { assertion: assertionFacet, assertionIri } = require('./assertion.facets');
-const { Base64: base64 } = require('js-base64');
 const { issuer } = require('../config');
+
+const base64 = input => Buffer.from(input).toString('base64');
 
 function bake(assertion) {
   return assertion.badgeClass.getImage()
@@ -32,7 +33,7 @@ function buildOptions(assertion, image) {
 
 function encode(image, extension) {
   if (extension === 'svg+xml') {
-    return { image: base64.encode(image), extension };
+    return { image: base64(image), extension };
   }
 
   return getStream(image, { encoding: 'base64' })
