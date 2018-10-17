@@ -6,6 +6,8 @@ const jwt = require('jsonwebtoken');
 const { assertion: assertionFacet, assertionIri } = require('./assertion.facets');
 const { issuer } = require('../config');
 
+const base64 = input => Buffer.from(input).toString('base64');
+
 function bake(assertion) {
   return assertion.badgeClass.getImage()
     .then(({ image, extension }) => {
@@ -18,10 +20,6 @@ function bake(assertion) {
         });
       });
     });
-}
-
-function base64(input) {
-  return Buffer.from(input).toString('base64');
 }
 
 function buildOptions(assertion, image) {
