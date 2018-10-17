@@ -30,7 +30,6 @@
   "homepage": "https://github.com/ExtensionEngine/app-starter#readme",
   "devDependencies": {
     "@babel/core": "^7.1.2",
-    "@mapbox/stylelint-processor-arbitrary-tags": "^0.2.0",
     "@poi/plugin-bundle-report": "^10.0.1",
     "@poi/plugin-eslint": "^10.0.2",
     "del-cli": "^1.1.0",
