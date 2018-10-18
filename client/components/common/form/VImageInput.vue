@@ -1,27 +1,27 @@
 <template>
   <div class="field">
-    <label class="label">{{ label }}</label>
-    <div class="control">
-      <picture-input
-        v-validate="validate"
-        ref="pictureInput"
-        :margin="margin"
-        :width="width"
-        :height="height"
-        :accept="accept"
-        :size="size"
-        :custom-strings="customStrings"
-        :hideChangeButton="hideChangeButton"
-        :name="name"
-        :prefill="value"
-        :prefillOptions="prefillOptions"
-        :alertOnError="false"
-        @change="input"
-        @error="error"
-        data-vv-delay="1000"
-        data-vv-validate-on="change"
-        button-class="btn" />
-    </div>
+    <label v-if="showLabel" class="label">{{ label }}</label>
+    <picture-input
+      v-validate="validate"
+      ref="pictureInput"
+      :margin="margin"
+      :width="width"
+      :height="height"
+      :accept="accept"
+      :size="size"
+      :custom-strings="customStrings"
+      :hideChangeButton="hideChangeButton"
+      :name="name"
+      :prefill="value"
+      :prefillOptions="prefillOptions"
+      :alertOnError="false"
+      :zIndex="10"
+      @change="input"
+      @error="error"
+      data-vv-delay="1000"
+      data-vv-validate-on="change"
+      button-class="btn"
+      class="picture-input control" />
     <p v-visible="showError" class="help is-danger">
       {{ vErrors.first(name) || '&nbsp;' }}
     </p>
@@ -49,7 +49,8 @@ export default {
     accept: { type: String, default: '' },
     size: { type: Number, default: DEFAULT_IMAGE_SIZE },
     customStrings: { type: Object, default: () => {} },
-    hideChangeButton: { type: Boolean, default: false }
+    hideChangeButton: { type: Boolean, default: false },
+    showLabel: { type: Boolean, default: false }
   },
   computed: {
     label() {
@@ -77,15 +78,13 @@ export default {
 };
 </script>
 
-<style lang="scss">
-#picture-input {
-  padding: 10px;
-  border: 1px solid transparent;
-  border-style: solid;
-  border-color: rgb(219, 219, 219);
+<style lang="scss" scoped>
+.picture-input /deep/ .picture-inner-text {
+  font-size: 1.35em;
+  font-weight: 100;
+}
 
-  .picture-inner-text {
-    font-size: 1.35em;
-  }
+.help.is-danger {
+  text-align: center;
 }
 </style>

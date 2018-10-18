@@ -54,6 +54,7 @@
     "vue-template-compiler": "^2.5.17"
   },
   "dependencies": {
+    "@mdi/font": "^2.8.94",
     "ajv": "^6.5.4",
     "aws-sdk": "^2.336.0",
     "axios": "^0.18.0",
@@ -82,7 +83,6 @@
     "jsend": "^1.0.2",
     "jsonwebtoken": "^8.3.0",
     "lodash": "^4.17.11",
-    "mdi": "^2.2.43",
     "morgan": "^1.9.1",
     "nocache": "^2.0.0",
     "openbadges-bakery": "^1.0.5",

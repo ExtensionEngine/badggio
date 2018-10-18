@@ -1,10 +1,13 @@
 import get from 'lodash/get';
+import mapValues from 'lodash/mapValues';
 import Router from 'vue-router';
 import store from './store';
 import Vue from 'vue';
 
 import Auth from '@/components/auth';
+import BadgeList from '@/components/badges/list';
 import Badges from '@/components/badges';
+import BadgeSave from '@/components/badges/save';
 import ForgotPassword from '@/components/auth/ForgotPassword';
 import Index from '@/components/index';
 import Login from '@/components/auth/Login';
@@ -13,6 +16,8 @@ import ResetPassword from '@/components/auth/ResetPassword';
 import Users from '@/components/users';
 
 Vue.use(Router);
+
+const paramsNumParser = route => mapValues(route.params, Number);
 
 // Handle 404
 const fallbackRoute = {
@@ -50,7 +55,21 @@ const router = new Router({
     }, {
       path: '/badges',
       name: 'badges',
-      component: Badges
+      component: Badges,
+      children: [{
+        path: '',
+        name: 'badge-list',
+        component: BadgeList
+      }, {
+        path: 'create',
+        name: 'badge-create',
+        component: BadgeSave
+      }, {
+        path: ':id',
+        name: 'badge-edit',
+        component: BadgeSave,
+        props: paramsNumParser
+      }]
     }, fallbackRoute]
   }, fallbackRoute]
 });

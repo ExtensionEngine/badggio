@@ -1,68 +1,68 @@
 <template>
-  <div class="field">
-    <label class="label">{{ label }}</label>
-    <button @click.prevent="addTag();" class="button is-small">
-      <span class="icon has-text-primary mdi mdi-plus-circle mdi-24px" />
-    </button>
-    <div v-for="(tag, index) in value" :key="index" class="control">
-      <input
-        v-bind="$attrs"
-        :value="tag"
-        :type="type"
+  <div>
+    <div class="tag-input">
+      <v-input
+        v-model="currentTag"
         :name="name"
-        :placeholder="'Tag'"
-        @input="input($event, index);"
-        class="input">
+        :validate="{ min: 2, 'alpha_num': true, unique: tags }"
+        @keydown.enter.prevent.native="add"/>
       <button
-        @click.prevent="removeTag(index);"
-        class="button is-small is-pulled-right">
-        <span class="icon mdi mdi-close" />
+        :disabled="!hasInput"
+        @click="add"
+        type="button"
+        class="button is-small">
+        <span
+          :class="{ 'has-text-primary': hasInput }"
+          class="icon mdi mdi-plus-circle mdi-24px">
+        </span>
       </button>
+    </div>
+    <div class="tags control">
+      <span v-for="tag in tags" :key="tag" class="tag is-primary">{{ tag }} &nbsp;
+        <button @click.prevent="remove(tag)" class="delete is-small" type="button"></button>
+      </span>
     </div>
   </div>
 </template>
 
 <script>
-import clone from 'lodash/clone';
+import { withValidation } from '@/validation';
 import humanize from 'humanize-string';
 import VInput from './VInput';
+import without from 'lodash/without';
 
 export default {
   name: 'v-tags-input',
+  mixins: [withValidation()],
   inheritAttrs: false,
   props: {
-    type: { type: String, default: 'text' },
     name: { type: String, required: true },
-    value: { type: Array, default: () => [] }
+    tags: { type: Array, default: () => [] }
   },
   data() {
-    return { tags: clone(this.value) };
+    return { currentTag: '' };
   },
   computed: {
     label() {
       return humanize(this.name);
+    },
+    hasInput() {
+      return !!this.currentTag;
     }
   },
   methods: {
-    input({ target }, index) {
-      this.tags.splice(index, 1, target.value);
-      this.update();
+    add() {
+      this.$validator.validate(this.name).then(isValid => {
+        if (!isValid || !this.hasInput) return;
+        this.update([...this.tags, this.currentTag]);
+        this.currentTag = '';
+      });
     },
-    addTag() {
-      this.tags.push('');
-      this.update();
+    remove(tag) {
+      this.update(without(this.tags, tag));
     },
-    removeTag(index) {
-      this.tags.splice(index, 1);
-      this.update();
-    },
-    update() {
-      this.$emit('input', this.tags);
-    }
-  },
-  watch: {
-    value(val) {
-      this.tags = clone(val);
+    update(tags) {
+      this.$emit('update:tags', tags);
     }
   },
   components: { VInput }
@@ -70,23 +70,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.label {
-  display: inline-block;
-}
-
-.button {
-  border:  0;
-}
-
-.input {
-  max-width: 95%;
-}
-
-.control {
-  margin-bottom: 0.75rem;
+.tag-input {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
 
   .button {
-    margin-top: 5px;
+    margin-left: 10px;
+    border:  0;
+    background-color: transparent;
   }
 }
 </style>
