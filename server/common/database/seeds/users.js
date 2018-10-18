@@ -6,6 +6,8 @@ const Promise = require('bluebird');
 const { auth: config = {} } = require('../../../config');
 const { role } = require('../../../../common/config');
 
+const sha1 = (str, length = 7) => hasha(str, { algorithm: 'sha1' }).substr(-length);
+
 const INTEGRATION = 'INTEGRATION';
 const now = new Date();
 const users = [{
@@ -54,9 +56,4 @@ function encryptPassword(user) {
   return bcrypt.hash(user.password, config.saltRounds)
     .then(password => (user.password = password))
     .then(() => user);
-}
-
-function sha1(input, length = 7) {
-  const hash = hasha(input, { algorithm: 'sha1' });
-  return hash.substring(hash.length - length);
 }

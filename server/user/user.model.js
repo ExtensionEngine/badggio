@@ -12,6 +12,8 @@ const pick = require('lodash/pick');
 const Promise = require('bluebird');
 const values = require('lodash/values');
 
+const sha1 = (str, length = 7) => hasha(str, { algorithm: 'sha1' }).substr(-length);
+
 const timestamps = ({ DATE }) => ({
   createdAt: {
     type: DATE,
@@ -56,7 +58,7 @@ class Integration extends Model {
         field: 'first_name',
         set(name) {
           this.setDataValue('name', name);
-          this.setDataValue('email', `${encrypt(name, 14)}@integration.localhost`);
+          this.setDataValue('email', `${sha1(name, 14)}@integration.localhost`);
         },
         validate: { notEmpty: true }
       },
@@ -186,8 +188,3 @@ class User extends Model {
 Object.assign(User, UserBase, { Integration });
 
 module.exports = User;
-
-function encrypt(value, length = 7) {
-  const hash = hasha(value, { algorithm: 'sha1' });
-  return hash.substring(hash.length - length);
-}
