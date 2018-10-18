@@ -1,5 +1,7 @@
 'use strict';
 
+const { Integration } = require('../common/database');
+const { permit } = require('../common/auth/mw');
 const auth = require('../common/auth').authenticate('jwt');
 const ctrl = require('./assertion.controller');
 const paths = require('./assertion.paths');
@@ -12,8 +14,8 @@ apiRouter
   .use(auth)
   .param('id', loadAssertion)
   .get('/', list)
-  .post('/', create)
-  .patch('/:id', patch);
+  .post('/', permit(Integration.role), create)
+  .patch('/:id', permit(Integration.role), patch);
 
 badgingRouter
   .param('id', loadAssertion)
