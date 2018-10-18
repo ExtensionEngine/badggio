@@ -37,7 +37,6 @@ function list() {
   return Integration.findAll({ where: { role: Integration.role } })
     .then(integrations => {
       console.log(integrations.map(it => format(it)).join(''));
-      console.log();
     });
 }
 
