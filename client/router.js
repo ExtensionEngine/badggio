@@ -42,6 +42,7 @@ const router = new Router({
     path: '/',
     name: 'home',
     component: Index,
+    redirect: 'badges',
     meta: { auth: true },
     children: [{
       path: '/users',
@@ -51,7 +52,7 @@ const router = new Router({
       path: '/badges',
       name: 'badges',
       component: Badges
-    }, fallbackRoute]
+    }]
   }, fallbackRoute]
 });
 
