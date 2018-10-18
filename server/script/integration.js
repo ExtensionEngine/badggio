@@ -12,7 +12,7 @@ const defaultDomain = domain => input => {
   return `${input}@${domain}`;
 };
 
-const line = (char = '-', length = Math.min(process.stdout.columns, 80)) => {
+const line = (char = '-', length = Math.min(process.stdout.columns, 72)) => {
   return Array.from({ length }).reduce(acc => acc + char, '');
 };
 const template = ({ name, id, email }) => `
