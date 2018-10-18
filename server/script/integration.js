@@ -11,21 +11,15 @@ const defaultDomain = domain => input => {
   if (input.includes('@')) return input;
   return `${input}@${domain}`;
 };
-const line = (char = '-', length = Math.min(process.stdout.columns, 80)) => {
-  let result = '';
-  while (length) {
-    result += char;
-    length--;
-  }
-  return result;
-};
 
-const template = (integration, token = false) => `
-# ${integration.name}
+const line = (char = '-', length = Math.min(process.stdout.columns, 80)) => {
+  return Array.from({ length }).reduce(acc => acc + char, '');
+};
+const template = ({ name, id, email }) => `
+# Integration: "${name}"
 ${line()}
-Id:    ${integration.id}
-Email: ${integration.email}
-${(token && `Token: ${integration.token}\n`) || ''}`;
+Id:    ${id}
+Email: ${email}`;
 
 const commands = {
   list,
@@ -42,7 +36,7 @@ action()
 function list() {
   return Integration.findAll({ where: { role: Integration.role } })
     .then(integrations => {
-      console.log(integrations.map(it => template(it).trim()).join('\n\n'));
+      console.log(integrations.map(it => format(it)).join(''));
       console.log();
     });
 }
@@ -56,7 +50,7 @@ function create() {
   };
   return prompt([question])
     .then(({ name }) => Integration.create({ name }))
-    .then(integration => console.log(template(integration, true)));
+    .then(integration => console.log(format(integration, true)));
 }
 
 function getToken() {
@@ -76,7 +70,13 @@ function getToken() {
       ]);
     })
     .then(([integration, email]) => {
-      if (integration) return console.log(template(integration, true));
+      if (integration) return console.log(format(integration, true));
       return Promise.reject(new Error(`Integration "${email}" does not exist.`));
     });
+}
+
+function format(integration, token = false) {
+  let output = template(integration);
+  if (token) output += `\nToken: ${integration.token}`;
+  return output + '\n';
 }
