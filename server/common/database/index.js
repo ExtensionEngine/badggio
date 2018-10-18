@@ -52,6 +52,7 @@ function initialize() {
 const models = {
   Assertion: defineModel(Assertion),
   BadgeClass: defineModel(BadgeClass),
+  Integration: defineModel(User.Integration),
   Recipient: defineModel(Recipient),
   User: defineModel(User)
 };

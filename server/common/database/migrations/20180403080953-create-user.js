@@ -3,6 +3,8 @@
 const { role } = require('../../../../common/config');
 const values = require('lodash/values');
 
+const roles = [...values(role), 'INTEGRATION'];
+
 module.exports = {
   up: (queryInterface, Sequelize) => queryInterface.createTable('user', {
     id: {
@@ -20,7 +22,7 @@ module.exports = {
       type: Sequelize.STRING
     },
     role: {
-      type: Sequelize.ENUM(values(role)),
+      type: Sequelize.ENUM(roles),
       allowNull: false
     },
     token: {

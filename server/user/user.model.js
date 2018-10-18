@@ -4,6 +4,7 @@ const { auth: config = {} } = require('../config');
 const { Model } = require('sequelize');
 const { role } = require('../../common/config');
 const bcrypt = require('bcrypt');
+const hasha = require('hasha');
 const jwt = require('jsonwebtoken');
 const logger = require('../common/logger')();
 const mail = require('../common/mail');
@@ -11,14 +12,99 @@ const pick = require('lodash/pick');
 const Promise = require('bluebird');
 const values = require('lodash/values');
 
-class User extends Model {
+const sha1 = (str, length = 7) => hasha(str, { algorithm: 'sha1' }).slice(-length);
+
+const timestamps = DataTypes => ({
+  createdAt: {
+    type: DataTypes.DATE,
+    field: 'created_at',
+    allowNull: false
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    field: 'updated_at',
+    allowNull: false
+  },
+  deletedAt: {
+    type: DataTypes.DATE,
+    field: 'deleted_at'
+  }
+});
+
+const UserBase = {
+  options() {
+    return {
+      modelName: 'user',
+      timestamps: true,
+      paranoid: true,
+      freezeTableName: true
+    };
+  }
+};
+
+class Integration extends Model {
+  constructor(values = {}, options = {}) {
+    super({ ...values, role: Integration.role }, options);
+  }
+
   static fields(DataTypes) {
     return {
       email: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: { isEmail: true, notEmpty: true },
-        unique: { msg: 'This email address is already in use.' }
+        unique: { msg: 'This integration already exists.' }
+      },
+      name: {
+        type: DataTypes.STRING,
+        field: 'first_name',
+        set(name) {
+          this.setDataValue('name', name);
+          this.setDataValue('email', `${sha1(name, 14)}@integration.localhost`);
+        },
+        validate: { notEmpty: true }
+      },
+      role: {
+        type: DataTypes.ENUM(Integration.role),
+        allowNull: false,
+        defaultValue: Integration.role
+      },
+      token: {
+        type: DataTypes.VIRTUAL,
+        get() {
+          const payload = pick(this, ['id', 'name']);
+          return jwt.sign(payload, config.secret);
+        }
+      },
+      ...timestamps(DataTypes)
+    };
+  }
+
+  static get role() {
+    return 'INTEGRATION';
+  }
+
+  static isIntegration(model) {
+    return model.role === this.role;
+  }
+}
+
+withIntegrationCheck(Integration);
+Object.assign(Integration, UserBase);
+
+class User extends Model {
+  constructor(...args) {
+    super(...args);
+    if (Integration.isIntegration(this)) return new Integration(...args);
+  }
+
+  static fields(DataTypes) {
+    return {
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+        validate: { isEmail: true, notEmpty: true }
       },
       password: {
         type: DataTypes.STRING,
@@ -26,8 +112,7 @@ class User extends Model {
       },
       role: {
         type: DataTypes.ENUM(values(role)),
-        allowNull: false,
-        defaultValue: role.STUDENT
+        allowNull: false
       },
       token: {
         type: DataTypes.STRING,
@@ -41,33 +126,13 @@ class User extends Model {
         type: DataTypes.STRING,
         field: 'last_name'
       },
-      createdAt: {
-        type: DataTypes.DATE,
-        field: 'created_at'
-      },
-      updatedAt: {
-        type: DataTypes.DATE,
-        field: 'updated_at'
-      },
-      deletedAt: {
-        type: DataTypes.DATE,
-        field: 'deleted_at'
-      },
       profile: {
         type: DataTypes.VIRTUAL,
         get() {
           return pick(this, ['id', 'firstName', 'lastName', 'email', 'role']);
         }
-      }
-    };
-  }
-
-  static options() {
-    return {
-      modelName: 'user',
-      timestamps: true,
-      paranoid: true,
-      freezeTableName: true
+      },
+      ...timestamps(DataTypes)
     };
   }
 
@@ -119,4 +184,16 @@ class User extends Model {
   }
 }
 
+withIntegrationCheck(User);
+Object.assign(User, UserBase, { Integration });
+
 module.exports = User;
+
+function withIntegrationCheck(Model) {
+  Object.defineProperty(Model.prototype, 'isIntegration', {
+    get() {
+      return Integration.isIntegration(this);
+    }
+  });
+  return Model;
+}
