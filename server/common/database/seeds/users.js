@@ -6,7 +6,7 @@ const Promise = require('bluebird');
 const { auth: config = {} } = require('../../../config');
 const { role } = require('../../../../common/config');
 
-const sha1 = (str, length = 7) => hasha(str, { algorithm: 'sha1' }).substr(-length);
+const sha1 = (str, length = 7) => hasha(str, { algorithm: 'sha1' }).slice(-length);
 
 const INTEGRATION = 'INTEGRATION';
 const now = new Date();

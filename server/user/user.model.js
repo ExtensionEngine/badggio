@@ -12,7 +12,7 @@ const pick = require('lodash/pick');
 const Promise = require('bluebird');
 const values = require('lodash/values');
 
-const sha1 = (str, length = 7) => hasha(str, { algorithm: 'sha1' }).substr(-length);
+const sha1 = (str, length = 7) => hasha(str, { algorithm: 'sha1' }).slice(-length);
 
 const timestamps = ({ DATE }) => ({
   createdAt: {
