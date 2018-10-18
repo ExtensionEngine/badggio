@@ -14,17 +14,19 @@ const values = require('lodash/values');
 
 const sha1 = (str, length = 7) => hasha(str, { algorithm: 'sha1' }).slice(-length);
 
-const timestamps = ({ DATE }) => ({
+const timestamps = DataTypes => ({
   createdAt: {
-    type: DATE,
-    field: 'created_at'
+    type: DataTypes.DATE,
+    field: 'created_at',
+    allowNull: false
   },
   updatedAt: {
-    type: DATE,
-    field: 'updated_at'
+    type: DataTypes.DATE,
+    field: 'updated_at',
+    allowNull: false
   },
   deletedAt: {
-    type: DATE,
+    type: DataTypes.DATE,
     field: 'deleted_at'
   }
 });
@@ -78,10 +80,6 @@ class Integration extends Model {
     };
   }
 
-  get isIntegration() {
-    return true;
-  }
-
   static get role() {
     return 'INTEGRATION';
   }
@@ -91,6 +89,7 @@ class Integration extends Model {
   }
 }
 
+withIntegrationCheck(Integration);
 Object.assign(Integration, UserBase);
 
 class User extends Model {
@@ -185,6 +184,16 @@ class User extends Model {
   }
 }
 
+withIntegrationCheck(User);
 Object.assign(User, UserBase, { Integration });
 
 module.exports = User;
+
+function withIntegrationCheck(Model) {
+  Object.defineProperty(Model.prototype, 'isIntegration', {
+    get() {
+      return Integration.isIntegration(this);
+    }
+  });
+  return Model;
+}
