@@ -55,17 +55,18 @@ export default {
 <style lang="scss" scoped>
 @import '~bulma/sass/utilities/all';
 
-@media (min-width: $desktop) {
-  .item-email {
-    user-select: none;
-  }
+.item-email {
+  user-select: none;
+  cursor: default;
+}
 
+@media (min-width: $desktop) {
   .btn-menu {
     margin-left: -0.25rem;
 
     &:hover {
       color: $link-hover;
-      background-color: #e8e8e8;
+      background: #e8e8e8;
     }
   }
 
@@ -74,10 +75,10 @@ export default {
 
     margin-top: 4px;
     border-radius: 0;
-    box-shadow: 0 8px 8px rgba(10, 10, 10, 0.1);
     border: 1px solid $border-color;
     border-top: none;
     border-right: none;
+    box-shadow: 0 8px 8px rgba(10, 10, 10, 0.1);
 
     .navbar-item {
       display: inline-block;
@@ -114,7 +115,7 @@ export default {
       display: block;
       height: 1px;
       margin-bottom: 0.5rem;
-      background-color: $grey-lighter;
+      background: $grey-lighter;
     }
 
     .navbar-item {
