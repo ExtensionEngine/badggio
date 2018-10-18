@@ -18,6 +18,7 @@ const devServer = {
 };
 
 module.exports = (options, req) => ({
+  html: { title: 'Badggio' },
   plugins: [
     require('@poi/plugin-eslint')({ command: '*' }),
     require('@poi/plugin-bundle-report')()

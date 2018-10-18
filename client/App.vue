@@ -5,7 +5,6 @@
 </template>
 
 <script>
-document.title = 'Badggio';
 export default {
   name: 'app'
 };
