@@ -14,12 +14,12 @@
     </div>
     <div :class="{ 'is-active': showMenu }" class="navbar-menu">
       <div v-if="user" class="navbar-end">
-        <router-link to="/badges" class="navbar-item">Badges</router-link>
+        <router-link :to="{ name: 'badges' }" class="navbar-item">Badges</router-link>
         <div class="item-email navbar-item is-hidden-touch has-text-grey">{{ user.email }}</div>
         <div class="navbar-item has-dropdown is-hoverable">
           <a class="btn-menu navbar-item is-hidden-touch mdi mdi-dots-vertical mdi-24px"></a>
           <div class="navbar-dropdown is-right is-boxed">
-            <router-link to="/users" class="navbar-item">
+            <router-link :to="{ name: 'users' }" class="navbar-item">
               <span>Access Rights</span>
             </router-link>
             <hr class="navbar-divider">
