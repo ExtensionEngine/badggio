@@ -60,7 +60,7 @@ export default {
   cursor: default;
 }
 
-@media (min-width: $desktop) {
+@include from($desktop) {
   .btn-menu {
     margin-left: -0.25rem;
 
@@ -92,7 +92,7 @@ export default {
   }
 }
 
-@media (max-width: $desktop - 1px) {
+@include until($desktop) {
   .navbar-burger {
     margin-left: 0;
   }
