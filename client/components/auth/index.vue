@@ -13,9 +13,7 @@
 
 <style lang="scss" scoped>
 .auth-container {
-  padding-top: 7%;
-  padding-left: 16px;
-  padding-right: 16px;
+  padding: 7% 1rem 0 1rem;
 }
 
 .auth-panel {
