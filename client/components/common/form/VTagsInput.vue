@@ -75,7 +75,7 @@ export default {
 }
 
 .button {
-  border:  0;
+  border: 0;
 }
 
 .input {

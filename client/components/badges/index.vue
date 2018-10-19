@@ -6,34 +6,36 @@
       class="btn-create button is-primary is-pulled-right">
       Create
     </button>
-    <table class="table is-fullwidth is-hoverable">
-      <thead>
-        <th>Name</th>
-        <th>Description</th>
-        <th>Image</th>
-        <th>Image caption</th>
-        <th>Image author</th>
-        <th>Criteria</th>
-        <th>Tags</th>
-        <th></th>
-      </thead>
-      <tbody>
-        <tr v-for="badge in badges" :key="badge._cid">
-          <td>{{ badge.name }}</td>
-          <td>{{ badge.description }}</td>
-          <td><img :src="badge.image" class="image"/></td>
-          <td>{{ badge.imageCaption }}</td>
-          <td>{{ badge.imageAuthorIri }}</td>
-          <td>{{ badge.criteriaNarrative }}</td>
-          <td>{{ badge.tags | readable }}</td>
-          <td>
-            <button @click="edit(badge)" class="button is-small is-pulled-right is-outlined">
-              <span class="mdi mdi-pencil"></span>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-container">
+      <table class="table is-fullwidth is-hoverable">
+        <thead>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Image</th>
+          <th>Image caption</th>
+          <th>Image author</th>
+          <th>Criteria</th>
+          <th>Tags</th>
+          <th></th>
+        </thead>
+        <tbody>
+          <tr v-for="badge in badges" :key="badge._cid">
+            <td>{{ badge.name }}</td>
+            <td>{{ badge.description }}</td>
+            <td><img :src="badge.image" class="image"/></td>
+            <td>{{ badge.imageCaption }}</td>
+            <td>{{ badge.imageAuthorIri }}</td>
+            <td>{{ badge.criteriaNarrative }}</td>
+            <td>{{ badge.tags | readable }}</td>
+            <td>
+              <button @click="edit(badge)" class="button is-small is-pulled-right is-outlined">
+                <span class="mdi mdi-pencil"></span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <badge-modal
       :show="showModal"
       :badgeData="context"

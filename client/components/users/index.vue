@@ -6,28 +6,30 @@
       class="btn-create button is-primary is-pulled-right">
       Create
     </button>
-    <table class="table is-fullwidth is-hoverable">
-      <thead>
-        <th>Email</th>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Role</th>
-        <th></th>
-      </thead>
-      <tbody>
-        <tr v-for="user in users" :key="user._cid">
-          <td>{{ user.email }}</td>
-          <td>{{ user.firstName }}</td>
-          <td>{{ user.lastName }}</td>
-          <td>{{ user.role }}</td>
-          <td>
-            <button @click="edit(user)" class="button is-small is-pulled-right is-outlined">
-              <span class="mdi mdi-pencil"></span>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-container">
+      <table class="table is-fullwidth is-hoverable">
+        <thead>
+          <th>Email</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Role</th>
+          <th></th>
+        </thead>
+        <tbody>
+          <tr v-for="user in users" :key="user._cid">
+            <td>{{ user.email }}</td>
+            <td>{{ user.firstName }}</td>
+            <td>{{ user.lastName }}</td>
+            <td>{{ user.role }}</td>
+            <td>
+              <button @click="edit(user)" class="button is-small is-pulled-right is-outlined">
+                <span class="mdi mdi-pencil"></span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <user-modal
       :show="showModal"
       :userData="context"

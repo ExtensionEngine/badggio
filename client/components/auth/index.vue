@@ -1,8 +1,8 @@
 <template>
-  <div class="auth-container">
+  <div class="auth-container container">
     <div class="auth-panel">
       <div class="auth-header">
-        <h1>APP STARTER</h1>
+        <h1>BADGGIO</h1>
       </div>
       <div class="auth-body">
         <router-view></router-view>
@@ -13,15 +13,15 @@
 
 <style lang="scss" scoped>
 .auth-container {
-  padding-top: 7%;
+  padding: 7% 1rem 0 1rem;
 }
 
 .auth-panel {
-  width: 500px;
+  max-width: 500px;
   margin: auto;
   background-color: #fff;
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+  transition: all 0.3s cubic-bezier(0.25,0.8,0.25,1);
 
   &:hover {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1), 0 2px 3px rgba(0,0,0,0.15);
@@ -37,7 +37,7 @@
   .auth-header {
     padding: 40px 10px;
     text-align: center;
-    background: linear-gradient(90deg, #2979FF 60%, #3D5AFE);
+    background: linear-gradient(90deg, #2979ff 60%, #3d5afe);
   }
 
   .auth-body {
