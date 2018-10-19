@@ -17,7 +17,6 @@
         <router-link :to="{ name: 'badges' }" class="navbar-item">Badges</router-link>
         <div class="item-email navbar-item is-hidden-touch has-text-grey">{{ user.email }}</div>
         <div class="navbar-item has-dropdown is-hoverable">
-          <a class="btn-menu navbar-item is-hidden-touch mdi mdi-dots-vertical mdi-24px"></a>
           <div class="navbar-dropdown is-right is-boxed">
             <router-link :to="{ name: 'users' }" class="navbar-item">
               <span>Access Rights</span>
@@ -28,6 +27,7 @@
               <span>Logout</span>
             </a>
           </div>
+          <a class="btn-menu navbar-item is-hidden-touch mdi mdi-dots-vertical mdi-24px"></a>
         </div>
       </div>
     </div>
@@ -55,6 +55,8 @@ export default {
 <style lang="scss" scoped>
 @import '~bulma/sass/utilities/all';
 
+$grey-accent: lighten($grey-lighter, 4%);
+
 .item-email {
   user-select: none;
   cursor: default;
@@ -64,18 +66,16 @@ export default {
   .btn-menu {
     margin-left: -0.25rem;
 
-    &:hover {
+    &:hover, .navbar-dropdown:hover + & {
       color: $link-hover;
-      background: #e8e8e8;
+      background: $grey-accent;
     }
   }
 
   .navbar-dropdown {
-    $border-color: lighten($grey-lighter, 5%);
-
-    margin-top: 4px;
+    margin-top: 2px;
     border-radius: 0;
-    border: 1px solid $border-color;
+    border: 1px solid $grey-accent;
     border-top: none;
     border-right: none;
     box-shadow: 0 8px 8px rgba(10, 10, 10, 0.1);
@@ -87,7 +87,7 @@ export default {
 
     .navbar-divider {
       height: 1px;
-      background: $border-color;
+      background: $grey-accent;
     }
   }
 }
