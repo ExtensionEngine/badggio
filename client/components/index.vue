@@ -25,11 +25,6 @@ export default {
 
   .app-content {
     flex: 1;
-
-    /deep/ .table-container {
-      width: 100%;
-      overflow-x: auto;
-    }
   }
 }
 </style>
