@@ -23,7 +23,7 @@
               <span>Access Rights</span>
             </router-link>
             <hr class="navbar-divider">
-            <a @click="logout" class="navbar-item has-icon">
+            <a @click="logout" class="navbar-item">
               <span class="icon mdi mdi-logout"></span>
               <span>Logout</span>
             </a>

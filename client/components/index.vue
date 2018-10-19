@@ -4,11 +4,7 @@
       <navbar/>
     </header>
     <main class="app-content container">
-      <div class="columns">
-        <div class="column">
-          <router-view></router-view>
-        </div>
-      </div>
+      <router-view></router-view>
     </main>
   </div>
 </template>
