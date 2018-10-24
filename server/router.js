@@ -4,6 +4,7 @@ const express = require('express');
 
 const assertion = require('./assertion');
 const badgeClass = require('./badge-class');
+const docs = require('./docs');
 const issuer = require('./issuer');
 const recipient = require('./recipient');
 const user = require('./user');
@@ -25,6 +26,7 @@ badging
   .use(badgeClass.path, badgeClass.badgingRouter);
 
 router.use('/', badging);
+router.use(docs.path, docs.router);
 router.use('/api/v1', api);
 
 module.exports = router;
