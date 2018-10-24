@@ -1,4 +1,5 @@
 import get from 'lodash/get';
+import join from 'url-join';
 import Router from 'vue-router';
 import store from './store';
 import Vue from 'vue';
@@ -18,6 +19,10 @@ Vue.use(Router);
 const fallbackRoute = {
   path: '*',
   component: NotFound
+};
+
+const redirect = ({ path, origin = window.location.origin }) => {
+  return () => location.replace(join(origin, path));
 };
 
 const router = new Router({
@@ -52,6 +57,9 @@ const router = new Router({
       path: '/badges',
       name: 'badges',
       component: Badges
+    }, {
+      path: '/docs',
+      redirect: redirect({ path: 'docs' })
     }]
   }, fallbackRoute]
 });
