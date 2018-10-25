@@ -22,15 +22,15 @@ export default {
     return { height: 500 };
   },
   methods: {
-    formBody() {
+    frameBody() {
       return get(this.$refs.frame, 'contentWindow.document.body');
     },
     setHeight() {
-      this.height = this.formBody().scrollHeight;
+      this.height = this.frameBody().scrollHeight;
     },
     load() {
       this.setHeight();
-      elementQueries.ResizeSensor(this.formBody(), this.setHeight);
+      elementQueries.ResizeSensor(this.frameBody(), this.setHeight);
     }
   }
 };
