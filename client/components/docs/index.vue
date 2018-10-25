@@ -1,56 +1,28 @@
 <template>
   <div class="container docs">
     <h1 class="title">Api Docs</h1>
-    <iframe :style="style" @load="onLoad" scrolling="no" src="/docs"></iframe>
+    <swagger-viewer :auth="auth" class="viewer" url="/docs"/>
   </div>
 </template>
 
 <script>
-import { ResizeSensor } from 'css-element-queries';
-
-const noop = Function.prototype;
+import SwaggerViewer from './SwaggerViewer';
 
 export default {
   name: 'docs',
-  props: {
-    logger: {
-      type: Object,
-      default: () => ({ error: noop })
-    }
-  },
-  data() {
-    return { height: 0 };
-  },
   computed: {
-    style() {
-      return {
-        height: `${this.height}px`,
-        opacity: Math.min(this.height, 1)
-      };
-    }
+    auth: () => ({
+      key: 'JWTAuthToken',
+      type: 'apiKey',
+      value: `JWT ${window.localStorage.getItem('APP_TOKEN')}`
+    })
   },
-  methods: {
-    onLoad(e) {
-      const iframe = e.target;
-      const { console, document } = iframe.contentWindow;
-      Object.assign(console, this.logger);
-      const updateHeight = () => (this.height = document.body.scrollHeight);
-      if (this.resizeSensor) this.resizeSensor.detach();
-      this.resizeSensor = new ResizeSensor(document.body, updateHeight);
-      updateHeight();
-    }
-  },
-  beforeDestroy() {
-    if (this.resizeSensor) this.resizeSensor.detach();
-  }
+  components: { SwaggerViewer }
 };
 </script>
 
 <style lang="scss" scoped>
-.docs iframe {
-  width: 100%;
+.viewer {
   margin-bottom: 6.25em;
-  border: 0;
-  transition: opacity 0.5s ease-in;
 }
 </style>
