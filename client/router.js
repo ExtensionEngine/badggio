@@ -1,11 +1,11 @@
 import get from 'lodash/get';
-import join from 'url-join';
 import Router from 'vue-router';
 import store from './store';
 import Vue from 'vue';
 
 import Auth from '@/components/auth';
 import Badges from '@/components/badges';
+import Docs from '@/components/docs';
 import ForgotPassword from '@/components/auth/ForgotPassword';
 import Index from '@/components/index';
 import Login from '@/components/auth/Login';
@@ -19,10 +19,6 @@ Vue.use(Router);
 const fallbackRoute = {
   path: '*',
   component: NotFound
-};
-
-const redirect = ({ path, origin = window.location.origin }) => {
-  return () => location.replace(join(origin, path));
 };
 
 const router = new Router({
@@ -59,7 +55,8 @@ const router = new Router({
       component: Badges
     }, {
       path: '/docs',
-      redirect: redirect({ path: 'docs' })
+      name: 'docs',
+      component: Docs
     }]
   }, fallbackRoute]
 });

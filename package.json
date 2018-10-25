@@ -66,6 +66,7 @@
     "bulma": "^0.7.2",
     "bunyan": "^1.8.12",
     "cors": "^2.8.4",
+    "css-element-queries": "^1.0.5",
     "cuid": "^2.1.4",
     "dotenv": "^6.1.0",
     "emailjs": "^2.2.0",
