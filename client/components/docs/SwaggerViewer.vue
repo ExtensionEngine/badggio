@@ -10,6 +10,9 @@
 <script>
 import { ResizeSensor } from 'css-element-queries';
 
+const hiddenSections = '.topbar, .information-container';
+
+const hide = (...elements) => elements.forEach(el => (el.style.display = 'none'));
 const noop = Function.prototype;
 
 export default {
@@ -47,6 +50,7 @@ export default {
       Object.assign(console, this.logger);
       const updateHeight = () => (this.height = document.body.scrollHeight);
       if (this.resizeSensor) this.resizeSensor.detach();
+      hide(...Array.from(document.querySelectorAll(hiddenSections)));
       this.resizeSensor = new ResizeSensor(document.body, updateHeight);
       updateHeight();
     },
