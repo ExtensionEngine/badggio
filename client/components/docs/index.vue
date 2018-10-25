@@ -8,8 +8,16 @@
 <script>
 import { ResizeSensor } from 'css-element-queries';
 
+const noop = Function.prototype;
+
 export default {
   name: 'docs',
+  props: {
+    logger: {
+      type: Object,
+      default: () => ({ error: noop })
+    }
+  },
   data() {
     return { height: 0 };
   },
@@ -24,10 +32,11 @@ export default {
   methods: {
     onLoad(e) {
       const iframe = e.target;
-      const body = getBody(iframe);
-      const updateHeight = () => (this.height = body.scrollHeight);
+      const { console, document } = iframe.contentWindow;
+      Object.assign(console, this.logger);
+      const updateHeight = () => (this.height = document.body.scrollHeight);
       if (this.resizeSensor) this.resizeSensor.detach();
-      this.resizeSensor = new ResizeSensor(body, updateHeight);
+      this.resizeSensor = new ResizeSensor(document.body, updateHeight);
       updateHeight();
     }
   },
@@ -35,10 +44,6 @@ export default {
     if (this.resizeSensor) this.resizeSensor.detach();
   }
 };
-
-function getBody(iframe) {
-  return iframe.contentWindow.document.body;
-}
 </script>
 
 <style lang="scss" scoped>
