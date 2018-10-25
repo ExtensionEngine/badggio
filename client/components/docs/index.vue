@@ -1,44 +1,51 @@
 <template>
   <div class="container docs">
     <h1 class="title">Api Docs</h1>
-    <iframe
-      ref="frame"
-      :height="height"
-      @load="load"
-      class="frame"
-      scrolling="no"
-      src="/docs">
-    </iframe>
+    <iframe :style="style" @load="onLoad" scrolling="no" src="/docs"></iframe>
   </div>
 </template>
 
 <script>
-import elementQueries from 'css-element-queries';
-import get from 'lodash/get';
+import { ResizeSensor } from 'css-element-queries';
 
 export default {
   name: 'docs',
   data() {
-    return { height: 500 };
+    return { height: 0 };
+  },
+  computed: {
+    style() {
+      return {
+        height: `${this.height}px`,
+        opacity: Math.min(this.height, 1)
+      };
+    }
   },
   methods: {
-    frameBody() {
-      return get(this.$refs.frame, 'contentWindow.document.body');
-    },
-    setHeight() {
-      this.height = this.frameBody().scrollHeight;
-    },
-    load() {
-      this.setHeight();
-      elementQueries.ResizeSensor(this.frameBody(), this.setHeight);
+    onLoad(e) {
+      const iframe = e.target;
+      const body = getBody(iframe);
+      const updateHeight = () => (this.height = body.scrollHeight);
+      if (this.resizeSensor) this.resizeSensor.detach();
+      this.resizeSensor = new ResizeSensor(body, updateHeight);
+      updateHeight();
     }
+  },
+  beforeDestroy() {
+    if (this.resizeSensor) this.resizeSensor.detach();
   }
 };
+
+function getBody(iframe) {
+  return iframe.contentWindow.document.body;
+}
 </script>
 
 <style lang="scss" scoped>
-.docs .frame {
+.docs iframe {
   width: 100%;
-  margin-bottom: 100px;
+  margin-bottom: 6.25em;
+  border: 0;
+  transition: opacity 0.5s ease-in;
 }
 </style>
