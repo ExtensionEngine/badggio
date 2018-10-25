@@ -73,6 +73,6 @@ export default {
 .viewer {
   width: 100%;
   border: 0;
-  transition: opacity 0.5s ease-in;
+  transition: opacity 0.4s ease-in;
 }
 </style>
