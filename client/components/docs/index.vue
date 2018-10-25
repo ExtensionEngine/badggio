@@ -8,15 +8,16 @@
 <script>
 import SwaggerViewer from './SwaggerViewer';
 
+const format = (value, { scheme } = {}) => value ? `${scheme} ${value}` : '';
+const auth = () => ({
+  key: 'JWTAuthToken',
+  type: 'apiKey',
+  value: format(window.localStorage.getItem('APP_TOKEN'), { scheme: 'JWT' })
+});
+
 export default {
   name: 'docs',
-  computed: {
-    auth: () => ({
-      key: 'JWTAuthToken',
-      type: 'apiKey',
-      value: `JWT ${window.localStorage.getItem('APP_TOKEN')}`
-    })
-  },
+  computed: { auth },
   components: { SwaggerViewer }
 };
 </script>
