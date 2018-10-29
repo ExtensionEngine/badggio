@@ -39,8 +39,12 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
+import { role } from '@/../common/config';
 import UserModal from './UserModal';
+import values from 'lodash/values';
+
+const roles = values(role);
 
 export default {
   name: 'user-list',
@@ -50,7 +54,7 @@ export default {
       context: null
     };
   },
-  computed: mapState('users', { users: 'items' }),
+  computed: mapGetters('users', ['users']),
   methods: {
     ...mapActions('users', ['fetch']),
     create() {
@@ -63,7 +67,7 @@ export default {
     }
   },
   mounted() {
-    this.fetch();
+    this.fetch({ roles });
   },
   components: { UserModal }
 };

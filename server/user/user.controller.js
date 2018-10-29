@@ -1,7 +1,7 @@
 'use strict';
 
 const { createError } = require('../common/errors');
-const { Sequelize, User, Integration } = require('../common/database');
+const { Sequelize, User } = require('../common/database');
 const HttpStatus = require('http-status');
 const map = require('lodash/map');
 const pick = require('lodash/pick');
@@ -11,11 +11,11 @@ const { BAD_REQUEST, FORBIDDEN, NOT_FOUND } = HttpStatus;
 const inputAttrs = ['email', 'role', 'firstName', 'lastName'];
 const Op = Sequelize.Op;
 
-function list({ query: { email, emailLike, role } }, res) {
-  const cond = [{ role: { [Op.ne]: Integration.role } }];
+function list({ query: { email, emailLike, roles } }, res) {
+  const cond = [];
   if (email) cond.push({ email });
   if (emailLike) cond.push({ email: { [Op.iLike]: `%${emailLike}%` } });
-  if (role) cond.push({ role });
+  if (roles) cond.push({ role: { [Op.in]: roles } });
   return User.findAll({ where: { [Op.and]: cond } })
     .then(users => res.jsend.success(map(users, 'profile')));
 }
