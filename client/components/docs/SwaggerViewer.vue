@@ -1,82 +1,59 @@
 <template>
-  <iframe
-    :src="url"
-    :style="style"
-    @load="onLoad"
-    scrolling="no"
-    class="viewer"></iframe>
+  <div ref="docs" class="docs"></div>
 </template>
 
 <script>
-import { ResizeSensor } from 'css-element-queries';
+import SwaggerUi from 'swagger-ui';
 
-const hiddenSections = '.topbar, .information-container';
-
-const hide = (...elements) => elements.forEach(el => (el.style.display = 'none'));
 const noop = Function.prototype;
 
 export default {
   name: 'swagger-viewer',
   props: {
-    url: {
-      type: String,
-      required: true
-    },
-    auth: {
-      type: Object,
-      default: () => ({})
-    },
-    logger: {
-      type: Object,
-      default: () => ({ error: noop })
-    }
+    api: { type: Object, required: true },
+    auth: { type: Object, default: () => ({}) },
+    logger: { type: Object, default: () => ({ error: noop }) }
   },
   data() {
-    return { height: 0 };
-  },
-  computed: {
-    style() {
-      return {
-        height: `${this.height}px`,
-        opacity: Math.min(this.height, 1)
-      };
-    }
+    return { swagger: null };
   },
   methods: {
-    onLoad(e) {
-      const iframe = this.iframe = e.target;
-      const { console, document } = iframe.contentWindow;
-      this.authorize();
-      Object.assign(console, this.logger);
-      const updateHeight = () => (this.height = document.body.scrollHeight);
-      if (this.resizeSensor) this.resizeSensor.detach();
-      hide(...Array.from(document.querySelectorAll(hiddenSections)));
-      this.resizeSensor = new ResizeSensor(document.body, updateHeight);
-      updateHeight();
-    },
     authorize({ key, type, ...options } = this.auth) {
-      const ui = this.iframe && this.iframe.contentWindow.ui;
-      if (!ui) return;
+      if (!this.swagger) return;
       if (type === 'basic') {
         const { username, password } = options;
-        return username && password && ui.preauthorizeBasic(key, username, password);
+        return username && password && this.swagger.preauthorizeBasic(key, username, password);
       }
-      return options.value && ui.preauthorizeApiKey(key, options.value);
+      return options.value && this.swagger.preauthorizeApiKey(key, options.value);
     }
   },
   watch: {
-    auth: () => this.authorize()
+    auth() {
+      this.authorize();
+    }
   },
-  beforeDestroy() {
-    if (this.resizeSensor) this.resizeSensor.detach();
+  mounted() {
+    this.swagger = new SwaggerUi({ domNode: this.$refs.docs, spec: this.api });
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.viewer {
+.docs {
+  @import '~swagger-ui/dist/swagger-ui.css';
+
   width: 100%;
-  border: 0;
   transition: opacity 0.4s ease-in;
+  border: none;
+
+  /deep/ {
+    .information-container, .auth-wrapper {
+      display: none;
+    }
+
+    .scheme-container {
+      box-shadow: none;
+    }
+  }
 }
 </style>
