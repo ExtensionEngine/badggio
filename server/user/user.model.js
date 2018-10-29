@@ -76,6 +76,12 @@ class Integration extends Model {
           return jwt.sign(payload, config.secret);
         }
       },
+      profile: {
+        type: DataTypes.VIRTUAL,
+        get() {
+          return pick(this, ['id', 'name', 'email', 'token', 'role']);
+        }
+      },
       ...timestamps(DataTypes)
     };
   }
