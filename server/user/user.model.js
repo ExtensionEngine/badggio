@@ -62,6 +62,9 @@ class Integration extends Model {
           this.setDataValue('name', name);
           this.setDataValue('email', `${sha1(name, 14)}@integration.localhost`);
         },
+        get() {
+          return this.getDataValue('name') || this.getDataValue('firstName');
+        },
         validate: { notEmpty: true }
       },
       role: {
@@ -74,6 +77,12 @@ class Integration extends Model {
         get() {
           const payload = pick(this, ['id', 'name']);
           return jwt.sign(payload, config.secret);
+        }
+      },
+      profile: {
+        type: DataTypes.VIRTUAL,
+        get() {
+          return pick(this, ['id', 'name', 'email', 'token', 'role']);
         }
       },
       ...timestamps(DataTypes)

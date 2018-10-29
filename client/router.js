@@ -5,6 +5,7 @@ import Vue from 'vue';
 
 import Auth from '@/components/auth';
 import Badges from '@/components/badges';
+import Docs from '@/components/docs';
 import ForgotPassword from '@/components/auth/ForgotPassword';
 import Index from '@/components/index';
 import Login from '@/components/auth/Login';
@@ -52,6 +53,10 @@ const router = new Router({
       path: '/badges',
       name: 'badges',
       component: Badges
+    }, {
+      path: '/docs',
+      name: 'docs',
+      component: Docs
     }]
   }, fallbackRoute]
 });

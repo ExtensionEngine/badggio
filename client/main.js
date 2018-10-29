@@ -15,10 +15,23 @@ Vue.use(VeeValidate, {
 Vue.use(VueHotkey);
 Vue.use(VueVisible);
 
-// eslint-disable-next-line no-new
-new Vue({
-  store,
-  router,
-  el: '#app',
-  render: h => h(App)
+loadScript('/docs/api.js').then(() => {
+  // eslint-disable-next-line no-new
+  new Vue({
+    store,
+    router,
+    el: '#app',
+    render: h => h(App)
+  });
 });
+
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.async = true;
+    script.onload = resolve;
+    script.onerror = reject;
+    script.src = src;
+    document.getElementsByTagName('head').item(0).appendChild(script);
+  });
+}

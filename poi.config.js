@@ -10,11 +10,10 @@ const devServer = {
   headers: {
     'X-Powered-By': 'Webpack DevSever'
   },
-  proxy: {
-    '/api': {
-      target: `http://${config.ip}:${config.port}`
-    }
-  }
+  proxy: [{
+    context: ['/api', '/docs'],
+    target: `http://${config.ip}:${config.port}`
+  }]
 };
 
 module.exports = (options, req) => ({

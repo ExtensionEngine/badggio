@@ -1,0 +1,180 @@
+openapi: 3.0.1
+info:
+  title: Badggio
+  description: Your fav OpenBadges implementation ❤️
+  version: '1.0'
+servers:
+  - url: /api/v1
+tags:
+  - name: Assertions
+    description: Manage assertions
+components:
+  schemas:
+    Response:
+      type: object
+      properties:
+        status:
+          type: string
+      required: [status]
+    ErrorResponse:
+      allOf:
+        - $ref: '#/components/schemas/Response'
+        - required: [message]
+          properties:
+            message:
+              type: string
+    SuccessResponse:
+      allOf:
+        - $ref: '#/components/schemas/Response'
+        - required: [data]
+    AssertionBase:
+      type: object
+      properties:
+        expires:
+          description: Expiration datetime of the assertion
+          type: string
+          format: date-time
+        narrative:
+          description: 'Text or markdown text describing evidence (evidence: TBA)'
+          type: string
+        revoked:
+          description: Is assertion revoked
+          type: boolean
+        revocationReason:
+          description: Optional published reason for revocation, if revoked
+          type: string
+    NewAssertion:
+      allOf:
+        - properties:
+            badgeClassId:
+              description: Id of the associated badge class
+              type: integer
+              minimum: 1
+            recipientEmail:
+              description: Email of the associated recipient
+              type: string
+              format: email
+              writeOnly: true
+        - $ref: '#/components/schemas/AssertionBase'
+    Assertion:
+      allOf:
+        - properties:
+            id:
+              description: Id of the assertion
+              type: integer
+              minimum: 1
+            uuid:
+              description: UUID of the assertion
+              type: string
+              format: uuid
+              readOnly: true
+            recipientId:
+              description: Id of the associated recipient
+              type: integer
+              readOnly: true
+              minimum: 1
+        - $ref: '#/components/schemas/NewAssertion'
+  responses:
+    Assertion:
+      description: Assertion details
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/SuccessResponse'
+              - properties:
+                  data:
+                    $ref: '#/components/schemas/Assertion'
+    AssertionList:
+      description: Assertion list
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/SuccessResponse'
+              - properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Assertion'
+    Unauthorized:
+      description: API key is missing or invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: Page not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: Internal server error occured
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  parameters:
+    assertionId:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+      description: The Assertion Id
+  securitySchemes:
+    JWTAuthToken:
+      type: apiKey
+      in: header
+      name: Authorization
+security:
+  - JWTAuthToken: []
+paths:
+  /assertions:
+    get:
+      tags: [Assertions]
+      description: Fetch assertions
+      responses:
+        200:
+          $ref: '#/components/responses/AssertionList'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags: [Assertions]
+      description: Create a new assertion
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewAssertion'
+      responses:
+        200:
+          $ref: '#/components/responses/Assertion'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+  /assertions/{id}:
+    patch:
+      tags: [Assertions]
+      description: Modify assertion
+      parameters:
+        - $ref: '#/components/parameters/assertionId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssertionBase'
+      responses:
+        200:
+          $ref: '#/components/responses/Assertion'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
