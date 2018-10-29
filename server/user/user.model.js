@@ -62,6 +62,9 @@ class Integration extends Model {
           this.setDataValue('name', name);
           this.setDataValue('email', `${sha1(name, 14)}@integration.localhost`);
         },
+        get() {
+          return this.getDataValue('name') || this.getDataValue('firstName');
+        },
         validate: { notEmpty: true }
       },
       role: {
